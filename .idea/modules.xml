@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/smart_plugs.iml" filepath="$PROJECT_DIR$/.idea/modules/smart_plugs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/smart_plugs-build.iml" filepath="$PROJECT_DIR$/.idea/modules/smart_plugs-build.iml" />
     </modules>
   </component>
 </project>
