@@ -15,23 +15,10 @@ object Hello {
     conf.setMaster("local[2]")
     val sc = new SparkContext(conf)
 
-    var list = sc.textFile("dataset/d14_filtered.csv")
-      .collect()
+    val data = sc.textFile("hdfs://localhost:54310/dataset/d14_filtered.csv").collect()
 
-    for( line <- list){
-      println(line)
-    }
-
-
-    val data = Array(1, 2, 3, 4, 5)
-    val distData = sc.parallelize(data)
-
-    val square = distData
-      .map(x => x * x)
-
-    for( i <- square){
-      println(i)
+    for ( row <- data ) {
+      println(row)
     } */
-
   }
 }
