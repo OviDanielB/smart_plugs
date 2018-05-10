@@ -8,7 +8,8 @@ val sparkVersion = "2.3.0"
 
 
 resolvers ++= Seq(
-  "apache-snapshots" at "http://repository.apache.org/snapshots/"
+  "apache-snapshots" at "http://repository.apache.org/snapshots/",
+  DefaultMavenRepository, Resolver.sonatypeRepo("public")
 )
 
 libraryDependencies ++= Seq(

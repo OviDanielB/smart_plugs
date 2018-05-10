@@ -5,20 +5,27 @@ object Hello {
 
   def main(args: Array[String]): Unit = {
 
-    val line = "a33011,1377986420,0,1,1,0,3"
-
-    val parsed = CSVParser.parse(line)
-    println(parsed.get)
-
-    /*val conf = new SparkConf()
-    conf.setAppName("demo-app")
-    conf.setMaster("local[2]")
+    val conf = new SparkConf()
+    conf.setAppName("test-app")
+    //conf.setMaster("spark://localhost:7077")
     val sc = new SparkContext(conf)
 
-    val data = sc.textFile("hdfs://localhost:54310/dataset/d14_filtered.csv").collect()
+    //val data = sc.textFile("hdfs://localhost:54310/dataset/d14_filtered.csv")
 
-    for ( row <- data ) {
-      println(row)
-    } */
+    //val data = sc.textFile("/dataset/d14_filtered.csv")
+
+    val data = sc.textFile(args(0))
+    var list =
+      data.map(line => line.length)
+      .saveAsTextFile(args(1))
+
+      /*data
+      .map(line => CSVParser.parse(line))
+      .filter(f => !None.contains(f))
+      .filter(f => f.get.property && f.get.value >= 350)
+      .map(data => (data.get.house_id, data.get.value))
+      .groupByKey()
+      .collect() */
+
   }
 }

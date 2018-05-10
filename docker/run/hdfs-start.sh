@@ -14,8 +14,12 @@ docker exec master /bin/bash -c \
 
 FILENAME=d14_filtered.csv
 
-docker cp dataset/$FILENAME $CONT:/
+docker cp ../../dataset/$FILENAME $CONT:/
 
 docker exec master /bin/bash -c \
 "hdfs dfs -mkdir /dataset;
     hdfs dfs -put $FILENAME /dataset/"
+
+docker cp ../../target/scala-2.11/smart_plugs_2.11-0.1.jar ${CONT}:/app.jar
+
+docker exec master /bin/bash -c "hdfs dfs -put /app.jar /app.jar"

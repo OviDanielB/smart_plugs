@@ -34,3 +34,6 @@ EXPOSE 7077
 
 # spark web UI
 EXPOSE 8080
+
+# SSH
+EXPOSE 22
