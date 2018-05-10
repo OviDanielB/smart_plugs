@@ -1,3 +1,4 @@
+import config.SmartPlugConfig
 import org.apache.spark.{SparkConf, SparkContext}
 import utils.CSVParser
 
@@ -6,8 +7,8 @@ object Hello {
   def main(args: Array[String]): Unit = {
 
     val conf = new SparkConf()
-    conf.setAppName("test-app")
-    //conf.setMaster("spark://localhost:7077")
+    conf.setAppName(SmartPlugConfig.SPARK_APP_NAME)
+    conf.setMaster(SmartPlugConfig.SPARK_MASTER_URL)
     val sc = new SparkContext(conf)
 
     //val data = sc.textFile("hdfs://localhost:54310/dataset/d14_filtered.csv")
