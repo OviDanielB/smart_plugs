@@ -9,4 +9,21 @@ class PlugData(mId: Long, mTimestamp: Long, mValue: Float, mProperty: Boolean, m
   var plug_id : Int = mPlug
   var household_id : Int = mHousehold
   var house_id : Int = mHouse
+
+  def isWorkMeasurement() : Boolean = {
+    !this.property
+  }
+
+  def isLoadMeasurement() : Boolean = {
+    this.property
+  }
+
+  def fullPlugID : String = {
+    val houseString = String.valueOf(this.house_id)
+    val householdString = String.valueOf(this.household_id)
+    val plugString = String.valueOf(this.plug_id)
+
+    //houseString + "_" + householdString + "_" + plugString
+    houseString + "_" + plugString
+  }
 }
