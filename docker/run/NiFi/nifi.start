@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+docker network create --driver bridge hadoop_network
+docker run -t -i -p 8080:8080 -p 10000:10000 --network=hadoop_network -d --name=nifi zanna94/nifi
+docker cp ../../../dataset/ nifi:/data
+
