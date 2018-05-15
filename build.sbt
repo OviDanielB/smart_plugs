@@ -18,3 +18,7 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0" % "test"
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
   "org.apache.spark" %% "spark-sql" % sparkVersion)
+libraryDependencies ++= Seq(
+  "net.objectlab.kit" % "datecalc-common" % "1.4.0",
+  "net.objectlab.kit" % "datecalc-jdk8" % "1.4.0"
+)
