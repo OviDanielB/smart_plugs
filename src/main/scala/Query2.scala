@@ -1,16 +1,17 @@
 import config.SmartPlugConfig
+import model.MeanStdHolder
 import org.apache.spark.{SparkConf, SparkContext}
-import utils.{CSVParser, CalendarManager}
+import utils.{CSVParser, CalendarManager, Statistics}
 
-object Query2 {
-
-  var conf : SparkConf = new SparkConf()
-  conf.setAppName(SmartPlugConfig.SPARK_APP_NAME)
-  conf.setMaster(SmartPlugConfig.SPARK_MASTER_URL)
-  val sc: SparkContext = new SparkContext(conf)
-  val cm: CalendarManager = new CalendarManager
+object Query2 extends Serializable {
 
   def execute(): Unit = {
+
+    val conf : SparkConf = new SparkConf()
+    conf.setAppName(SmartPlugConfig.SPARK_APP_NAME)
+    conf.setMaster(SmartPlugConfig.SPARK_MASTER_URL)
+    val sc: SparkContext = new SparkContext(conf)
+    val cm: CalendarManager = new CalendarManager
 
     val data = sc.textFile("dataset/d14_filtered.csv")
 
@@ -19,22 +20,16 @@ object Query2 {
         line => CSVParser.parse(line)
       )
       .filter(
-        f => !f.get.property
+        f => f.get.isWorkMeasurement()
       )
       .map(
-        d => ((d.get.house_id, cm.getInterval(d.get.timestamp)), (d.get.value, d.get.value, 1))
+        d => ((d.get.house_id, cm.getInterval(d.get.timestamp)), new MeanStdHolder(d.get.value, 1, 0d))
       )
-      .reduceByKey(
-        (v1,v2) => (v1._1+v2._1, math.pow(v1._1,2).toFloat+math.pow(v2._1,2).toFloat, v1._3+v2._3)
+      .reduceByKey( (x,y) =>
+         Statistics.computeOnlineMeanAndStd(x,y)
       )
-//        .aggregateByKey((0.0,0))((v1,v2) => (v1._1+v2._1,v1._2+v2._2), (v1,v2) => (v1._1+v2._1,v1._2+v2._2))
-      .map{
-        case(k, v) =>
-
-          val mean = v._1 / v._3
-          val dev = math.sqrt((v._2 - math.pow(mean,2))/v._3)
-
-          (k, mean, dev)
+      .map {
+        case (k,v) => (k, v.mean(), v.std())
       }
       .sortBy(_._1)
       .collect()

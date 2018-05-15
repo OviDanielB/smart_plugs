@@ -2,7 +2,7 @@ package utils
 
 import model.MeanStdHolder
 
-object Statistics {
+object Statistics extends Serializable {
 
   /**
     * computes online mean to AVOID OVERFLOW using Welford's one pass algorithm
@@ -25,7 +25,7 @@ object Statistics {
     val newMean = oldMean + (currentValue - oldMean) / n
 
     val oldStd = prevTuple._3
-    val newStd = ( oldStd + ( currentValue - oldMean) * (currentValue - newMean)) // / ( n - 1 )
+    val newStd =  oldStd + ( currentValue - oldMean) * (currentValue - newMean) // / ( n - 1 )
     (newMean , n, newStd)
   }
 

@@ -2,15 +2,15 @@ import config.SmartPlugConfig
 import org.apache.spark.{SparkConf, SparkContext}
 import utils.{CSVParser, CalendarManager, Statistics}
 
-object Query3 {
-
-  var conf : SparkConf = new SparkConf()
-  conf.setAppName(SmartPlugConfig.SPARK_APP_NAME)
-  conf.setMaster(SmartPlugConfig.SPARK_MASTER_URL)
-  val sc: SparkContext = new SparkContext(conf)
-  val cm: CalendarManager = new CalendarManager
+object Query3 extends Serializable {
 
   def execute(): Unit = {
+
+    val conf : SparkConf = new SparkConf()
+    conf.setAppName(SmartPlugConfig.SPARK_APP_NAME)
+    conf.setMaster(SmartPlugConfig.SPARK_MASTER_URL)
+    val sc: SparkContext = new SparkContext(conf)
+    val cm: CalendarManager = new CalendarManager
 
     val data = sc.textFile("dataset/d14_filtered.csv")
 

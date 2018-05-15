@@ -2,7 +2,7 @@ package utils
 
 import org.joda.time.{DateTime, DateTimeZone}
 
-class CalendarManager {
+class CalendarManager extends Serializable {
 
   val TIMEZONE: DateTimeZone = DateTimeZone.forID("Europe/Berlin")
 
