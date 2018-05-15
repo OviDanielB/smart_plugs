@@ -1,11 +1,13 @@
 package utils
 
+
+import de.jollyday.{HolidayManager}
 import org.joda.time.{DateTime, DateTimeZone}
 
 class CalendarManager extends Serializable {
 
   val TIMEZONE: DateTimeZone = DateTimeZone.forID("Europe/Berlin")
-
+  val HOLIDAY_HIERARCHY: String = "de"
   /**
     * Retrieve the interval index related to the value of timestamp
     * among the four ranges:
@@ -39,6 +41,7 @@ class CalendarManager extends Serializable {
     *         es. 5 highest rate on May, -5 lowest rate on May
     */
   def getPeriodRate(timestamp : Long) : Int = {
+
     val date = new DateTime(timestamp*1000L, TIMEZONE)
 
     if ( date.getHourOfDay >= 6 && date.getHourOfDay <= 17
@@ -51,8 +54,15 @@ class CalendarManager extends Serializable {
     0
   }
 
+  /**
+    * Check if the date is signed as holiday following
+    * German holidays collection in "Holidays_de" file.
+    *
+    * @param dateTime possible holiday
+    * @return if holiday
+    */
   def isHoliday(dateTime: DateTime) : Boolean = {
-    // TODO
-    false
+    val hm: HolidayManager = HolidayManager.getInstance()
+    hm.isHoliday(dateTime.toGregorianCalendar, HOLIDAY_HIERARCHY)
   }
 }
