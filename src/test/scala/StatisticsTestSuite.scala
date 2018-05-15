@@ -5,7 +5,6 @@ import utils.Statistics
 
 class StatisticsTestSuite extends FlatSpec {
 
-  SmartPlugConfig.SPARK_APP_NAME
 
   val STATISTICS_DECIMAL_PLACE_PRECISION = 5
 

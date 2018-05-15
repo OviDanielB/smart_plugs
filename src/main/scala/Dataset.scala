@@ -1,14 +1,12 @@
-import config.SmartPlugConfig
+import config.{SmartPlugConfig, SmartPlugProperties}
 import model.PlugData
 import org.apache.spark.rdd.RDD
-import org.apache.spark.{SparkConf, SparkContext}
 import org.joda.time.{DateTime, DateTimeZone}
 import utils.CSVParser
 
 object Dataset {
 
   type ValueCount = (Float, Int)
-
 
   def datasetEntries(dataSetData: RDD[PlugData]) : Unit = {
     val dataSetRowsNumber =
@@ -67,13 +65,6 @@ object Dataset {
     }
   }
 
-
-  def computeMean(prevTuple: ValueCount, currTuple: ValueCount) : ValueCount = {
-
-    (prevTuple._1 + (currTuple._1 - prevTuple._1)/prevTuple._2 + currTuple._2, prevTuple._2 + currTuple._2)
-
-  }
-
   def datasetHouseAveragePowerConsumption(dataSetData: RDD[PlugData]): Unit = {
     val house_average_power =
       dataSetData
@@ -94,17 +85,14 @@ object Dataset {
   }
 
   def main(args: Array[String]) = {
-    val sparkConf = new SparkConf()
-      .setAppName(SmartPlugConfig.SPARK_DATASET_APP_NAME)
-      .setMaster(SmartPlugConfig.SPARK_MASTER_URL)
 
-    val sc = new SparkContext(sparkConf)
+    val sc = SparkController.defaultSparkContext()
 
 
     println(sc.startTime)
     println(new DateTime(1377986420 * 1000L).toDateTime(DateTimeZone.forID("Europe/Berlin")))
 
-    val dataSetData = sc.textFile(SmartPlugConfig.DATASET_URL)
+    val dataSetData = sc.textFile(SmartPlugConfig.get(SmartPlugProperties.CSV_DATASET_URL))
       .map(line => CSVParser.parse(line).get).cache()
 
     datasetEntries(dataSetData)

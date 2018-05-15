@@ -190,8 +190,8 @@
     <orderEntry type="library" name="sbt: com.clearspring.analytics:stream:2.7.0:jar" level="project" />
     <orderEntry type="library" name="sbt: com.carrotsearch:hppc:0.7.2:jar" level="project" />
     <orderEntry type="library" name="sbt: aopalliance:aopalliance:1.0:jar" level="project" />
-    <orderEntry type="library" name="sbt: net.objectlab.kit:datecalc-common:1.4.0:jar" level="project" />
-    <orderEntry type="library" name="sbt: net.objectlab.kit:datecalc-jdk8:1.4.0:jar" level="project" />
     <orderEntry type="library" name="sbt: com.typesafe:config:1.3.2:jar" level="project" />
+    <orderEntry type="library" name="sbt: de.jollyday:jollyday:0.5.5:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.threeten:threeten-extra:1.3.2:jar" level="project" />
   </component>
 </module>
