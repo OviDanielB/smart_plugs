@@ -11,16 +11,14 @@ resolvers ++= Seq(
   DefaultMavenRepository, Resolver.sonatypeRepo("public")
 )
 
-libraryDependencies += "joda-time" % "joda-time" % "2.9.9"
-libraryDependencies += "org.joda" % "joda-convert" % "2.0.1"
-libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.1"
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0" % "test"
 libraryDependencies ++= Seq(
+  "joda-time" % "joda-time" % "2.9.9",
+  "org.joda" % "joda-convert" % "2.0.1",
+  "org.scalactic" %% "scalactic" % "3.0.1",
+  "org.scalatest" %% "scalatest" % "3.0.0" % "test",
   "org.apache.spark" %% "spark-core" % sparkVersion,
-  "org.apache.spark" %% "spark-sql" % sparkVersion)
-libraryDependencies ++= Seq(
-  "net.objectlab.kit" % "datecalc-common" % "1.4.0",
-  "net.objectlab.kit" % "datecalc-jdk8" % "1.4.0"
+  "org.apache.spark" %% "spark-sql" % sparkVersion,
+  "de.jollyday" % "jollyday" % "0.5.5"
 )
 libraryDependencies += "com.databricks" %% "spark-avro" % "4.0.0"
 libraryDependencies += "com.typesafe" % "config" % "1.3.2"
