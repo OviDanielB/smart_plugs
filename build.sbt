@@ -22,3 +22,5 @@ libraryDependencies ++= Seq(
   "net.objectlab.kit" % "datecalc-common" % "1.4.0",
   "net.objectlab.kit" % "datecalc-jdk8" % "1.4.0"
 )
+libraryDependencies += "com.databricks" %% "spark-avro" % "4.0.0"
+libraryDependencies += "com.typesafe" % "config" % "1.3.2"
