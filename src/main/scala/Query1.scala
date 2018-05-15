@@ -19,13 +19,13 @@ object Query1 {
         .map(
           line => CSVParser.parse(line))
         .filter(
-          f => f.get.property && f.get.value >= 350
+          f => f.get.isLoadMeasurement && f.get.value >= 350
         )
         .map(
           data => (data.get.house_id, 1)
         )
         .groupByKey()
-        .map(v => v._1 )
+        .map(v => v._1)
         .collect()
 
     for (q <- q1) {
