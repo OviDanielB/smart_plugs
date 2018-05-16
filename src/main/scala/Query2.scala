@@ -1,13 +1,13 @@
 import config.SmartPlugConfig
 import model.MeanStdHolder
 import org.apache.spark.{SparkConf, SparkContext}
-import utils.{CSVParser, CalendarManager, Statistics}
+import utils.{CSVParser, CalendarManager, Statistics, ProfilingTime}
 
 object Query2 extends Serializable {
 
   def execute(): Unit = {
 
-    val conf : SparkConf = new SparkConf()
+    val conf: SparkConf = new SparkConf()
     conf.setAppName(SmartPlugConfig.SPARK_APP_NAME)
     conf.setMaster(SmartPlugConfig.SPARK_MASTER_URL)
     val sc: SparkContext = new SparkContext(conf)
@@ -22,9 +22,9 @@ object Query2 extends Serializable {
       .filter(
         f => f.get.isWorkMeasurement()
       )
-      .map(
-        d => ((d.get.house_id, cm.getInterval(d.get.timestamp)), new MeanStdHolder(d.get.value, 1, 0d))
-      )
+      .map {
+        d =>((d.get.house_id, cm.getInterval(d.get.timestamp)), new MeanStdHolder(d.get.value, 1, 0d))
+      }
       .reduceByKey( (x,y) =>
          Statistics.computeOnlineMeanAndStd(x,y)
       )
@@ -40,6 +40,8 @@ object Query2 extends Serializable {
   }
 
   def main(args: Array[String]): Unit = {
-    execute()
+    ProfilingTime.time {
+      execute()
+    }
   }
 }
