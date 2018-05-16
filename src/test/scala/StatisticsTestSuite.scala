@@ -1,8 +1,10 @@
-import model.MeanStdHolder
+import config.SmartPlugConfig
+import model.{MeanHolder, MeanStdHolder}
 import org.scalatest.FlatSpec
 import utils.Statistics
 
 class StatisticsTestSuite extends FlatSpec {
+
 
   val STATISTICS_DECIMAL_PLACE_PRECISION = 5
 
@@ -23,10 +25,12 @@ class StatisticsTestSuite extends FlatSpec {
 
 
   it should "be equal calculate mean with different values and long list with decimal places" in {
-    val values = Seq((3.24f,1), (4.53f,1), (5.321f,1), (10.3215f,1), (100.65f,1))
+    val values = Seq(new MeanHolder(3.24f,1), new MeanHolder(4.53f,1),
+      new MeanHolder(5.321f,1), new MeanHolder(10.3215f,1),
+      new MeanHolder(100.65f,1))
     val actualMean = values.reduce((s,v) => Statistics.computeOnlineMean(s,v))
-    assert(actualMean._1 == expectedMeanTuple(values))
-    assert(actualMean._2 == values.length)
+    assert(actualMean.mean() == expectedMean(values).mean())
+    assert(actualMean.count == values.length)
 
   }
 
@@ -103,6 +107,16 @@ class StatisticsTestSuite extends FlatSpec {
       count = count + v._2
     }
     sum / count
+  }
+
+  def expectedMean(values: Seq[MeanHolder]): MeanHolder = {
+    var sum = 0d
+    var count = 0L
+    for(v <- values){
+      sum = sum + v.avg
+      count = count + v.count
+    }
+    new MeanHolder(sum / count, count)
   }
 
 

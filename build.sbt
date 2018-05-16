@@ -18,5 +18,7 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.0.0" % "test",
   "org.apache.spark" %% "spark-core" % sparkVersion,
   "org.apache.spark" %% "spark-sql" % sparkVersion,
-  "de.jollyday" % "jollyday" % "0.5.5"
+  "de.jollyday" % "jollyday" % "0.5.5",
+  "com.databricks" %% "spark-avro" % "4.0.0",
+  "com.typesafe" % "config" % "1.3.2"
 )
