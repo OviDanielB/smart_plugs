@@ -31,6 +31,14 @@ class CalendarManager extends Serializable {
     -1
   }
 
+  def getDayAndMonth(timestamp : Long) : Array[Int] = {
+    val date = new DateTime(timestamp*1000L, TIMEZONE)
+    var res = new Array[Int](2)
+    res(0) = date.getDayOfMonth
+    res(1) = date.getMonthOfYear
+    res
+  }
+
   /**
     * Retrieve the rate index related to:
     * - daily hours [06:00,17:59] from Monday to Wednesday - highest rate
