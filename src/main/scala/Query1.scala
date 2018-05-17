@@ -21,21 +21,13 @@ object Query1 extends Serializable {
         .map(v => v._1)
         .collect()
 
-    for (q <- q1) {
-      println(q)
-    }
+    q1
   }
 
   def executeFaster(): Unit = {
 
-    val conf = new SparkConf()
-    conf.setAppName(SmartPlugConfig.SPARK_APP_NAME)
-    conf.setMaster(SmartPlugConfig.SPARK_MASTER_URL)
-    val sc = new SparkContext(conf)
-
-    //val data = sc.textFile("hdfs://master:54310/dataset/d14_filtered.csv")
-    val data = sc.textFile("dataset/d14_filtered.csv")
-
+    val sc = SparkController.defaultSparkContext()
+    val data = sc.textFile(SmartPlugConfig.get(SmartPlugProperties.CSV_DATASET_URL))
 
     val start = System.currentTimeMillis()
     val q = data
