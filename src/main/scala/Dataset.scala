@@ -1,4 +1,4 @@
-import config.{SmartPlugConfig, SmartPlugProperties}
+import config.{SmartPlugConfig, Properties}
 import model.PlugData
 import org.apache.spark.rdd.RDD
 import org.joda.time.{DateTime, DateTimeZone}
@@ -92,7 +92,7 @@ object Dataset {
     println(sc.startTime)
     println(new DateTime(1377986420 * 1000L).toDateTime(DateTimeZone.forID("Europe/Berlin")))
 
-    val dataSetData = sc.textFile(SmartPlugConfig.get(SmartPlugProperties.CSV_DATASET_URL))
+    val dataSetData = sc.textFile(SmartPlugConfig.get(Properties.CSV_DATASET_URL))
       .map(line => CSVParser.parse(line).get).cache()
 
     datasetEntries(dataSetData)

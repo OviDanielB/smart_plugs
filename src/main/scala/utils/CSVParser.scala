@@ -1,6 +1,6 @@
 package utils
 
-import config.{SmartPlugConfig, SmartPlugProperties}
+import config.{SmartPlugConfig, Properties}
 import model.PlugData
 
 import scala.collection.mutable.ListBuffer
@@ -16,11 +16,11 @@ object CSVParser {
     * returns all lines from csv dataset as PlugData class
     * @return mutable list of PlugData
     */
-  def readDataFromFile(): ListBuffer[PlugData] = {
+  def readDataFromLocalFile(path: String): ListBuffer[PlugData] = {
 
     val list : ListBuffer[PlugData] = ListBuffer()
     var data : PlugData = new PlugData()
-    for(l <- Source.fromFile(SmartPlugConfig.get(SmartPlugProperties.CSV_DATASET_URL)).getLines()){
+    for(l <- Source.fromFile(path).getLines()){
       breakable {
         val parsed = parse(l)
         if (parsed.isEmpty) break

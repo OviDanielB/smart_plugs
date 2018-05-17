@@ -1,3 +1,4 @@
+import config.{Properties, SmartPlugConfig}
 import model.PlugData
 import org.scalatest.FlatSpec
 import utils.{CSVParser, CalendarManager}
@@ -16,7 +17,7 @@ class QueryTwoTestSuite extends FlatSpec {
   "Query Two" should "return values " in {
 
     val calManager = new CalendarManager
-    val dataList : ListBuffer[PlugData] = CSVParser.readDataFromFile()
+    val dataList : ListBuffer[PlugData] = CSVParser.readDataFromLocalFile(SmartPlugConfig.get(Properties.Test.CSV_DATASET_URL))
 
     var valList : ListBuffer[TestData] = ListBuffer()
     var triple = (0,0,0f)
