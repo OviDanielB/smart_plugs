@@ -1,7 +1,7 @@
 import config.SmartPlugConfig
 import model.MeanStdHolder
 import org.apache.spark.{SparkConf, SparkContext}
-import utils.{CSVParser, CalendarManager, Statistics}
+import utils.{CSVParser, CalendarManager, Statistics, ProfilingTime}
 
 object Query2 extends Serializable {
 
@@ -32,6 +32,8 @@ object Query2 extends Serializable {
   }
 
   def main(args: Array[String]): Unit = {
-    execute()
+    ProfilingTime.time {
+      execute()
+    }
   }
 }

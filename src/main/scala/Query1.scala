@@ -1,6 +1,6 @@
 import config.SmartPlugConfig
 import org.apache.spark.{SparkConf, SparkContext}
-import utils.CSVParser
+import utils.{CSVParser, ProfilingTime}
 
 object Query1 extends Serializable {
 
@@ -28,6 +28,8 @@ object Query1 extends Serializable {
   }
 
   def main(args: Array[String]): Unit = {
-    execute()
+    ProfilingTime.time {
+      execute()
+    }
   }
 }
