@@ -34,7 +34,7 @@ object Query1 extends Serializable {
     val q = data
       .flatMap { line =>
         val f = line.split(",")
-        if (f(3).toFloat == 1) Some((f(6).toInt, f(2).toFloat)) else None
+        if (f(3).toInt == 1) Some((f(6).toInt, f(2).toFloat)) else None
       }
       .reduceByKey(_+_)
       .flatMap(
