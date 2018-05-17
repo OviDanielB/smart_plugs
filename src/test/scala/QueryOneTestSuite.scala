@@ -4,18 +4,13 @@ import org.scalatest.FlatSpec
 import utils.CSVParser
 
 import scala.collection.mutable._
-import util.control.Breaks._
-import scala.io.Source
 
 import scala.collection.SortedSet
 
 class QueryOneTestSuite extends FlatSpec {
 
-  "The first query" should "return houses" in {
 
-    val dataList : ListBuffer[PlugData] = readDataFromFile()
-    val nHouses : Int = numberOfHouses(dataList)
-
+  def computeExpectedHousesIDWithLoadGreaterThan(dataList: ListBuffer[PlugData], nHouses: Int, i: Int): SortedSet[Int] = {
     var hMap : Map[Int, ListBuffer[PlugData]] = Map()
     for(i <- 0 until nHouses){
       hMap = hMap.+((i, ListBuffer()))
@@ -33,7 +28,14 @@ class QueryOneTestSuite extends FlatSpec {
         }
       }
     }
+    expectedHousesID
+  }
 
+  "The first query" should "return houses" in {
+
+    val dataList : ListBuffer[PlugData] = CSVParser.readDataFromFile()
+    val nHouses : Int = numberOfHouses(dataList)
+    val expectedHousesID : SortedSet[Int] = computeExpectedHousesIDWithLoadGreaterThan(dataList,nHouses,350)
     val actualHousesId : Array[Int] = Query1.execute()
 
     for(actualHouse <- actualHousesId){
@@ -51,21 +53,5 @@ class QueryOneTestSuite extends FlatSpec {
     houseIdset.size
   }
 
-  def readDataFromFile(): ListBuffer[PlugData] = {
-
-    val list : ListBuffer[PlugData] = ListBuffer()
-    var data : PlugData = new PlugData()
-    for(l <- Source.fromFile(SmartPlugConfig.get(SmartPlugProperties.CSV_DATASET_URL)).getLines()){
-      breakable {
-        val parsed = CSVParser.parse(l)
-        if (parsed.isEmpty) break
-
-        data = parsed.get
-        list.append(data)
-      }
-
-    }
-    list
-  }
 
 }

@@ -1,5 +1,4 @@
-import config.SmartPlugConfig
-import org.apache.spark.{SparkConf, SparkContext}
+import config.{SmartPlugConfig, SmartPlugProperties}
 import utils.{CSVParser, ProfilingTime}
 
 object Query1 extends Serializable {
@@ -7,9 +6,7 @@ object Query1 extends Serializable {
   def execute(): Array[Int] = {
 
     val sc = SparkController.defaultSparkContext()
-
-    //val data = sc.textFile("hdfs://master:54310/dataset/d14_filtered.csv")
-    val data = sc.textFile("dataset/d14_filtered.csv")
+    val data = sc.textFile(SmartPlugConfig.get(SmartPlugProperties.CSV_DATASET_URL))
 
     val q1 = data
         .map(
