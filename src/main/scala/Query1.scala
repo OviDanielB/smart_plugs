@@ -4,7 +4,7 @@ import utils.CSVParser
 
 object Query1 extends Serializable {
 
-  def execute(): Unit = {
+  def execute(): Array[Int] = {
 
     val sc = SparkController.defaultSparkContext()
 
@@ -24,9 +24,7 @@ object Query1 extends Serializable {
         .map(v => v._1)
         .collect()
 
-    for (q <- q1) {
-      println(q)
-    }
+    q1
   }
 
   def main(args: Array[String]): Unit = {

@@ -14,21 +14,15 @@ object Query2 extends Serializable {
     val data = sc.textFile("dataset/d14_filtered.csv")
 
     val q2 = data
-      .map(
-        line => CSVParser.parse(line)
-      )
-      .filter(
-        f => f.get.isWorkMeasurement()
-      )
-      .map(
-        d => ((d.get.house_id, cm.getInterval(d.get.timestamp)), new MeanStdHolder(d.get.value, 1, 0d))
-      )
-      .reduceByKey( (x,y) =>
-         Statistics.computeOnlineMeanAndStd(x,y)
-      )
+      .map( line => CSVParser.parse(line) )
+      .filter( f => f.isDefined && f.get.isWorkMeasurement() )
       .map {
-        case (k,v) => (k, v.mean(), v.std())
+        data =>
+          val current = data.get
+          ((current.house_id, cm.getInterval(current.timestamp)), new MeanStdHolder(current.value))
       }
+      .reduceByKey( (x,y) => Statistics.computeOnlineMeanAndStd(x,y))
+      .map(stat => (stat._1, stat._2.mean(), stat._2.std()) )
       .sortBy(_._1)
       .collect()
 

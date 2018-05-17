@@ -11,7 +11,10 @@ object SmartPlugConfig {
   def get(property : String) : String = {
     config.getString(property)
   }
+
+  println(get(SmartPlugProperties.SPARK_MASTER_URL))
 }
+
 
 
 object SmartPlugProperties {

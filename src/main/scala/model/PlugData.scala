@@ -2,6 +2,8 @@ package model
 
 class PlugData(mId: Long, mTimestamp: Long, mValue: Float, mProperty: Boolean, mPlug: Int, mHousehold: Int, mHouse: Int ) extends Serializable {
 
+  def this() = this(0l,0l,0f,false,0,0,0)
+
   var id : Long = mId
   var timestamp : Long = mTimestamp
   var value : Float = mValue
