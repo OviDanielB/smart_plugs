@@ -1,6 +1,26 @@
 #!/usr/bin/env bash
 
+HOST=localhost
+PORT=9090
+
 docker network create --driver bridge hadoop_network
-docker run -t -i -p 8080:8080 -p 10000:10000 --network=hadoop_network -d --name=nifi zanna94/nifi
-docker cp ../../../dataset/ nifi:/data
+docker run -t -i -p $PORT:$PORT   -e NIFI_WEB_HTTP_PORT="$PORT" --network=hadoop_network -d --name=nifi zanna94/nifi
+
+docker cp ../../../dataset/d14_filtered.csv nifi:/data
+
+wget http://central.maven.org/maven2/com/github/hermannpencole/nifi-deploy-config/1.1.32/nifi-deploy-config-1.1.32.jar
+
+
+if [[ $(wget http://$HOST:$PORT/ -O-) ]] 2>/dev/null
+  then
+    java -jar nifi-deploy-config-1.1.32.jar -nifi http://$HOST:$PORT/nifi-api -conf ./template.xml -m deployTemplate
+    java -jar nifi-deploy-config-1.1.32.jar -nifi http://$HOST:$PORT/nifi-api -conf /tmp/config.json -mode extractConfig
+    java -jar nifi-deploy-config-1.1.32.jar -nifi http://$HOST:$PORT/nifi-api -conf /tmp/config.json -mode updateConfig
+
+  else
+    echo "waiting for the service..."
+    sleep 1000
+ fi
+
+
 

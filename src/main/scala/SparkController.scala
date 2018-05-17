@@ -1,4 +1,5 @@
 import config.{SmartPlugConfig, SmartPlugProperties}
+import org.apache.spark.sql.SparkSession
 import org.apache.spark.{SparkConf, SparkContext}
 
 object SparkController {
@@ -10,9 +11,20 @@ object SparkController {
     new SparkContext(conf)
   }
 
+  private[this] val sparkSession : SparkSession = {
+    SparkSession
+      .builder()
+      .appName(SmartPlugConfig.get(SmartPlugProperties.SPARK_APP_NAME))
+      .getOrCreate()
+  }
+
 
 
   def defaultSparkContext() : SparkContext = {
     this.sparkContext
+  }
+
+  def defaultSparkSession() : SparkSession = {
+    this.sparkSession
   }
 }
