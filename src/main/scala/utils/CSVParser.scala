@@ -12,6 +12,10 @@ object CSVParser {
   private val CSV_DELIMITER = ","
   private var count :Int = 0
 
+  /**
+    * returns all lines from csv dataset as PlugData class
+    * @return mutable list of PlugData
+    */
   def readDataFromFile(): ListBuffer[PlugData] = {
 
     val list : ListBuffer[PlugData] = ListBuffer()
@@ -29,6 +33,11 @@ object CSVParser {
     list
   }
 
+  /**
+    * parses a csv line string into Plug data class
+    * @param line
+    * @return plug data
+    */
   def parse(line: String) : Option[PlugData] = {
 
     val cols = line.split(CSV_DELIMITER).map(_.trim)
