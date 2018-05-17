@@ -28,4 +28,6 @@ class PlugData(mId: Long, mTimestamp: Long, mValue: Float, mProperty: Boolean, m
     //houseString + "_" + householdString + "_" + plugString
     houseString + "_" + plugString
   }
+
+
 }
