@@ -1,35 +1,26 @@
-import config.SmartPlugConfig
-import org.apache.spark.{SparkConf, SparkContext}
-import utils.CSVParser
+import config.{SmartPlugConfig, SmartPlugProperties}
+import utils.{CSVParser, ProfilingTime}
 
 object Query1 extends Serializable {
 
-  def execute(): Unit = {
+  def execute(): Array[Int] = {
 
-    val conf = new SparkConf()
-    conf.setAppName(SmartPlugConfig.SPARK_APP_NAME)
-    conf.setMaster(SmartPlugConfig.SPARK_MASTER_URL)
-    val sc = new SparkContext(conf)
+    val sc = SparkController.defaultSparkContext()
+    val data = sc.textFile(SmartPlugConfig.get(SmartPlugProperties.CSV_DATASET_URL))
 
-    //val data = sc.textFile("hdfs://master:54310/dataset/d14_filtered.csv")
-    val data = sc.textFile("dataset/d14_filtered.csv")
-
-    val start1 = System.currentTimeMillis()
     val q1 = data
-      .map(
-        line => CSVParser.parse(line))
-      .filter(
-        f => f.get.isLoadMeasurement && f.get.value >= 350
-      )
-      .map(
-        data => (data.get.house_id, 1)
-      )
-      .groupByKey()
-      .map(v => v._1)
-      .collect()
-    val elapsed1 = System.currentTimeMillis() - start1
+        .map(
+          line => CSVParser.parse(line))
+        .filter(
+          f => f.get.isLoadMeasurement && f.get.value >= 350
+        )
+        .map(
+          data => (data.get.house_id, 1)
+        )
+        .groupByKey()
+        .map(v => v._1)
+        .collect()
 
-    println("elapsed: ", elapsed1)
     for (q <- q1) {
       println(q)
     }
@@ -61,6 +52,8 @@ object Query1 extends Serializable {
   }
 
   def main(args: Array[String]): Unit = {
-    execute()
+    ProfilingTime.time {
+      execute()
+    }
   }
 }

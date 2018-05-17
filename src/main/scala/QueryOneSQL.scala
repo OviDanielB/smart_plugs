@@ -1,4 +1,4 @@
-import config.SmartPlugConfig
+import config.{SmartPlugConfig, SmartPlugProperties}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.types._
 
@@ -9,8 +9,8 @@ import org.apache.spark.sql.types._
 object QueryOneSQL {
 
   val spark: SparkSession = SparkSession.builder()
-    .appName(SmartPlugConfig.SPARK_APP_NAME)
-    .master(SmartPlugConfig.SPARK_MASTER_URL)
+    .appName(SmartPlugConfig.get(SmartPlugProperties.SPARK_APP_NAME))
+    .master(SmartPlugConfig.get(SmartPlugProperties.SPARK_MASTER_URL))
     .getOrCreate()
 
   // Create schema

@@ -1,6 +1,6 @@
 package utils
 
-import model.MeanStdHolder
+import model.{MeanHolder, MeanStdHolder}
 
 object Statistics extends Serializable {
 
@@ -15,6 +15,12 @@ object Statistics extends Serializable {
 
     (prevTuple._1 + (currTuple._1 - prevTuple._1)/(prevTuple._2 + currTuple._2) , prevTuple._2 + currTuple._2)
   }
+
+  def computeOnlineMean(prevTuple: MeanHolder, currTuple: MeanHolder) : MeanHolder = {
+
+    new MeanHolder(prevTuple.avg + (currTuple.avg - prevTuple.avg)/(prevTuple.count + currTuple.count) , prevTuple.count + currTuple.count)
+  }
+
 
   def computeOnlineMeanAndStd(prevTuple: (Float, Int, Double), currTuple: (Float, Int, Double)): (Float, Int, Double) = {
     val n = prevTuple._2 + currTuple._2

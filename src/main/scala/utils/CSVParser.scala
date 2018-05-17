@@ -1,11 +1,33 @@
 package utils
 
+import config.{SmartPlugConfig, SmartPlugProperties}
 import model.PlugData
+
+import scala.collection.mutable.ListBuffer
+import scala.io.Source
+import scala.util.control.Breaks.{break, breakable}
 
 object CSVParser {
 
   private val CSV_DELIMITER = ","
   private var count :Int = 0
+
+  def readDataFromFile(): ListBuffer[PlugData] = {
+
+    val list : ListBuffer[PlugData] = ListBuffer()
+    var data : PlugData = new PlugData()
+    for(l <- Source.fromFile(SmartPlugConfig.get(SmartPlugProperties.CSV_DATASET_URL)).getLines()){
+      breakable {
+        val parsed = parse(l)
+        if (parsed.isEmpty) break
+
+        data = parsed.get
+        list.append(data)
+      }
+
+    }
+    list
+  }
 
   def parse(line: String) : Option[PlugData] = {
 
