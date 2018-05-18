@@ -31,11 +31,57 @@ class CalendarManagerTestSuite extends FlatSpec {
 
     interval = calendarManager.getInterval(getTimeStampForHourAndMinute(23,59))
     assert(interval == 3)
+
+    var rate = calendarManager.getPeriodRate(getTimeStampForHourAndMinuteAndWeekDay(1,17,59))
+    assert(rate == 9)
+
+    rate = calendarManager.getPeriodRate(getTimeStampForHourAndMinuteAndWeekDay(6,17,59))
+    assert(rate == 0)
+
+    rate = calendarManager.getPeriodRate(getTimeStampForHourAndMinuteAndWeekDay(1,6,0))
+    assert(rate == 9)
+
+    rate = calendarManager.getPeriodRate(getTimeStampForHourAndMinuteAndWeekDay(6,6,0))
+    assert(rate == 0)
+
+    rate = calendarManager.getPeriodRate(getTimeStampForHourAndMinuteAndWeekDay(6,18,0))
+    assert(rate == -9)
+
+    rate = calendarManager.getPeriodRate(getTimeStampForHourAndMinuteAndWeekDay(1,18,0))
+    assert(rate == 0)
+
+    rate = calendarManager.getPeriodRate(getTimeStampForHourAndMinuteAndWeekDay(6,5,59))
+    assert(rate == -9)
+
+    rate = calendarManager.getPeriodRate(getTimeStampForHourAndMinuteAndWeekDay(1,5,59))
+    assert(rate == 0)
   }
 
   def getTimeStampForHourAndMinute(hourOfDay : Int, minuteOfHour : Int) : Long = {
     new DateTime(2013,9,1,
       hourOfDay,minuteOfHour ,DateTimeZone.forID("Europe/Berlin")).getMillis / 1000
+
+  }
+
+  def getTimeStampForHourAndMinuteAndWeekDay(weekDay: Int, hourOfDay : Int, minuteOfHour : Int) : Long = {
+
+    weekDay match {
+        // Monday
+      case 1 => new DateTime(2013,9,2,
+        hourOfDay,minuteOfHour ,DateTimeZone.forID("Europe/Berlin")).getMillis / 1000
+      case 2 => new DateTime(2013,9,3,
+        hourOfDay,minuteOfHour ,DateTimeZone.forID("Europe/Berlin")).getMillis / 1000
+      case 3 => new DateTime(2013,9,4,
+        hourOfDay,minuteOfHour ,DateTimeZone.forID("Europe/Berlin")).getMillis / 1000
+      case 4 => new DateTime(2013,9,5,
+        hourOfDay,minuteOfHour ,DateTimeZone.forID("Europe/Berlin")).getMillis / 1000
+      case 5 => new DateTime(2013,9,6,
+        hourOfDay,minuteOfHour ,DateTimeZone.forID("Europe/Berlin")).getMillis / 1000
+      case 6 => new DateTime(2013,9,7,
+        hourOfDay,minuteOfHour ,DateTimeZone.forID("Europe/Berlin")).getMillis / 1000
+      case 7 => new DateTime(2013,9,1,
+        hourOfDay,minuteOfHour ,DateTimeZone.forID("Europe/Berlin")).getMillis / 1000
+    }
 
   }
 }
