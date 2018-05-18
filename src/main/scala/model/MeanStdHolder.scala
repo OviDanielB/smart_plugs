@@ -27,3 +27,19 @@ class MeanStdHolder(x: Double, n: Long, s: Double) extends MeanHolder(x, n) {
 
   override def toString = s"MeanStdHolder( avg $avg, count $count, stdUndivided $stdSumUndivided)"
 }
+
+
+class SubMeanStdHolder(v : Double, x: Double, n: Long, s: Double) extends SubMeanHolder(v, x, n) {
+  /*var avg : Double = x
+  var count : Long = n */
+  var stdSumUndivided : Double = s
+
+
+  def variance() : Double = {
+    this.stdSumUndivided / (this.count - 1)
+  }
+
+  def std() : Double = {
+    Math.sqrt(variance())
+  }
+}

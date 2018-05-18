@@ -15,7 +15,7 @@ object Query1 extends Serializable {
 
   def executeCSV(sc: SparkContext, data: RDD[String]): Array[Int] = {
 
-    val q1 = data
+    val q = data
       .map(
         line => CSVParser.parse(line))
       .flatMap(
@@ -33,7 +33,7 @@ object Query1 extends Serializable {
       )
       .distinct()
       .collect()
-    q1
+    q
   }
 
   def executeFasterCSV(sc: SparkContext, filePath: String): Array[Int] = {
@@ -95,13 +95,13 @@ object Query1 extends Serializable {
     val data_p = spark.read.parquet(SmartPlugConfig.get(Properties.PARQUET_DATASET_URL))
 
     ProfilingTime.time {
-      executeFasterCSV(sc, data)
+      executeCSV(sc, data)                  // 6,6
     }
     ProfilingTime.time {
-      executeCSV(sc, data)
+      executeFasterCSV(sc, data)            // 2,4 BEST
     }
     ProfilingTime.time {
-      executeFasterParquet(sc, data_p.rdd)
+      executeFasterParquet(sc, data_p.rdd)  // 2,7
     }
   }
 }

@@ -2,10 +2,21 @@ package model
 
 class MeanHolder(x: Double, n: Long) extends Serializable {
 
-  var avg : Double = x
-  var count : Long = n
+  var avg: Double = x
+  var count: Long = n
 
-  def mean() : Double = {
+  def mean(): Double = {
     this.avg
   }
+}
+
+class SubMeanHolder(v: Double, x: Double, n: Long) extends Serializable {
+
+    var value: Double = v // previous value
+    var avg: Double = x
+    var count: Long = n
+
+    def mean(): Double = {
+      this.avg
+    }
 }

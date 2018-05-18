@@ -1,6 +1,6 @@
 package utils
 
-import model.{MeanHolder, MeanStdHolder}
+import model.{MeanHolder, MeanStdHolder, SubMeanHolder, SubMeanStdHolder}
 
 object Statistics extends Serializable {
 
@@ -49,4 +49,52 @@ object Statistics extends Serializable {
     new MeanStdHolder(newMean , n, newStd)
   }
 
+  /**
+    * Compute online mean and standard deviation among values given by the
+    * SUBTRACTION between one and the previous one.
+    *
+    * @param prevTuple
+    * @param currTuple
+    * @return
+    */
+  def computeOnlineSubMeanAndStd(prevTuple: SubMeanStdHolder, currTuple: SubMeanStdHolder): SubMeanStdHolder = {
+
+    val n = prevTuple.count + currTuple.count
+
+    val currentValue = currTuple.value - prevTuple.value // x_n
+
+    var oldMean = 0d
+    if (prevTuple.avg == -1d)
+      oldMean = currentValue
+    else
+      oldMean = prevTuple.avg
+    val newMean = oldMean + (currentValue - oldMean) / n
+
+    val oldStd = prevTuple.stdSumUndivided
+    val newStd = oldStd + ( currentValue - oldMean) * (currentValue - newMean)
+    new SubMeanStdHolder(currTuple.value, newMean , n, newStd)
+  }
+
+  /**
+    * Compute online mean among values given by the SUBTRACTION between one and the previous one.
+    *
+    * @param prevTuple
+    * @param currTuple
+    * @return
+    */
+  def computeOnlineSubMean(prevTuple: SubMeanHolder, currTuple: SubMeanHolder): SubMeanHolder = {
+
+    val n = prevTuple.count + currTuple.count
+
+    val currentValue = currTuple.value - prevTuple.value // x_n
+
+    var oldMean = 0d
+    if (prevTuple.avg == -1d)
+      oldMean = currentValue
+    else
+      oldMean = prevTuple.avg
+    val newMean = oldMean + (currentValue - oldMean) / n
+
+    new SubMeanHolder(currTuple.value, newMean , n)
+  }
 }
