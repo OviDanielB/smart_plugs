@@ -59,20 +59,25 @@ object Statistics extends Serializable {
     */
   def computeOnlineSubMeanAndStd(prevTuple: SubMeanStdHolder, currTuple: SubMeanStdHolder): SubMeanStdHolder = {
 
-    val n = prevTuple.count + currTuple.count
+    if (prevTuple.timestamp != currTuple.timestamp) {
 
-    val currentValue = currTuple.value - prevTuple.value // x_n
+      val n = prevTuple.count + currTuple.count
 
-    var oldMean = 0d
-    if (prevTuple.avg == -1d)
-      oldMean = currentValue
-    else
-      oldMean = prevTuple.avg
-    val newMean = oldMean + (currentValue - oldMean) / n
+      val currentValue = currTuple.value - prevTuple.value // x_n
 
-    val oldStd = prevTuple.stdSumUndivided
-    val newStd = oldStd + ( currentValue - oldMean) * (currentValue - newMean)
-    new SubMeanStdHolder(currTuple.value, newMean , n, newStd)
+      var oldMean = 0d
+      if (prevTuple.avg == -1d)
+        oldMean = currentValue
+      else
+        oldMean = prevTuple.avg
+      val newMean = oldMean + (currentValue - oldMean) / n
+
+      val oldStd = prevTuple.stdSumUndivided
+      val newStd = oldStd + (currentValue - oldMean) * (currentValue - newMean)
+      new SubMeanStdHolder(currTuple.value, newMean, n, newStd, currTuple.timestamp)
+    } else
+      new SubMeanStdHolder(prevTuple.value, prevTuple.avg , prevTuple.count, prevTuple.stdSumUndivided, prevTuple.timestamp)
+
   }
 
   /**
@@ -84,17 +89,19 @@ object Statistics extends Serializable {
     */
   def computeOnlineSubMean(prevTuple: SubMeanHolder, currTuple: SubMeanHolder): SubMeanHolder = {
 
-    val n = prevTuple.count + currTuple.count
+    if (prevTuple.timestamp != currTuple.timestamp) {
+      val n = prevTuple.count + currTuple.count
 
-    val currentValue = currTuple.value - prevTuple.value // x_n
+      val currentValue = currTuple.value - prevTuple.value // x_n
 
-    var oldMean = 0d
-    if (prevTuple.avg == -1d)
-      oldMean = currentValue
-    else
-      oldMean = prevTuple.avg
-    val newMean = oldMean + (currentValue - oldMean) / n
-
-    new SubMeanHolder(currTuple.value, newMean , n)
+      var oldMean = 0d
+      if (prevTuple.avg == -1d)
+        oldMean = currentValue
+      else
+        oldMean = prevTuple.avg
+      val newMean = oldMean + (currentValue - oldMean) / n
+      new SubMeanHolder(currTuple.value, newMean , n, currTuple.timestamp)
+    } else
+      new SubMeanHolder(prevTuple.value, prevTuple.avg , prevTuple.count, prevTuple.timestamp)
   }
 }

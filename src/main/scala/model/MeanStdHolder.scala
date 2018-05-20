@@ -29,7 +29,7 @@ class MeanStdHolder(x: Double, n: Long, s: Double) extends MeanHolder(x, n) {
 }
 
 
-class SubMeanStdHolder(v : Double, x: Double, n: Long, s: Double) extends SubMeanHolder(v, x, n) {
+class SubMeanStdHolder(v : Double, x: Double, n: Long, s: Double, t: Long) extends SubMeanHolder(v, x, n,t) {
   /*var avg : Double = x
   var count : Long = n */
   var stdSumUndivided : Double = s

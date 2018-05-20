@@ -21,12 +21,11 @@ object Query3 extends Serializable {
             val day_month = cm.getDayAndMonth(d.get.timestamp)
             val day = day_month(0)
             val month = day_month(1)
-            if (rate != 0) { // if in a rate
-              Some((d.get.house_id, d.get.household_id, d.get.plug_id, rate, day, month),
-                new SubMeanHolder(d.get.value, -1d, 1))
-            } else None
+            Some((d.get.house_id, d.get.household_id, d.get.plug_id, rate, day, month),
+              new SubMeanHolder(d.get.value, -1d, 1, d.get.timestamp))
           } else None
         )
+      .sortBy(_._2.timestamp)
       .reduceByKey(
         (x,y) => Statistics.computeOnlineSubMean(x,y) // average on single day per rate
       )
@@ -50,7 +49,15 @@ object Query3 extends Serializable {
       .reduceByKey(_+_)
       .sortBy(_._2, false)
       .collect()
+
     q
+//    new Array[((Int, Int, Int, Int), Double)](0)
+  }
+
+  def executeCSV(sc: SparkContext, cm: CalendarManager, filePath: String):
+  Array[((Int,Int,Int,Int),Double)] = {
+    val data = sc.textFile(filePath)
+    executeCSV(sc,data,cm)
   }
 
   def executeFasterCSV(sc: SparkContext, data: RDD[String], cm: CalendarManager)
@@ -67,7 +74,7 @@ object Query3 extends Serializable {
             val month = day_month(1)                                        // f(4) <- plug_id
             if (rate != 0) { // if in a rate                                // f(5) <- household_id
               Some((f(6).toInt, f(5).toInt, f(4).toInt, rate, day, month),  // f(6) <- house_id
-                new SubMeanHolder(f(2).toFloat, -1d, 1))                    // f(2) <- value
+                new SubMeanHolder(f(2).toFloat, -1d, 1, f(1).toLong))                    // f(2) <- value
             } else None
           } else None
       }
@@ -111,7 +118,7 @@ object Query3 extends Serializable {
             val month = day_month(1)                                                 // f(4) <- plug_id
             if (rate != 0) { // if in a rate                                         // f(5) <- household_id
               Some((f(6).toString.toInt, f(5).toString.toInt, f(4).toString.toInt, rate, day, month),  // f(6) <- house_id
-                new SubMeanHolder(f(2).toString.toFloat, -1d, 1))                    // f(2) <- value
+                new SubMeanHolder(f(2).toString.toFloat, -1d, 1, f(1).toString.toLong))                    // f(2) <- value
             } else None
           } else None
       }
@@ -151,14 +158,16 @@ object Query3 extends Serializable {
 
     val cm = new CalendarManager
 
-    ProfilingTime.time {
-      executeCSV(sc, data,cm)                     // 22,1 s
-    }
-    ProfilingTime.time {
-      executeFasterCSV(sc, data, cm)              // 17,5 s BEST
-    }
-    ProfilingTime.time {
-      executeSlowerParquet(sc, data_p.rdd, cm)    // 29 s
-    }
+    val datap = sc.textFile("dataset/testFile.csv")
+    executeCSV(sc,datap,cm)
+//    ProfilingTime.time {
+//      executeCSV(sc, data,cm)                     // 22,1 s
+//    }
+//    ProfilingTime.time {
+//      executeFasterCSV(sc, data, cm)              // 17,5 s BEST
+//    }
+//    ProfilingTime.time {
+//      executeSlowerParquet(sc, data_p.rdd, cm)    // 29 s
+//    }
   }
 }
