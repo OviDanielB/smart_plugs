@@ -1,6 +1,8 @@
 import config.{SmartPlugConfig, Properties}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.types._
+import org.apache.spark.sql.functions._
+
 
 /**
   * Find house with a instantaneous energy consumption greater or equal to 350 Watt.
@@ -12,6 +14,9 @@ object QueryOneSQL {
     .appName(SmartPlugConfig.get(Properties.SPARK_APP_NAME))
     .master(SmartPlugConfig.get(Properties.SPARK_MASTER_URL))
     .getOrCreate()
+
+  import spark.implicits._
+
 
   // Create schema
   val customSchema = StructType(Array(
@@ -34,7 +39,6 @@ object QueryOneSQL {
       .schema(customSchema)
       .load("dataset/d14_filtered.csv")
 
-    df.show()
 
     execute(df)
 
@@ -46,24 +50,29 @@ object QueryOneSQL {
   def executeOnParquet(): Unit = {
 
     val df = spark.read.load("dataset/d14_filtered.parquet")
-    //    df.show()
     execute(df)
 
   }
 
   private def execute(df: DataFrame): Unit = {
 
-    val res = df.select("house_id")
-      .where("property = 1 and value >= 350")
+    val res = df
+      .where("property = 1")
+      .groupBy("house_id", "timestamp")
+      .agg(sum("value").as("sum"))
+      .select("house_id")
+      .where("sum >= 350")
       .distinct()
+      .sort($"house_id")
 
-    spark.time(res.show())
+
+    spark.time(res.show(100))
 
   }
 
   def main(args: Array[String]): Unit = {
     executeOnCsv()
-    executeOnParquet()
+        executeOnParquet()
   }
 
 }
