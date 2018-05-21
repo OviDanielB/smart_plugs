@@ -1,5 +1,5 @@
-import config.{SmartPlugConfig, Properties}
-import model.{MeanHolder, SubMeanHolder}
+import config.{Properties, SmartPlugConfig}
+import model.{MaxMinHolder, MeanHolder, SubMeanHolder}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Row
 import org.apache.spark.SparkContext
@@ -7,7 +7,7 @@ import utils.{CSVParser, CalendarManager, ProfilingTime, Statistics}
 
 object Query3 extends Serializable {
 
-  def executeCSV(sc: SparkContext, data: RDD[String], cm: CalendarManager)
+  def executeMinMaxCSV(sc: SparkContext, data: RDD[String], cm: CalendarManager)
     : Array[((Int,Int,Int,Int),Double)] = {
 
     val q = data
@@ -21,13 +21,13 @@ object Query3 extends Serializable {
             val day_month = cm.getDayAndMonth(d.get.timestamp)
             val day = day_month(0)
             val month = day_month(1)
-            Some((d.get.house_id, d.get.household_id, d.get.plug_id, rate, day, month),
-              new SubMeanHolder(d.get.value, -1d, 1, d.get.timestamp))
+            Some((d.get.plug_id, d.get.household_id, d.get.house_id, rate, day, month),
+              new MaxMinHolder(d.get.value,d.get.value,d.get.value, d.get.timestamp))
           } else None
         )
       .sortBy(_._2.timestamp)
       .reduceByKey(
-        (x,y) => Statistics.computeOnlineSubMean(x,y) // average on single day per rate
+        (x,y) => Statistics.computeOnlineMaxMin(x,y)
       )
      .map(
         d =>  {
@@ -37,27 +37,84 @@ object Query3 extends Serializable {
       )
       .reduceByKey(
         (x,y) => Statistics.computeOnlineMean(x,y) // average on month per rate
-      )
-      .map {
-        case (k,v) =>
-          if (k._4 < 0) { // if lowest rate invert sign
-            ((k._1,k._2,k._3, math.abs(k._4)), -v.mean())
-          } else {
-            ((k._1,k._2,k._3, math.abs(k._4)), v.mean())
-          }
-      }
+      ).map {
+      case (k, v) =>
+        if (k._4 < 0) { // if lowest rate invert sign
+          ((k._1, k._2, k._3, math.abs(k._4)), -v.mean())
+        } else {
+          ((k._1, k._2, k._3, math.abs(k._4)), v.mean())
+        }
+    }
       .reduceByKey(_+_)
       .sortBy(_._2, false)
       .collect()
 
+    for (x<-q) {
+      println(x._1,x._2)
+    }
+
     q
-//    new Array[((Int, Int, Int, Int), Double)](0)
+  }
+
+  def executeCSV(sc: SparkContext, data: RDD[String], cm: CalendarManager)
+  : Array[((Int,Int,Int,Int),Double)] = {
+
+    val q = data
+      .map(
+        line => CSVParser.parse(line)
+      )
+      .flatMap(
+        d =>
+          if (d.get.isWorkMeasurement()) {
+            val rate = cm.getPeriodRate(d.get.timestamp)
+            val day_month = cm.getDayAndMonth(d.get.timestamp)
+            val day = day_month(0)
+            val month = day_month(1)
+            Some((d.get.plug_id, d.get.household_id, d.get.house_id, rate, day, month),
+               new SubMeanHolder(d.get.value, -1d, 1, d.get.timestamp))
+          } else None
+      )
+      .sortBy(_._2.timestamp)
+      .reduceByKey(
+        (x,y) => Statistics.computeOnlineSubMean(x,y) // average on single day per rate
+      )
+      .map(
+        d =>  {
+          ((d._1._1, d._1._2, d._1._3, d._1._4, d._1._6),
+            new MeanHolder(d._2.mean(), 1))
+        }
+      )
+      .reduceByKey(
+        (x,y) => Statistics.computeOnlineMean(x,y) // average on month per rate
+      ).map {
+      case (k, v) =>
+        if (k._4 < 0) { // if lowest rate invert sign
+          ((k._1, k._2, k._3, math.abs(k._4)), -v.mean())
+        } else {
+          ((k._1, k._2, k._3, math.abs(k._4)), v.mean())
+        }
+    }
+      .reduceByKey(_+_)
+      .sortBy(_._2, false)
+      .collect()
+
+    for (x<-q) {
+      println(x._1,x._2)
+    }
+
+    q
   }
 
   def executeCSV(sc: SparkContext, cm: CalendarManager, filePath: String):
   Array[((Int,Int,Int,Int),Double)] = {
     val data = sc.textFile(filePath)
     executeCSV(sc,data,cm)
+  }
+
+  def executeMinMaxCSV(sc: SparkContext, cm: CalendarManager, filePath: String):
+  Array[((Int,Int,Int,Int),Double)] = {
+    val data = sc.textFile(filePath)
+    executeMinMaxCSV(sc,data,cm)
   }
 
   def executeFasterCSV(sc: SparkContext, data: RDD[String], cm: CalendarManager)
@@ -73,7 +130,7 @@ object Query3 extends Serializable {
             val day = day_month(0)
             val month = day_month(1)                                        // f(4) <- plug_id
             if (rate != 0) { // if in a rate                                // f(5) <- household_id
-              Some((f(6).toInt, f(5).toInt, f(4).toInt, rate, day, month),  // f(6) <- house_id
+              Some((f(4).toInt, f(5).toInt, f(6).toInt, rate, day, month),  // f(6) <- house_id
                 new SubMeanHolder(f(2).toFloat, -1d, 1, f(1).toLong))                    // f(2) <- value
             } else None
           } else None
@@ -117,7 +174,7 @@ object Query3 extends Serializable {
             val day = day_month(0)
             val month = day_month(1)                                                 // f(4) <- plug_id
             if (rate != 0) { // if in a rate                                         // f(5) <- household_id
-              Some((f(6).toString.toInt, f(5).toString.toInt, f(4).toString.toInt, rate, day, month),  // f(6) <- house_id
+              Some((f(4).toString.toInt, f(5).toString.toInt, f(6).toString.toInt, rate, day, month),  // f(6) <- house_id
                 new SubMeanHolder(f(2).toString.toFloat, -1d, 1, f(1).toString.toLong))                    // f(2) <- value
             } else None
           } else None
@@ -158,7 +215,7 @@ object Query3 extends Serializable {
 
     val cm = new CalendarManager
 
-    val datap = sc.textFile("dataset/testFile.csv")
+    val datap = sc.textFile("dataset/d14_filtered.csv")
     executeCSV(sc,datap,cm)
 //    ProfilingTime.time {
 //      executeCSV(sc, data,cm)                     // 22,1 s

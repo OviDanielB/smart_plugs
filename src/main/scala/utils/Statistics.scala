@@ -1,6 +1,6 @@
 package utils
 
-import model.{MeanHolder, MeanStdHolder, SubMeanHolder, SubMeanStdHolder}
+import model._
 
 object Statistics extends Serializable {
 
@@ -80,7 +80,29 @@ object Statistics extends Serializable {
 
   }
 
-  /**
+
+  def computeOnlineMaxMin(prevTuple: MaxMinHolder, currTuple: MaxMinHolder): MaxMinHolder = {
+
+    if (prevTuple.timestamp != currTuple.timestamp) {
+
+      var newMin: Double =0d
+      var newMax: Double =0d
+
+      if (currTuple.value < prevTuple.min)
+        newMin = currTuple.value
+      else
+        newMin = prevTuple.min
+
+      if (currTuple.value > prevTuple.max)
+        newMax = currTuple.value
+      else
+        newMax = prevTuple.max
+
+      new MaxMinHolder(currTuple.value, newMin, newMax, currTuple.timestamp)
+    } else
+      new MaxMinHolder(prevTuple.value, prevTuple.min, prevTuple.max, prevTuple.timestamp)
+  }
+    /**
     * Compute online mean among values given by the SUBTRACTION between one and the previous one.
     *
     * @param prevTuple
@@ -90,9 +112,15 @@ object Statistics extends Serializable {
   def computeOnlineSubMean(prevTuple: SubMeanHolder, currTuple: SubMeanHolder): SubMeanHolder = {
 
     if (prevTuple.timestamp != currTuple.timestamp) {
+      if (prevTuple.timestamp > currTuple.timestamp) {
+        println("[ERR] not sorted by timestamps")
+      }
       val n = prevTuple.count + currTuple.count
 
-      val currentValue = currTuple.value - prevTuple.value // x_n
+      var currentValue = currTuple.value - prevTuple.value // x_n
+//      if (currentValue < 0) {
+//        currentValue = 0d
+//      }
 
       var oldMean = 0d
       if (prevTuple.avg == -1d)
@@ -100,8 +128,10 @@ object Statistics extends Serializable {
       else
         oldMean = prevTuple.avg
       val newMean = oldMean + (currentValue - oldMean) / n
+
       new SubMeanHolder(currTuple.value, newMean , n, currTuple.timestamp)
-    } else
-      new SubMeanHolder(prevTuple.value, prevTuple.avg , prevTuple.count, prevTuple.timestamp)
+    } else {
+      new SubMeanHolder(prevTuple.value, prevTuple.avg, prevTuple.count, prevTuple.timestamp)
+    }
   }
 }
