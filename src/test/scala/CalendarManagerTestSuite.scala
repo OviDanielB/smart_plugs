@@ -35,26 +35,20 @@ class CalendarManagerTestSuite extends FlatSpec {
     var rate = calendarManager.getPeriodRate(getTimeStampForHourAndMinuteAndWeekDay(1,17,59))
     assert(rate == 9)
 
-    rate = calendarManager.getPeriodRate(getTimeStampForHourAndMinuteAndWeekDay(6,17,59))
-    assert(rate == 0)
+    rate = calendarManager.getPeriodRate(getTimeStampForHourAndMinuteAndWeekDay(1,18,0))
+    assert(rate == -9)
 
     rate = calendarManager.getPeriodRate(getTimeStampForHourAndMinuteAndWeekDay(1,6,0))
     assert(rate == 9)
 
-    rate = calendarManager.getPeriodRate(getTimeStampForHourAndMinuteAndWeekDay(6,6,0))
-    assert(rate == 0)
-
-    rate = calendarManager.getPeriodRate(getTimeStampForHourAndMinuteAndWeekDay(6,18,0))
-    assert(rate == -9)
-
-    rate = calendarManager.getPeriodRate(getTimeStampForHourAndMinuteAndWeekDay(1,18,0))
-    assert(rate == 0)
-
-    rate = calendarManager.getPeriodRate(getTimeStampForHourAndMinuteAndWeekDay(6,5,59))
-    assert(rate == -9)
-
     rate = calendarManager.getPeriodRate(getTimeStampForHourAndMinuteAndWeekDay(1,5,59))
-    assert(rate == 0)
+    assert(rate == -9)
+
+    rate = calendarManager.getPeriodRate(getTimeStampForHourAndMinuteAndWeekDay(6,17,59))
+    assert(rate == -9)
+
+    rate = calendarManager.getPeriodRate(getTimeStampForHourAndMinuteAndWeekDay(7,6,0))
+    assert(rate == -9)
   }
 
   def getTimeStampForHourAndMinute(hourOfDay : Int, minuteOfHour : Int) : Long = {

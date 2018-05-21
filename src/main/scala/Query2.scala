@@ -1,11 +1,55 @@
 import config.{Properties, SmartPlugConfig}
-import model.{MeanStdHolder, SubMeanStdHolder}
+import model.{MaxMinHolder, MeanStdHolder, SubMeanStdHolder}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.Row
 import utils.{CSVParser, CalendarManager, ProfilingTime, Statistics}
 
 object Query2 extends Serializable {
+
+
+  def executeMinMaxCSV(sc: SparkContext, data: RDD[String], cm: CalendarManager): Array[((Int,Int),Double,Double)] = {
+
+    val q = data
+      .map(
+        line => CSVParser.parse(line)
+      )
+      .flatMap (
+        d =>
+          if (d.get.isWorkMeasurement()) {
+            val d_m = cm.getDayAndMonth(d.get.timestamp)
+            val day = d_m(0)
+            val month = d_m(1)
+            Some((d.get.house_id, d.get.household_id, d.get.plug_id, cm.getInterval(d.get.timestamp), day,month),
+              new MaxMinHolder(d.get.value,d.get.value,d.get.value, d.get.timestamp) )
+          } else {
+            None
+          }
+      )
+      .reduceByKey(
+        (x,y) => Statistics.computeOnlineMaxMin(x,y)
+      )
+      .map(
+        d => ((d._1._1,d._1._2,d._1._3,d._1._4,d._1._6), new MeanStdHolder(d._2.mean(), 1, 0d))
+      )
+      .reduceByKey( (x,y) =>
+        Statistics.computeOnlineMeanAndStd(x,y)
+      )
+      .map(
+        d => ((d._1._1,d._1._4), new MeanStdHolder(d._2.mean(), 1, 0d))
+      )
+      .reduceByKey( (x,y) =>
+        Statistics.computeOnlineMeanAndStd(x,y)
+      )
+      .map(stat => (stat._1, stat._2.mean(), stat._2.std()) ) // TODO compare with mapValues
+      .sortBy(_._1)
+      .collect()
+
+    for (x <- q) {
+      println(x)
+    }
+    q
+  }
 
   def executeCSV(sc: SparkContext, data: RDD[String], cm: CalendarManager): Array[((Int,Int),Double,Double)] = {
 
@@ -34,7 +78,6 @@ object Query2 extends Serializable {
       .map(stat => (stat._1, stat._2.mean(), stat._2.std()) ) // TODO compare with mapValues
       .sortBy(_._1)
       .collect()
-
     q
   }
 
@@ -106,14 +149,16 @@ object Query2 extends Serializable {
 
     val cm = new CalendarManager
 
-    ProfilingTime.time {
-      executeCSV(sc, data, cm)           // 2,9 s
-    }
-    ProfilingTime.time {
-      executeFasterCSV(sc, data, cm)     // 2,3 s BEST
-    }
-    ProfilingTime.time {
-      executeParquet(sc, data_p.rdd, cm) // 4,7 s
-    }
+    executeMinMaxCSV(sc,data,cm)
+
+//    ProfilingTime.time {
+//      executeCSV(sc, data, cm)           // 2,9 s
+//    }
+//    ProfilingTime.time {
+//      executeFasterCSV(sc, data, cm)     // 2,3 s BEST
+//    }
+//    ProfilingTime.time {
+//      executeParquet(sc, data_p.rdd, cm) // 4,7 s
+//    }
   }
 }
