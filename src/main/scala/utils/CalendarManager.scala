@@ -89,10 +89,11 @@ class CalendarManager extends Serializable {
   /**
     * Retrieve the rate index related to:
     * - daily hours [06:00,17:59] from Monday to Wednesday - highest rate
-    * - nightly hours [18:00, 05:59] on Saturday, Sunday and holidays - lowest rate
+    * - nightly hours [18:00, 05:59] from Monday to Wednesday,
+    *     on Saturday, Sunday and holidays - lowest rate
     *
     * @param timestamp of measurement
-    * @return rate month index, 0 if timestamp does not belong to
+    * @return rate month index positive if high rate, negative otherwise
     *         es. 5 highest rate on May, -5 lowest rate on May
     */
   def getPeriodRate(timestamp : Long) : Int = {
@@ -101,12 +102,8 @@ class CalendarManager extends Serializable {
 
     if ( date.getHourOfDay >= 6 && date.getHourOfDay <= 17
           && date.getDayOfWeek < 6 && !isHoliday(date)) {
-      return date.getMonthOfYear
-    } else if (date.getHourOfDay >= 18 && date.getHourOfDay <= 5
-                && (date.getDayOfWeek > 5 || isHoliday(date))) {
-      return 0-date.getMonthOfYear
-    }
-    0
+      date.getMonthOfYear
+     } else 0-date.getMonthOfYear
   }
 
   /**

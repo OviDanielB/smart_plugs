@@ -17,7 +17,7 @@ object Query2 extends Serializable {
          d =>
            if (d.get.isWorkMeasurement() && !(d.get.value == 0)) {
              Some((d.get.house_id, d.get.household_id, d.get.plug_id, cm.getInterval(d.get.timestamp)),
-               new SubMeanStdHolder(d.get.value, -1d, 1, 0d)) // giorno mese
+               new SubMeanStdHolder(d.get.value, -1d, 1, 0d, d.get.timestamp)) // giorno mese
            } else {
              None
            }
@@ -37,6 +37,14 @@ object Query2 extends Serializable {
 
     q
   }
+
+  def executeCSV(sc: SparkContext, cm: CalendarManager, filePath: String):
+    Array[((Int,Int),Double,Double)] = {
+    val data = sc.textFile(filePath)
+    executeCSV(sc,data,cm)
+  }
+
+
   def executeFasterCSV(sc: SparkContext, data: RDD[String], cm: CalendarManager): Array[((Int,Int),Double,Double)] = {
 
     val q = data
@@ -44,7 +52,7 @@ object Query2 extends Serializable {
         val f = line.split(",")
         if (f(3).toInt == 0)
           Some((f(6).toInt, f(5).toInt, f(4).toInt, cm.getInterval(f(1).toLong)),
-            new SubMeanStdHolder(f(2).toFloat, -1d, 1, 0d))
+            new SubMeanStdHolder(f(2).toFloat, -1d, 1, 0d, f(1).toLong))
         else None
       }
       .reduceByKey(
@@ -70,7 +78,7 @@ object Query2 extends Serializable {
       .flatMap { f =>
         if (f(3).toString.toInt == 0)
           Some((f(6).toString.toInt, f(5).toString.toInt, f(4).toString.toInt, cm.getInterval(f(1).toString.toLong)),
-            new SubMeanStdHolder(f(2).toString.toFloat, -1d, 1, 0d))
+            new SubMeanStdHolder(f(2).toString.toFloat, -1d, 1, 0d, f(1).toString.toLong))
         else None
       }
       .reduceByKey(
