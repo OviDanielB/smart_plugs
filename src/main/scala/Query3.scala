@@ -18,21 +18,23 @@ object Query3 extends Serializable {
         d =>
           if (d.get.isWorkMeasurement()) {
             val rate = cm.getPeriodRate(d.get.timestamp)
-            val day_month = cm.getDayAndMonth(d.get.timestamp)
-            val day = day_month(0)
-            val month = day_month(1)
+            val day = cm.getDay(d.get.timestamp)
+            val month = math.abs(rate)
             Some((d.get.plug_id, d.get.household_id, d.get.house_id, rate, day, month),
-              new MaxMinHolder(d.get.value,d.get.value,d.get.value, d.get.timestamp))
+              new MaxMinHolder(d.get.value,d.get.value))
           } else None
         )
-      .sortBy(_._2.timestamp)
       .reduceByKey(
         (x,y) => Statistics.computeOnlineMaxMin(x,y)
       )
      .map(
         d =>  {
-          ((d._1._1, d._1._2, d._1._3, d._1._4, d._1._6),
-            new MeanHolder(d._2.mean(), 1))
+          val house = d._1._1
+          val household = d._1._2
+          val plug = d._1._3
+          val rate = d._1._4
+          ((house, household, plug, rate),
+            new MeanHolder(d._2.delta(), 1))
         }
       )
       .reduceByKey(

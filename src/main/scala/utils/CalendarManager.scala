@@ -86,7 +86,7 @@ class CalendarManager extends Serializable {
     res
   }
 
-  def getDay(timestamp : Long) : Array[Int] = {
+  def getDay(timestamp : Long) : Int = {
     val date = new DateTime(timestamp*1000L, TIMEZONE)
     date.getDayOfMonth
   }
