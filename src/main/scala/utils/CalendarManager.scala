@@ -99,6 +99,18 @@ class CalendarManager extends Serializable {
   }
 
   /**
+    * Retrieve the day number along a month
+    * related to the specified timestamp
+    *
+    * @param timestamp of measurement
+    * @return
+    */
+  def getDayOfMonth(timestamp : Long) : Int = {
+    val date = new DateTime(timestamp*1000L, TIMEZONE)
+    date.getDayOfMonth
+  }
+
+  /**
     * Retrieve the rate index related to:
     * - daily hours [06:00,17:59] from Monday to Wednesday - highest rate
     * - nightly hours [18:00, 05:59] from Monday to Wednesday,

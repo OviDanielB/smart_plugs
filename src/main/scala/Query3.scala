@@ -18,7 +18,7 @@ object Query3 extends Serializable {
         d =>
           if (d.get.isWorkMeasurement() && d.isDefined) {
             val rate = cm.getPeriodRate(d.get.timestamp)
-            val day = cm.getDayOfYear(d.get.timestamp)
+            val day = cm.getDayOfMonth(d.get.timestamp)
             Some((d.get.house_id, d.get.household_id, d.get.plug_id, rate, day),
               new MaxMinHolder(d.get.value,d.get.value))
           } else None
@@ -175,11 +175,11 @@ object Query3 extends Serializable {
     ProfilingTime.time {
       executeCSV(sc, data,cm)
     }
-    ProfilingTime.time {
-      executeFasterCSV(sc, data, cm)              // BEST
-    }
-    ProfilingTime.time {
-      executeSlowerParquet(sc, data_p.rdd, cm)
-    }
+//    ProfilingTime.time {
+//      executeFasterCSV(sc, data, cm)              // BEST
+//    }
+//    ProfilingTime.time {
+//      executeSlowerParquet(sc, data_p.rdd, cm)
+//    }
   }
 }
