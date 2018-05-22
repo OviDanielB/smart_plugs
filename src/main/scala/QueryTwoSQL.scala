@@ -4,7 +4,7 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
-import utils.ProfilingTime
+import utils.{ProfilingTime, udfDataFunction}
 
 
 /**
@@ -12,44 +12,32 @@ import utils.ProfilingTime
   */
 object QueryTwoSQL {
 
-  val spark: SparkSession = SparkSession.builder()
-    .appName(SmartPlugConfig.get(Properties.SPARK_APP_NAME))
-    .master(SmartPlugConfig.get(Properties.SPARK_MASTER_URL))
-    .config("spark.sql.session.timeZone", "UTC")
-    .getOrCreate()
+  val spark : SparkSession = SparkController.defaultSparkSession()
+
+  val customSchema : StructType = SparkController.defaultCustomSchema()
 
   import spark.implicits._
 
 
   def executeOnCsv(): Unit = {
-    // Create schema
-    val customSchema = StructType(Array(
-      StructField("id", LongType, nullable = false),
-      StructField("timestamp", LongType, nullable = false),
-      StructField("value", FloatType, nullable = false),
-      StructField("property", IntegerType, nullable = false),
-      StructField("plug_id", LongType, nullable = false),
-      StructField("household_id", LongType, nullable = false),
-      StructField("house_id", LongType, nullable = false)))
 
     // Load DataFrame from parquet file
-    //  val df: DataFrame = spark.read.load("dataset/d14_filtered.parquet")
     val df = spark.read.format("csv")
       .option("header", "false")
       .option("delimiter", ",")
       .schema(customSchema)
-      .load("dataset/d14_filtered.csv").persist()
+      .load(SmartPlugConfig.get(Properties.CSV_DATASET_URL)).persist()
 
     executeOnSlot(df)
   }
 
   def executeOnParquet(): Unit = {
-    val df = spark.read.parquet("dataset/d14_filtered.parquet").persist()
+    val df = spark.read.parquet(SmartPlugConfig.get(Properties.PARQUET_DATASET_URL)).persist()
     executeOnSlot(df)
   }
 
   def executeOnAvro(): Unit = {
-    val df = spark.read.avro("dataset/d14_filtered.avro").persist()
+    val df = spark.read.avro(SmartPlugConfig.get(Properties.AVRO_DATASET_URL)).persist()
     executeOnSlot(df)
   }
 
@@ -65,7 +53,7 @@ object QueryTwoSQL {
       Useful to find the difference between the value of an event and the previous one to compute consumption
       https://databricks.com/blog/2015/07/15/introducing-window-functions-in-spark-sql.html
      */
-    val windowSpec = Window.partitionBy("house_id", "plug_id")
+    val windowSpec = Window.partitionBy("house_id", "household_id", "plug_id")
       .orderBy("timestamp")
 
     val data = df
@@ -138,7 +126,7 @@ object QueryTwoSQL {
       .orderBy("house_id", "window")
       .select("*")
 
-    data.collect()
+    data.show()
   }
 
 
@@ -147,13 +135,13 @@ object QueryTwoSQL {
       executeOnCsv()
     }
 
-    ProfilingTime.time {
-      executeOnParquet()
-    }
-
-    ProfilingTime.time {
-      executeOnAvro()
-    }
+//    ProfilingTime.time {
+//      executeOnParquet()
+//    }
+//
+//    ProfilingTime.time {
+//      executeOnAvro()
+//    }
   }
 
 }
