@@ -19,7 +19,7 @@ object Query3 extends Serializable {
           if (d.get.isWorkMeasurement() && d.isDefined) {
             val rate = cm.getPeriodRate(d.get.timestamp)
             val day = cm.getDayOfYear(d.get.timestamp)
-            Some((d.get.plug_id, d.get.household_id, d.get.house_id, rate, day),
+            Some((d.get.house_id, d.get.household_id, d.get.plug_id, rate, day),
               new MaxMinHolder(d.get.value,d.get.value))
           } else None
         )
