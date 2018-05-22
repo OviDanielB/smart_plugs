@@ -36,22 +36,30 @@ class MaxMinHolder(minH: Double, maxH: Double) extends Serializable {
   override def toString = s"MaxMinHolder( $min, $max)"
 }
 
-class MeanStdHolderBD(x: BigDecimal,s: BigDecimal, n: Long) extends Serializable {
+
+class MeanHolderBD(x: BigDecimal, n: Long) extends Serializable {
+
+  def this(valBD: BigDecimal) = this(valBD, 1)
+
+  var avg: BigDecimal = x
+  var count: Long = n
+
+  def mean(): Float = {
+    this.avg.toFloat
+  }
+
+  override def toString = s"MeanStdHolderBD($avg, $count)"
+}
+
+class MeanStdHolderBD(x: BigDecimal,s: BigDecimal, n: Long) extends MeanHolderBD(x,n) {
 
   //def this(value: Float) = this(BigDecimal.decimal(value), BigDecimal.decimal(0), 1)
   def this(valBD: BigDecimal) = this(valBD, BigDecimal.decimal(0), 1)
 
-
-  var avg: BigDecimal = x
   var stdSumUndivided: BigDecimal = s
-  var count: Long = n
 
   def variance(): Float = {
     (this.stdSumUndivided / (this.count - 1)).toFloat
-  }
-
-  def mean(): Float = {
-    this.avg.toFloat
   }
 
   def std() : Double = {

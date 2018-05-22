@@ -21,6 +21,11 @@ object Statistics extends Serializable {
     new MeanHolder(prevTuple.avg + (currTuple.avg - prevTuple.avg)/(prevTuple.count + currTuple.count) , prevTuple.count + currTuple.count)
   }
 
+  def computeOnlineMeanBD(prevTuple: MeanHolderBD, currTuple: MeanHolderBD) : MeanHolderBD = {
+
+    new MeanHolderBD(prevTuple.avg + (currTuple.avg - prevTuple.avg)/(prevTuple.count + currTuple.count) , prevTuple.count + currTuple.count)
+  }
+
 
   def computeOnlineMeanAndStd(prevTuple: (Float, Int, Double), currTuple: (Float, Int, Double)): (Float, Int, Double) = {
     val n = prevTuple._2 + currTuple._2
