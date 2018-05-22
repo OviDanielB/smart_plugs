@@ -83,24 +83,17 @@ object Statistics extends Serializable {
 
   def computeOnlineMaxMin(prevTuple: MaxMinHolder, currTuple: MaxMinHolder): MaxMinHolder = {
 
-    if (prevTuple.timestamp != currTuple.timestamp) {
+      var newMin = prevTuple.min
+      var newMax = prevTuple.max
 
-      var newMin: Double =0d
-      var newMax: Double =0d
+      if (currTuple.min < prevTuple.min) {
+        newMin = currTuple.min
+      }
+      if (currTuple.max > prevTuple.max) {
+        newMax = currTuple.max
+      }
 
-      if (currTuple.value < prevTuple.min)
-        newMin = currTuple.value
-      else
-        newMin = prevTuple.min
-
-      if (currTuple.value > prevTuple.max)
-        newMax = currTuple.value
-      else
-        newMax = prevTuple.max
-
-      new MaxMinHolder(currTuple.value, newMin, newMax, currTuple.timestamp)
-    } else
-      new MaxMinHolder(prevTuple.value, prevTuple.min, prevTuple.max, prevTuple.timestamp)
+      new MaxMinHolder(newMin, newMax)
   }
     /**
     * Compute online mean among values given by the SUBTRACTION between one and the previous one.

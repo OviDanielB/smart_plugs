@@ -16,39 +16,44 @@ object Query2 extends Serializable {
       )
       .flatMap (
         d =>
-          if (d.get.isWorkMeasurement()) {
+          if (d.get.isWorkMeasurement() && d.isDefined) {
             val d_m = cm.getDayAndMonth(d.get.timestamp)
             val day = d_m(0)
             val month = d_m(1)
             Some((d.get.house_id, d.get.household_id, d.get.plug_id, cm.getInterval(d.get.timestamp), day,month),
-              new MaxMinHolder(d.get.value,d.get.value,d.get.value, d.get.timestamp) )
+              new MaxMinHolder(d.get.value,d.get.value))
           } else {
             None
           }
       )
       .reduceByKey(
-        (x,y) => Statistics.computeOnlineMaxMin(x,y)
+        (x,y) => Statistics.computeOnlineMaxMin(x,y) // per day
       )
+      .map (
+        d => {
+          val house = d._1._1
+          val slot = d._1._4
+          val day = d._1._5
+          val month = d._1._6
+
+          ((house,slot,day,month), d._2.delta())
+        }
+      )
+      .reduceByKey(_+_) // per day per house as sum of per day per plug
       .map(
-        d => ((d._1._1,d._1._2,d._1._3,d._1._4,d._1._6), new MeanStdHolder(d._2.mean(), 1, 0d))
+        d => ((d._1._1,d._1._2), new MeanStdHolder(d._2, 1, 0d))
       )
       .reduceByKey( (x,y) =>
         Statistics.computeOnlineMeanAndStd(x,y)
       )
-      .map(
-        d => ((d._1._1,d._1._4), new MeanStdHolder(d._2.mean(), 1, 0d))
-      )
-      .reduceByKey( (x,y) =>
-        Statistics.computeOnlineMeanAndStd(x,y)
-      )
-      .map(stat => (stat._1, stat._2.mean(), stat._2.std()) ) // TODO compare with mapValues
-      .sortBy(_._1)
+      .map(stat => (stat._1, stat._2.mean(), stat._2.std()) )
+
       .collect()
 
-    for (x <- q) {
-      println(x)
+    for(i <- q) {
+      println(i)
     }
-    q
+    new Array[((Int, Int), Double, Double)](0)
   }
 
   def executeCSV(sc: SparkContext, data: RDD[String], cm: CalendarManager): Array[((Int,Int),Double,Double)] = {
