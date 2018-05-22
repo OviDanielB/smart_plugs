@@ -8,49 +8,6 @@ import utils.{CSVParser, CalendarManager, ProfilingTime, Statistics}
 object Query2 extends Serializable {
 
 
-  def executeMinMaxCSV(sc: SparkContext, data: RDD[String], cm: CalendarManager): Array[((Int,Int),Double,Double)] = {
-
-    val q = data
-      .map(
-        line => CSVParser.parse(line)
-      )
-      .flatMap (
-        d =>
-          if (d.get.isWorkMeasurement()) {
-            val d_m = cm.getDayAndMonth(d.get.timestamp)
-            val day = d_m(0)
-            val month = d_m(1)
-            Some((d.get.house_id, d.get.household_id, d.get.plug_id, cm.getInterval(d.get.timestamp), day,month),
-              new MaxMinHolder(d.get.value,d.get.value,d.get.value, d.get.timestamp) )
-          } else {
-            None
-          }
-      )
-      .reduceByKey(
-        (x,y) => Statistics.computeOnlineMaxMin(x,y)
-      )
-      .map(
-        d => ((d._1._1,d._1._2,d._1._3,d._1._4,d._1._6), new MeanStdHolder(d._2.mean(), 1, 0d))
-      )
-      .reduceByKey( (x,y) =>
-        Statistics.computeOnlineMeanAndStd(x,y)
-      )
-      .map(
-        d => ((d._1._1,d._1._4), new MeanStdHolder(d._2.mean(), 1, 0d))
-      )
-      .reduceByKey( (x,y) =>
-        Statistics.computeOnlineMeanAndStd(x,y)
-      )
-      .map(stat => (stat._1, stat._2.mean(), stat._2.std()) ) // TODO compare with mapValues
-      .sortBy(_._1)
-      .collect()
-
-    for (x <- q) {
-      println(x)
-    }
-    q
-  }
-
   def executeCSV(sc: SparkContext, data: RDD[String], cm: CalendarManager): Array[((Int,Int),Double,Double)] = {
 
     val q = data
@@ -58,57 +15,88 @@ object Query2 extends Serializable {
         line => CSVParser.parse(line)
       )
       .flatMap (
-         d =>
-           if (d.get.isWorkMeasurement() && !(d.get.value == 0)) {
-             Some((d.get.house_id, d.get.household_id, d.get.plug_id, cm.getInterval(d.get.timestamp)),
-               new SubMeanStdHolder(d.get.value, -1d, 1, 0d, d.get.timestamp)) // giorno mese
-           } else {
-             None
-           }
+        d =>
+          if (d.get.isWorkMeasurement() && d.isDefined) {
+            val d_m = cm.getDayAndMonth(d.get.timestamp)
+            val day = d_m(0)
+            val month = d_m(1)
+            Some((d.get.house_id, d.get.household_id, d.get.plug_id, cm.getTimeSlot(d.get.timestamp), day,month),
+              new MaxMinHolder(d.get.value,d.get.value))
+          } else {
+            None
+          }
       )
       .reduceByKey(
-        (x,y) => Statistics.computeOnlineSubMeanAndStd(x,y) // average on single day
+        (x,y) => Statistics.computeOnlineMaxMin(x,y) // per day
       )
+      .map (
+        d => {
+          val house = d._1._1
+          val slot = d._1._4
+          val day = d._1._5
+          val month = d._1._6
+
+          ((house,slot,day,month), d._2.delta())
+        }
+      )
+      .reduceByKey(_+_) // per day per house as sum of per day per plug
       .map(
-        d => ((d._1._1,d._1._4), new MeanStdHolder(d._2.mean(), 1, 0d))
-      )
-      .reduceByKey( (x,y) =>
-         Statistics.computeOnlineMeanAndStd(x,y)
-      )
-      .map(stat => (stat._1, stat._2.mean(), stat._2.std()) ) // TODO compare with mapValues
-      .sortBy(_._1)
-      .collect()
-    q
-  }
-
-  def executeCSV(sc: SparkContext, cm: CalendarManager, filePath: String):
-    Array[((Int,Int),Double,Double)] = {
-    val data = sc.textFile(filePath)
-    executeCSV(sc,data,cm)
-  }
-
-
-  def executeFasterCSV(sc: SparkContext, data: RDD[String], cm: CalendarManager): Array[((Int,Int),Double,Double)] = {
-
-    val q = data
-      .flatMap { line =>
-        val f = line.split(",")
-        if (f(3).toInt == 0)
-          Some((f(6).toInt, f(5).toInt, f(4).toInt, cm.getInterval(f(1).toLong)),
-            new SubMeanStdHolder(f(2).toFloat, -1d, 1, 0d, f(1).toLong))
-        else None
-      }
-      .reduceByKey(
-        (x,y) => Statistics.computeOnlineSubMeanAndStd(x,y)
-      )
-      .map(
-        d => ((d._1._1,d._1._4), new MeanStdHolder(d._2.mean(), 1, 0d))
+        d => ((d._1._1,d._1._2), new MeanStdHolder(d._2, 1, 0d))
       )
       .reduceByKey( (x,y) =>
         Statistics.computeOnlineMeanAndStd(x,y)
       )
       .map(stat => (stat._1, stat._2.mean(), stat._2.std()) )
-      .sortBy(_._1)
+
+      .collect()
+
+    q
+  }
+
+  def executeFasterCSV(sc: SparkContext, data: RDD[String], cm: CalendarManager): Array[((Int,Int),Double,Double)] = {
+
+    val q = data
+      .flatMap (
+        line => {
+          val f = line.split(",")
+          val house = f(6).toInt
+          val household = f(5).toInt
+          val plug = f(4).toInt
+          val property = f(3).toInt
+          val timestamp = f(1).toLong
+          val value = f(2).toFloat
+
+          if (property == 0 && value != 0) {
+            val d_m = cm.getDayAndMonth(timestamp)
+            val day = d_m(0)
+            val month = d_m(1)
+            Some((house,household,plug,cm.getTimeSlot(timestamp),day,month),
+              new MaxMinHolder(value,value))
+          } else None
+        }
+      )
+      .reduceByKey(
+        (x,y) => Statistics.computeOnlineMaxMin(x,y) // per day
+      )
+      .map (
+        d => {
+          val house = d._1._1
+          val slot = d._1._4
+          val day = d._1._5
+          val month = d._1._6
+
+          ((house,slot,day,month), d._2.delta())
+        }
+      )
+      .reduceByKey(_+_) // per day per house as sum of per day per plug
+      .map(
+      d => ((d._1._1,d._1._2), new MeanStdHolder(d._2, 1, 0d))
+    )
+      .reduceByKey( (x,y) =>
+        Statistics.computeOnlineMeanAndStd(x,y)
+      )
+      .map(stat => (stat._1, stat._2.mean(), stat._2.std()) )
+
       .collect()
 
     q
@@ -118,25 +106,47 @@ object Query2 extends Serializable {
   : Array[((Int,Int),Double,Double)] = {
 
     val q = data
-      .flatMap { f =>
-        if (f(3).toString.toInt == 0)
-          Some((f(6).toString.toInt, f(5).toString.toInt, f(4).toString.toInt, cm.getInterval(f(1).toString.toLong)),
-            new SubMeanStdHolder(f(2).toString.toFloat, -1d, 1, 0d, f(1).toString.toLong))
-        else None
-      }
+      .flatMap (
+        f => {
+          val house = f(6).toString.toInt
+          val household = f(5).toString.toInt
+          val plug = f(4).toString.toInt
+          val property = f(3).toString.toInt
+          val timestamp = f(1).toString.toLong
+          val value = f(2).toString.toFloat
+
+          if (property == 0 && value != 0) {
+            val d_m = cm.getDayAndMonth(timestamp)
+            val day = d_m(0)
+            val month = d_m(1)
+            Some((house,household,plug,cm.getTimeSlot(timestamp),day,month),
+              new MaxMinHolder(value,value))
+          } else None
+        }
+      )
       .reduceByKey(
-        (x,y) => Statistics.computeOnlineSubMeanAndStd(x,y)
+        (x,y) => Statistics.computeOnlineMaxMin(x,y) // per day
       )
+      .map (
+        d => {
+          val house = d._1._1
+          val slot = d._1._4
+          val day = d._1._5
+          val month = d._1._6
+
+          ((house,slot,day,month), d._2.delta())
+        }
+      )
+      .reduceByKey(_+_) // per day per house as sum of per day per plug
       .map(
-        d => ((d._1._1,d._1._4), new MeanStdHolder(d._2.mean(), 1, 0d))
-      )
+      d => ((d._1._1,d._1._2), new MeanStdHolder(d._2, 1, 0d))
+    )
       .reduceByKey( (x,y) =>
         Statistics.computeOnlineMeanAndStd(x,y)
       )
       .map(stat => (stat._1, stat._2.mean(), stat._2.std()) )
-      .sortBy(_._1)
-      .collect()
 
+      .collect()
     q
   }
 
@@ -149,16 +159,14 @@ object Query2 extends Serializable {
 
     val cm = new CalendarManager
 
-    executeMinMaxCSV(sc,data,cm)
-
-//    ProfilingTime.time {
-//      executeCSV(sc, data, cm)           // 2,9 s
-//    }
-//    ProfilingTime.time {
-//      executeFasterCSV(sc, data, cm)     // 2,3 s BEST
-//    }
-//    ProfilingTime.time {
-//      executeParquet(sc, data_p.rdd, cm) // 4,7 s
-//    }
+    ProfilingTime.time {
+      executeCSV(sc, data, cm)
+    }
+    ProfilingTime.time {
+      executeFasterCSV(sc, data, cm)     // BEST
+    }
+    ProfilingTime.time {
+      executeParquet(sc, data_p.rdd, cm)
+    }
   }
 }

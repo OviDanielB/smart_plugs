@@ -1,5 +1,6 @@
-import config.{SmartPlugConfig, Properties}
+import config.{Properties, SmartPlugConfig}
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.types._
 import org.apache.spark.{SparkConf, SparkContext}
 
 object SparkController {
@@ -15,6 +16,8 @@ object SparkController {
     SparkSession
       .builder()
       .appName(SmartPlugConfig.get(Properties.SPARK_APP_NAME))
+      .master(SmartPlugConfig.get(Properties.SPARK_MASTER_URL))
+      .config("spark.sql.session.timeZone", "UTC")
       .getOrCreate()
   }
 
@@ -26,6 +29,15 @@ object SparkController {
     new SparkContext(conf)
   }
 
+  private[this] lazy val customSchema = StructType(Array(
+    StructField("id", LongType, nullable = false),
+    StructField("timestamp", LongType, nullable = false),
+    StructField("value", FloatType, nullable = false),
+    StructField("property", IntegerType, nullable = false),
+    StructField("plug_id", LongType, nullable = false),
+    StructField("household_id", LongType, nullable = false),
+    StructField("house_id", LongType, nullable = false)))
+
   def defaultSparkContext() : SparkContext = {
     this.sparkContext
   }
@@ -36,5 +48,9 @@ object SparkController {
 
   def localTestSparkSession() : SparkContext = {
     this.sparkTestContext
+  }
+
+  def defaultCustomSchema() : StructType = {
+    this.customSchema
   }
 }

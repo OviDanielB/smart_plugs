@@ -46,15 +46,19 @@ object Query1 extends Serializable {
     val q = data
       .flatMap { line =>
         val f = line.split(",")
-        if (f(3).toInt == 1) Some((f(6).toInt, f(2).toFloat)) else None
+        val property = f(3).toInt
+        val house = f(6).toInt
+        val value = f(2).toFloat
+
+        if (property == 1) Some((house, value)) else None
       }
       .reduceByKey(_+_)
       .flatMap(
-      f =>
-        if (f._2 >= LOAD_THRESHOLD) {
-          Some(f._1)
-        } else
-          None
+        f =>
+          if (f._2 >= LOAD_THRESHOLD) {
+            Some(f._1)
+          } else
+            None
       )
       .distinct()
       .collect()
@@ -70,8 +74,13 @@ object Query1 extends Serializable {
   def executeFasterParquet(sc: SparkContext, data: RDD[Row]): Array[Int] = {
 
     val q = data
-      .flatMap { line =>
-        if (line(3) == 1) Some((line(6).toString.toInt, line(2).toString.toFloat)) else None
+      .flatMap {
+        line =>
+          val property = line(3)
+          val house = line(6).toString.toInt
+          val value = line(2).toString.toFloat
+
+          if (property == 1) Some((house, value)) else None
       }
       .reduceByKey(_+_)
       .flatMap(
