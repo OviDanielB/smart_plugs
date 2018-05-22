@@ -16,7 +16,7 @@ object Query2Alt {
       .map(d => {
         val data = d.get
         val holder = new MaxMinHolderBD(data.value)
-        ( (data.house_id, data.plug_id, calendarManager.getInterval(data.timestamp), calendarManager.getDayAndMonth(data.timestamp)(0) ),
+        ( (data.house_id, data.plug_id, calendarManager.getTimeSlot(data.timestamp), calendarManager.getDayOfMonth(data.timestamp)),
           holder)
       } )
       .reduceByKey( (x,y) => {

@@ -1,4 +1,3 @@
-import config.SmartPlugConfig
 import model.{MaxMinHolder, MeanHolder, MeanStdHolder}
 import org.scalatest.FlatSpec
 import utils.Statistics
@@ -29,7 +28,7 @@ class StatisticsTestSuite extends FlatSpec {
 
 
   it should "output the correct max and min with equal timestamps" in {
-    val values = Seq(new MaxMinHolder(2.3, 1), new MaxMinHolder(50, 1 ) , new MaxMinHolder(1, 1))
+    val values = Seq(new MaxMinHolder(2.3, 1), new MaxMinHolder(50,1) , new MaxMinHolder(1,1))
 
     val actualOutput = values.reduce( (t1,t2) => Statistics.computeOnlineMaxMin(t1,t2))
     val expectedOutput : MaxMinHolder = expectedMaxMin(values)
@@ -41,14 +40,14 @@ class StatisticsTestSuite extends FlatSpec {
     var max = 0d
     var min = Double.MaxValue
     for(v <- values){
-      if(v.value < min ){
-        min = v.value
+      if(v.min < min ){
+        min = v.min
       }
-      if(v.value > max ){
-        max = v.value
+      if(v.max > max ){
+        max = v.max
       }
     }
-    new MaxMinHolder(0,min,max,0)
+    new MaxMinHolder(min,max)
   }
 
   "The online algorithm" should "calculate mean with equal values" in {

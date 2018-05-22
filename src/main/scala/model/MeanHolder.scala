@@ -23,13 +23,12 @@ class SubMeanHolder(v: Double, x: Double, n: Long, t:Long) extends Serializable 
     }
 }
 
-class MaxMinHolder(minH: Float, maxH: Float) extends Serializable {
+class MaxMinHolder(minH: Double, maxH: Double) extends Serializable {
 
-  var min: Float = minH
-  var max: Float = maxH
-  def this(measure: Double, t : Long) = this(measure,measure,measure, t)
+  var min: Double = minH
+  var max: Double = maxH
 
-  def delta(): Float = {
+  def delta(): Double = {
     this.max-this.min
   }
 
