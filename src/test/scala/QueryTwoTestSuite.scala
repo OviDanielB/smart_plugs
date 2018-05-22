@@ -9,7 +9,7 @@ import scala.collection.mutable.ListBuffer
 class QueryTwoTestSuite extends FlatSpec {
 
   val TEST_HOUSE_ID = 1
-  val TEST_TIME_PERIOD = 0
+  val TEST_TIME_PERIOD = 1
 
   val START_DAY_OF_MONTH = 1
   val END_DAY_OF_MONTH = 30
@@ -20,7 +20,21 @@ class QueryTwoTestSuite extends FlatSpec {
   /*             (plugID, day, value)         */
   type TestData = (Int, Int, Float)
 
+
+  /*"Query Two dataset" should "compute mean for a single plug" in {
+
+    val sc = SparkController.defaultSparkContext()
+
+    val c = sc.textFile("dataset/d14_filtered.csv")
+      .filter(line => line.endsWith("1,0,0,0"))
+      .map(el => println(el) ).count()
+
+    println(c)
+
+  } */
+
   "Query Two" should "return values " in {
+
 
     println("==========   Query Two Test  ==========")
 
@@ -60,10 +74,12 @@ class QueryTwoTestSuite extends FlatSpec {
 
     var work : Float = 0f
     var workPerDay : Float = 0f
+    var daysActiveMeasurement: Set[Int] = Set()
     for(day <- START_DAY_OF_MONTH to END_DAY_OF_MONTH){
       workPerDay = 0f
       for(pid <- 0 until numPlugs) {
         val plugWorkPerDayConsumed = workConsumed(valList, pid, day)
+        if(plugWorkPerDayConsumed != 0) daysActiveMeasurement += day
         work += plugWorkPerDayConsumed
         workPerDay += plugWorkPerDayConsumed
         println(s"Plug $pid consumed $plugWorkPerDayConsumed on day $day ")
@@ -90,8 +106,9 @@ class QueryTwoTestSuite extends FlatSpec {
     }
 
     val variance = workVarianceUndivided / (END_DAY_OF_MONTH - START_DAY_OF_MONTH)
-    val std = Math.sqrt(variance)
+    var std = Math.sqrt(variance)
 
+    if(std == Double.PositiveInfinity) std = 0d
     println(s"Variance is $variance and standard deviation is $std")
 
 

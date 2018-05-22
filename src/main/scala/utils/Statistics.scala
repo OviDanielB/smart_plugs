@@ -36,6 +36,20 @@ object Statistics extends Serializable {
   }
 
 
+  def computeOnlineMeanAndStdBD(prevTuple: MeanStdHolderBD, currTuple: MeanStdHolderBD): MeanStdHolderBD = {
+    val n = prevTuple.count + currTuple.count
+
+    val currentValue = currTuple.avg // x_n
+
+    val oldMean = prevTuple.avg
+    val newMean = oldMean + (currentValue - oldMean) / BigDecimal.decimal(n)
+
+    val oldStd = prevTuple.stdSumUndivided
+    val newStd = oldStd + ( currentValue - oldMean) * (currentValue - newMean)
+    new MeanStdHolderBD(newMean , newStd, n)
+  }
+
+
   def computeOnlineMeanAndStd(prevTuple: MeanStdHolder, currTuple: MeanStdHolder): MeanStdHolder = {
     val n = prevTuple.count + currTuple.count
 
@@ -80,10 +94,26 @@ object Statistics extends Serializable {
 
   }
 
+  def computeOnlineMaxMinBD(prevTuple: MaxMinHolderBD, currTuple: MaxMinHolderBD): MaxMinHolderBD = {
+    var newMin: BigDecimal = 0d
+    var newMax: BigDecimal = 0d
+
+    if (currTuple.value < prevTuple.min)
+      newMin = currTuple.value
+    else
+      newMin = prevTuple.min
+
+    if (currTuple.value > prevTuple.max)
+      newMax = currTuple.value
+    else
+      newMax = prevTuple.max
+
+    new MaxMinHolderBD(currTuple.value, newMin, newMax)
+  }
 
   def computeOnlineMaxMin(prevTuple: MaxMinHolder, currTuple: MaxMinHolder): MaxMinHolder = {
 
-    if (prevTuple.timestamp != currTuple.timestamp) {
+    //if (prevTuple.timestamp != currTuple.timestamp) {
 
       var newMin: Double =0d
       var newMax: Double =0d
@@ -99,8 +129,8 @@ object Statistics extends Serializable {
         newMax = prevTuple.max
 
       new MaxMinHolder(currTuple.value, newMin, newMax, currTuple.timestamp)
-    } else
-      new MaxMinHolder(prevTuple.value, prevTuple.min, prevTuple.max, prevTuple.timestamp)
+    //} else
+      //new MaxMinHolder(prevTuple.value, prevTuple.min, prevTuple.max, prevTuple.timestamp)
   }
     /**
     * Compute online mean among values given by the SUBTRACTION between one and the previous one.

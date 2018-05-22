@@ -9,6 +9,14 @@ class CalendarManager extends Serializable {
   val TIMEZONE: DateTimeZone = DateTimeZone.forID("Europe/Berlin")
   val HOLIDAY_HIERARCHY: String = "de"
 
+  def fullDateString(timestamp: Long) : String = {
+    val date = new DateTime(timestamp*1000L, TIMEZONE)
+    val day = date.getDayOfMonth
+    val month = date.getMonthOfYear
+    val year = date.getYear
+    s"$day-$month-$year"
+  }
+
   /**
     * Retrieve the interval index related to the value of timestamp
     * among the four ranges:

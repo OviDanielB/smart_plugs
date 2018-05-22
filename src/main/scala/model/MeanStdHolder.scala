@@ -21,7 +21,9 @@ class MeanStdHolder(x: Double, n: Long, s: Double) extends MeanHolder(x, n) {
   }
 
   def std() : Double = {
-    Math.sqrt(variance())
+    var std = Math.sqrt(variance())
+    if(std == Double.PositiveInfinity || std == Double.NegativeInfinity) std = 0
+    std
   }
 
 

@@ -1,5 +1,5 @@
 import config.SmartPlugConfig
-import model.{MeanHolder, MeanStdHolder}
+import model.{MaxMinHolder, MeanHolder, MeanStdHolder}
 import org.scalatest.FlatSpec
 import utils.Statistics
 
@@ -7,6 +7,49 @@ class StatisticsTestSuite extends FlatSpec {
 
 
   val STATISTICS_DECIMAL_PLACE_PRECISION = 5
+
+
+  "The max min online function" should "output the correct max and min with increasing timestamps " in {
+    val values = Seq(new MaxMinHolder(2.3, 0), new MaxMinHolder(3,1) , new MaxMinHolder(10,2))
+
+    val actualOutput = values.reduce( (t1,t2) => Statistics.computeOnlineMaxMin(t1,t2))
+    val expectedOutput : MaxMinHolder = expectedMaxMin(values)
+    assert(expectedOutput.min == actualOutput.min)
+    assert(expectedOutput.max == actualOutput.max)
+  }
+
+  it should "output the correct max and min with decreasing timestamps" in {
+    val values = Seq(new MaxMinHolder(2.3, 65), new MaxMinHolder(50, 30 ) , new MaxMinHolder(1, 2))
+
+    val actualOutput = values.reduce( (t1,t2) => Statistics.computeOnlineMaxMin(t1,t2))
+    val expectedOutput : MaxMinHolder = expectedMaxMin(values)
+    assert(expectedOutput.min == actualOutput.min)
+    assert(expectedOutput.max == actualOutput.max)
+  }
+
+
+  it should "output the correct max and min with equal timestamps" in {
+    val values = Seq(new MaxMinHolder(2.3, 1), new MaxMinHolder(50, 1 ) , new MaxMinHolder(1, 1))
+
+    val actualOutput = values.reduce( (t1,t2) => Statistics.computeOnlineMaxMin(t1,t2))
+    val expectedOutput : MaxMinHolder = expectedMaxMin(values)
+    assert(expectedOutput.min == actualOutput.min)
+    assert(expectedOutput.max == actualOutput.max)
+  }
+
+  def expectedMaxMin(values: Seq[MaxMinHolder]): MaxMinHolder = {
+    var max = 0d
+    var min = Double.MaxValue
+    for(v <- values){
+      if(v.value < min ){
+        min = v.value
+      }
+      if(v.value > max ){
+        max = v.value
+      }
+    }
+    new MaxMinHolder(0,min,max,0)
+  }
 
   "The online algorithm" should "calculate mean with equal values" in {
     val values = Seq((2f,1), (2f,1), (2f,1))
