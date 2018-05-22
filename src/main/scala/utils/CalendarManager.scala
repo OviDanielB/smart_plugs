@@ -10,7 +10,7 @@ class CalendarManager extends Serializable {
   val HOLIDAY_HIERARCHY: String = "de"
 
   def fullDateString(timestamp: Long) : String = {
-    val date = new DateTime(timestamp*1000L, TIMEZONE)
+    val date = getDateFromTimestamp(timestamp)
     val day = date.getDayOfMonth
     val month = date.getMonthOfYear
     val year = date.getYear
@@ -26,7 +26,7 @@ class CalendarManager extends Serializable {
     * @return interval index
     */
   def getTimeSlot(timestamp : Long) : Int = {
-    val date = new DateTime(timestamp*1000L, TIMEZONE)
+    val date = getDateFromTimestamp(timestamp)
 
     if (date.getHourOfDay <= 5 ) {                                  // [00:00,05:59]
       return 0
@@ -38,6 +38,11 @@ class CalendarManager extends Serializable {
       return 3
     }
     -1
+  }
+
+  def getInterval(timestamp: Long) : Int = {
+    val date = getDateFromTimestamp(timestamp)
+    getInterval(date)
   }
 
   /**
@@ -71,7 +76,7 @@ class CalendarManager extends Serializable {
     * @return [time slot index, day, month]
     */
   def getTimeReference(timestamp: Long) : Array[Int] = {
-    val date = new DateTime(timestamp*1000L, TIMEZONE)
+    val date = getDateFromTimestamp(timestamp)
     val res = new Array[Int](3)
     res(0) = getInterval(date)
     res(1) = date.getDayOfMonth
@@ -87,7 +92,7 @@ class CalendarManager extends Serializable {
     * @return [day, month]
     */
   def getDayAndMonth(timestamp : Long) : Array[Int] = {
-    val date = new DateTime(timestamp*1000L, TIMEZONE)
+    val date = getDateFromTimestamp(timestamp)
     val res = new Array[Int](2)
     res(0) = date.getDayOfMonth
     res(1) = date.getMonthOfYear
@@ -102,7 +107,7 @@ class CalendarManager extends Serializable {
     * @return
     */
   def getDayOfYear(timestamp : Long) : Int = {
-    val date = new DateTime(timestamp*1000L, TIMEZONE)
+    val date = getDateFromTimestamp(timestamp)
     date.getDayOfYear
   }
 
@@ -114,7 +119,7 @@ class CalendarManager extends Serializable {
     * @return
     */
   def getDayOfMonth(timestamp : Long) : Int = {
-    val date = new DateTime(timestamp*1000L, TIMEZONE)
+    val date = getDateFromTimestamp(timestamp)
     date.getDayOfMonth
   }
 
@@ -130,7 +135,7 @@ class CalendarManager extends Serializable {
     */
   def getPeriodRate(timestamp : Long) : Int = {
 
-    val date = new DateTime(timestamp*1000L, TIMEZONE)
+    val date = getDateFromTimestamp(timestamp)
 
     if ( date.getHourOfDay >= 6 && date.getHourOfDay <= 17
           && date.getDayOfWeek < 6 && !isHoliday(date)) {
@@ -148,5 +153,9 @@ class CalendarManager extends Serializable {
   def isHoliday(dateTime: DateTime) : Boolean = {
     val hm: HolidayManager = HolidayManager.getInstance()
     hm.isHoliday(dateTime.toGregorianCalendar, HOLIDAY_HIERARCHY)
+  }
+
+  def getDateFromTimestamp(timestamp: Long) : DateTime = {
+    new DateTime(timestamp * 1000L, TIMEZONE)
   }
 }
