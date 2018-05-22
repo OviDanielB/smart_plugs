@@ -17,7 +17,7 @@ class CalendarManager extends Serializable {
     * @param timestamp of measurement
     * @return interval index
     */
-  def getInterval(timestamp : Long) : Int = {
+  def getTimeSlot(timestamp : Long) : Int = {
     val date = new DateTime(timestamp*1000L, TIMEZONE)
 
     if (date.getHourOfDay <= 5 ) {                                  // [00:00,05:59]
@@ -86,9 +86,16 @@ class CalendarManager extends Serializable {
     res
   }
 
-  def getDay(timestamp : Long) : Int = {
+  /**
+    * Retrieve the day number along a whole year
+    * related to the specified timestamp
+    *
+    * @param timestamp of measurement
+    * @return
+    */
+  def getDayOfYear(timestamp : Long) : Int = {
     val date = new DateTime(timestamp*1000L, TIMEZONE)
-    date.getDayOfMonth
+    date.getDayOfYear
   }
 
   /**

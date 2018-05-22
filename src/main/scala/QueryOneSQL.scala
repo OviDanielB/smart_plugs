@@ -10,23 +10,12 @@ import org.apache.spark.sql.functions._
   */
 object QueryOneSQL {
 
-  val spark: SparkSession = SparkSession.builder()
-    .appName(SmartPlugConfig.get(Properties.SPARK_APP_NAME))
-    .master(SmartPlugConfig.get(Properties.SPARK_MASTER_URL))
-    .getOrCreate()
+  val spark: SparkSession = SparkController.defaultSparkSession()
 
   import spark.implicits._
 
-
   // Create schema
-  val customSchema = StructType(Array(
-    StructField("id", LongType, nullable = false),
-    StructField("timestamp", LongType, nullable = false),
-    StructField("value", FloatType, nullable = false),
-    StructField("property", IntegerType, nullable = false),
-    StructField("plug_id", LongType, nullable = false),
-    StructField("household_id", LongType, nullable = false),
-    StructField("house_id", LongType, nullable = false)))
+  val customSchema : StructType = SparkController.defaultCustomSchema()
 
   /**
     * Execute query creating a DataFrame from a csv file
@@ -37,8 +26,7 @@ object QueryOneSQL {
       .option("header", "false")
       .option("delimiter", ",")
       .schema(customSchema)
-      .load("dataset/d14_filtered.csv")
-
+      .load(SmartPlugConfig.get(Properties.CSV_DATASET_URL))
 
     execute(df)
 
@@ -49,7 +37,7 @@ object QueryOneSQL {
     */
   def executeOnParquet(): Unit = {
 
-    val df = spark.read.load("dataset/d14_filtered.parquet")
+    val df = spark.read.load(SmartPlugConfig.get(Properties.CSV_DATASET_URL))
     execute(df)
 
   }

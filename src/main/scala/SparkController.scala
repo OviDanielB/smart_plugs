@@ -17,6 +17,7 @@ object SparkController {
       .builder()
       .appName(SmartPlugConfig.get(Properties.SPARK_APP_NAME))
       .master(SmartPlugConfig.get(Properties.SPARK_MASTER_URL))
+      .config("spark.sql.session.timeZone", "UTC")
       .getOrCreate()
   }
 
