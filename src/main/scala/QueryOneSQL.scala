@@ -3,11 +3,14 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.functions._
 import com.databricks.spark.avro._
-
+import utils.ProfilingTime
 
 /**
-  * Find house with a instantaneous energy consumption greater or equal to 350 Watt.
-  * Implementation through the Spark SQL library
+  * QUERY 1 USING SPARK SQL
+  *
+  * @author Ovidiu Daniel Barba
+  * @author Laura Trivelloni
+  * @author Emanuele Vannacci
   */
 object QueryOneSQL {
 
@@ -15,7 +18,6 @@ object QueryOneSQL {
 
   import spark.implicits._
 
-  // Create schema
   val customSchema : StructType = SparkController.defaultCustomSchema()
 
   /**
@@ -53,6 +55,11 @@ object QueryOneSQL {
 
   }
 
+  /**
+    * Find houses with a instantaneous energy consumption greater or equal to 350 Watt.
+    *
+    * @param df DataFrame
+    */
   def execute(df: DataFrame): Unit = {
 
     val res = df
@@ -64,14 +71,22 @@ object QueryOneSQL {
       .distinct()
       .sort($"house_id")
 
-
-//    spark.time(res.show(100))
-
+    spark.time(res.show(100))
   }
 
   def main(args: Array[String]): Unit = {
-    executeOnCsv()
-        executeOnParquet()
+
+    ProfilingTime.time {
+      executeOnCsv()
+    }
+
+    ProfilingTime.time {
+      executeOnParquet()
+    }
+
+    ProfilingTime.time {
+      executeOnAvro()
+    }
   }
 
 }

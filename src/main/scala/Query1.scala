@@ -3,19 +3,20 @@ import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Row
 import utils.{CSVParser, ProfilingTime}
-import com.databricks.spark.avro._
 
-
+/**
+  * QUERY 1 USING SPARK CORE
+  *
+  * @author Ovidiu Daniel Barba
+  * @author Laura Trivelloni
+  * @author Emanuele Vannacci
+  */
 object Query1 extends Serializable {
 
   val LOAD_THRESHOLD = 350
 
-  def executeCSV(sc: SparkContext, fileURL : String): Array[Int] = {
-    val data = sc.textFile(fileURL)
-    executeCSV(sc, data)
-  }
 
-  def executeCSV(sc: SparkContext, data: RDD[String]): Array[Int] = {
+  def executeSlowCSV(sc: SparkContext, data: RDD[String]): Array[Int] = {
 
     val q = data
       .map(
@@ -38,12 +39,15 @@ object Query1 extends Serializable {
     q
   }
 
-  def executeFasterCSV(sc: SparkContext, filePath: String): Array[Int] = {
-    val data = sc.textFile(filePath)
-    executeFasterCSV(sc,data)
-  }
-
-  def executeFasterCSV(sc: SparkContext, data: RDD[String]): Array[Int] = {
+  /**
+    * Find houses with a instantaneous energy consumption greater or equal to 350 Watt
+    * analyzing data read from a CSV file.
+    *
+    * @param sc spark context
+    * @param data rdd
+    * @return array of houses id
+    */
+  def executeCSV(sc: SparkContext, data: RDD[String]): Array[Int] = {
 
     val q = data
       .flatMap { line =>
@@ -67,12 +71,14 @@ object Query1 extends Serializable {
     q
   }
 
-  def executeFasterParquet(sc: SparkContext, filePath: String): Array[Int] = {
-    val spark = SparkController.defaultSparkSession()
-    val data_p = spark.read.parquet(filePath)
-    executeParquet(sc, data_p.rdd)
-  }
-
+  /**
+    * Find houses with a instantaneous energy consumption greater or equal to 350 Watt
+    * analyzing data converting a DataFrame read from a Parquet file.
+    *
+    * @param sc spark context
+    * @param data rdd
+    * @return array of houses id
+    */
   def executeParquet(sc: SparkContext, data: RDD[Row]): Array[Int] = {
 
     val q = data
@@ -97,6 +103,22 @@ object Query1 extends Serializable {
     q
   }
 
+  def executeSlowCSV(sc: SparkContext, fileURL : String): Array[Int] = {
+    val data = sc.textFile(fileURL)
+    executeSlowCSV(sc, data)
+  }
+
+  def executeCSV(sc: SparkContext, fileURL : String): Array[Int] = {
+    val data = sc.textFile(fileURL)
+    executeCSV(sc, data)
+  }
+
+  def executeParquet(sc: SparkContext, filePath: String): Array[Int] = {
+    val spark = SparkController.defaultSparkSession()
+    val data_p = spark.read.parquet(filePath)
+    executeParquet(sc, data_p.rdd)
+  }
+
   def main(args: Array[String]): Unit = {
 
     val sc = SparkController.defaultSparkContext()
@@ -104,19 +126,15 @@ object Query1 extends Serializable {
 
     val spark = SparkController.defaultSparkSession()
     val data_p = spark.read.parquet(SmartPlugConfig.get(Properties.PARQUET_DATASET_URL))
-    val data_a = spark.read.avro(SmartPlugConfig.get(Properties.AVRO_DATASET_URL))
 
     ProfilingTime.time {
-      executeCSV(sc, data)                  // 6,6
+      executeSlowCSV(sc, data)                  // 6,6
     }
     ProfilingTime.time {
-      executeFasterCSV(sc, data)            // 2,4 BEST
+      executeCSV(sc, data)            // 2,4 BEST
     }
     ProfilingTime.time {
       executeParquet(sc, data_p.rdd)  // 2,7
     }
-//    ProfilingTime.time {
-//      executeAvro(sc, data_a)
-//    }
   }
 }

@@ -8,7 +8,11 @@ import utils.{ProfilingTime, udfDataFunction}
 
 
 /**
-  * @author emanuele 
+  * QUERY 2 USING SPARK SQL
+  *
+  * @author Ovidiu Daniel Barba
+  * @author Laura Trivelloni
+  * @author Emanuele Vannacci
   */
 object QueryTwoSQL {
 
@@ -19,38 +23,18 @@ object QueryTwoSQL {
   import spark.implicits._
 
 
-  def executeOnCsv(): Unit = {
-
-    // Load DataFrame from parquet file
-    val df = spark.read.format("csv")
+  /**
+    * Load CSV file as a dataframe.
+    *
+    * @return DataFrame
+    */
+  private def loadDataframeFromCSV() : DataFrame = {
+    spark.read.format("csv")
       .option("header", "false")
       .option("delimiter", ",")
       .schema(customSchema)
-      .load(SmartPlugConfig.get(Properties.CSV_DATASET_URL)).persist()
-
-    executeOnSlot(df)
-  }
-
-  def executeOnCsvUDF(): Unit = {
-
-    // Load DataFrame from parquet file
-    val df = spark.read.format("csv")
-      .option("header", "false")
-      .option("delimiter", ",")
-      .schema(customSchema)
-      .load(SmartPlugConfig.get(Properties.CSV_DATASET_URL)).persist()
-
-    executeOnSlotUDF(df)
-  }
-
-  def executeOnParquet(): Unit = {
-    val df = spark.read.parquet(SmartPlugConfig.get(Properties.PARQUET_DATASET_URL)).persist()
-    executeOnSlot(df)
-  }
-
-  def executeOnAvro(): Unit = {
-    val df = spark.read.avro(SmartPlugConfig.get(Properties.AVRO_DATASET_URL)).persist()
-    executeOnSlot(df)
+      .load(SmartPlugConfig.get(Properties.CSV_DATASET_URL))
+      .persist()
   }
 
   /**
@@ -100,8 +84,16 @@ object QueryTwoSQL {
 
   }
 
- // TODO
-  private def executeOnSlotUDF(df: DataFrame): Unit = {
+  /**
+    * Compute mean and standard deviation statistics of every house energy consumption
+    * during each time slot in [00:00,05:59], [06:00,11:59], [12:00, 17:59], [18:00, 23:59].
+    * Single value of energy consumption is computed as the difference between the value
+    * of the last record of the period and the first one, because it is a cumulative quantity.
+    * It does NOT keep into account errors obtained for plugs that have been reset into a period
+    *
+    * @param df DataFrame
+    */
+  def executeOnSlotUDF(df: DataFrame): Unit = {
     val data = df
       // Keep only value for energy consumption
       .where("property == 0")
@@ -118,10 +110,10 @@ object QueryTwoSQL {
       .agg(
         when(last("value") >= first("value"), last("value") - first("value"))
           .otherwise(last("value"))
-          .alias("plug_consumption")
+          .alias("plug_consumption_by_day")
       )
       // The sum of the energy consumption of each plug of a given house is the consumption for the house
-      .groupBy("house_id", "slot")
+      .groupBy("house_id", "day", "slot")
       .agg(sum($"plug_consumption_by_day").as("home_consumption"))
 
       //Then we can compute statistics into each time slot over all the days for each house
@@ -131,12 +123,15 @@ object QueryTwoSQL {
       .orderBy("house_id", "slot")
       .select("*")
 
-    data.show()
+    spark.time(data.show(100))
   }
 
   /**
-    * Compute energy consumption in a period as the difference between the value of the last record of the period
-    * and the first. It does NOT keep into account errors obtained for plugs that have been reset into a period
+    * Compute mean and standard deviation statistics of every house energy consumption
+    * during each time slot in [00:00,05:59], [06:00,11:59], [12:00, 17:59], [18:00, 23:59].
+    * Single value of energy consumption is computed as the difference between the value
+    * of the last record of the period and the first one, because it is a cumulative quantity.
+    * It does NOT keep into account errors obtained for plugs that have been reset into a period
     *
     * @param df DataFrame
     */
@@ -172,22 +167,45 @@ object QueryTwoSQL {
       .orderBy("house_id", "window")
       .select("*")
 
-//    data.show
+      data.show(100)
+  }
+
+  def executeOnCsv(): Unit = {
+    val df = loadDataframeFromCSV()
+    executeOnSlot(df)
+  }
+
+  def executeOnCsvUDF(): Unit = {
+    val df = loadDataframeFromCSV()
+    executeOnSlotUDF(df)
+  }
+
+  def executeOnParquet(): Unit = {
+    val df = spark.read.parquet(SmartPlugConfig.get(Properties.PARQUET_DATASET_URL)).persist()
+    executeOnSlot(df)
+  }
+
+  def executeOnAvro(): Unit = {
+    val df = spark.read.avro(SmartPlugConfig.get(Properties.AVRO_DATASET_URL)).persist()
+    executeOnSlot(df)
   }
 
 
   def main(args: Array[String]): Unit = {
     ProfilingTime.time {
-      executeOnCsvUDF()
+      executeOnCsvUDF() // slower
+    }
+    ProfilingTime.time {
+      executeOnCsv()
     }
 
-//    ProfilingTime.time {
-//      executeOnParquet()
-//    }
-//
-//    ProfilingTime.time {
-//      executeOnAvro()
-//    }
+    ProfilingTime.time {
+      executeOnParquet()
+    }
+
+    ProfilingTime.time {
+      executeOnAvro()
+    }
   }
 
 }

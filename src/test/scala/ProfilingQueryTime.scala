@@ -46,12 +46,12 @@ class ProfilingQueryTime extends FlatSpec {
     var res : Map[String,Double] = Map()
 
     var t = ProfilingTime.getTime {
-      Query1.executeCSV(sparkContext, dataCSV)
+      Query1.executeSlowCSV(sparkContext, dataCSV)
     }
     res += ("query1csv_slow" -> t)
 
     t = ProfilingTime.getTime {
-      Query1.executeFasterCSV(sparkContext, dataCSV)
+      Query1.executeCSV(sparkContext, dataCSV)
     }
     res += ("query1csv_fast" -> t)
 
@@ -76,12 +76,12 @@ class ProfilingQueryTime extends FlatSpec {
     res += ("query1SQLavro" -> t)
 
     t = ProfilingTime.getTime {
-      Query2.executeCSV(sparkContext, dataCSV, calendarManager)
+      Query2.executeSlowCSV(sparkContext, dataCSV, calendarManager)
     }
     res += ("query2csv_slow" -> t)
 
     t = ProfilingTime.getTime {
-      Query2.executeFasterCSV(sparkContext, dataCSV, calendarManager)
+      Query2.executeCSV(sparkContext, dataCSV, calendarManager)
     }
     res += ("query2csv_fast" -> t)
 
@@ -106,12 +106,12 @@ class ProfilingQueryTime extends FlatSpec {
     res += ("query2SQLavro" -> t)
 
     t = ProfilingTime.getTime {
-      Query3.executeCSV(sparkContext, dataCSV, calendarManager)
+      Query3.executeSlowCSV(sparkContext, dataCSV, calendarManager)
     }
     res += ("query3csv_slow" -> t)
 
     t = ProfilingTime.getTime {
-      Query3.executeFasterCSV(sparkContext, dataCSV, calendarManager)
+      Query3.executeCSV(sparkContext, dataCSV, calendarManager)
     }
     res += ("query3csv_fast" -> t)
 
