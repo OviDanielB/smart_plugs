@@ -23,11 +23,17 @@ object udfDataFunction {
     calendarManager.getDayOfYear
   }
 
+  private val getHourOfDay: Long => Int = {
+    calendarManager.getHourOfDay
+  }
+
   val getTimeSlotUDF : UserDefinedFunction = udf(getTimeSlot)
 
   val getPeriodRateUDF : UserDefinedFunction = udf(getPeriodRate)
 
   val getDayOfMonthUDF : UserDefinedFunction= udf(getDayOfMonth)
+
+  val getHourOfDayUDF : UserDefinedFunction= udf(getHourOfDay)
 
   val getDayOfYearUDF : UserDefinedFunction= udf(getDayOfYear)
 

@@ -48,13 +48,18 @@ object QueryThreeSQL {
       .withColumn("value", $"value".cast(DataTypes.createDecimalType(20, 5)))
       // For each record compute the referring rate (high/low) per month
       .withColumn("slot", udfDataFunction.getPeriodRateUDF('timestamp))
-      // For each plug, for each rate computes consumption increase per day
-      .groupBy($"house_id", $"household_id", $"plug_id", udfDataFunction.getDayOfMonthUDF('timestamp), $"slot")
-      .agg((max("value") - min("value")).as("plug_consumption"))
+      // For each record compute the referring day of month
+      .withColumn("day", udfDataFunction.getDayOfMonthUDF('timestamp))
+      // For each plug, for each rate, for each day computes consumption increase per hour of the day
+      .groupBy($"house_id", $"household_id", $"plug_id", udfDataFunction.getHourOfDayUDF('timestamp), $"day", $"slot")
+      .agg((max("value") - min("value")).as("plug_consumption_hour"))
+      // For each plug, for each rate, for each day computes average consumption increase per day
+      .groupBy($"house_id", $"household_id", $"plug_id", $"day", $"slot")
+      .agg(avg("plug_consumption_hour").as("plug_consumption_day"))
       // For each plug, for each rate computes average consumption per month
       // (month described by absolute value of slot value)
       .groupBy($"house_id", $"household_id", $"plug_id", $"slot")
-      .agg(avg("plug_consumption").as("avg"))
+      .agg(avg("plug_consumption_day").as("avg"))
       // Inverting sign of average values referring to low slot rate
       .withColumn("avg", udfDataFunction.invertSignUDF('avg, 'slot))
       // For each month, for each slot computes difference between

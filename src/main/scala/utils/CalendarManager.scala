@@ -112,6 +112,18 @@ class CalendarManager extends Serializable {
   }
 
   /**
+    * Retrieve the day number along a whole year
+    * related to the specified timestamp
+    *
+    * @param timestamp of measurement
+    * @return
+    */
+  def getHourOfDay(timestamp : Long) : Int = {
+    val date = getDateFromTimestamp(timestamp)
+    date.getHourOfDay
+  }
+
+  /**
     * Retrieve the day number along a month
     * related to the specified timestamp
     *
