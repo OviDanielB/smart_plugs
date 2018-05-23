@@ -107,7 +107,8 @@ object Query3 extends Serializable {
           if (d.get.isWorkMeasurement() && d.isDefined) {
             val rate = cm.getPeriodRate(d.get.timestamp)
             val day = cm.getDayOfMonth(d.get.timestamp)
-            Some((d.get.house_id, d.get.household_id, d.get.plug_id, rate, day),
+            val hour = cm.getHourOfDay(d.get.timestamp)
+            Some((d.get.house_id, d.get.household_id, d.get.plug_id, rate, hour, day),
               new MaxMinHolder(d.get.value,d.get.value))
           } else None
       )
@@ -120,9 +121,28 @@ object Query3 extends Serializable {
           val household = d._1._2
           val plug = d._1._3
           val rate = d._1._4
+          val day = d._1._6
           val value = d._2
 
-          ((house, household, plug, rate), (value.delta(), 1))
+          ((house, household, plug, rate, day), (value.delta(), 1))
+        }
+      )
+      .reduceByKey {
+        case ((sum1, count1), (sum2, count2)) =>
+
+          (sum1 + sum2, count1 + count2)
+      }
+      .map(
+        d =>  {
+          val house = d._1._1
+          val household = d._1._2
+          val plug = d._1._3
+          val rate = d._1._4
+          val sum = d._2._1
+          val count = d._2._2
+          val avg = sum / count
+
+          ((house, household, plug, rate), (avg, 1))
         }
       )
       .reduceByKey {
@@ -169,7 +189,8 @@ object Query3 extends Serializable {
           if (property == 0 && value != 0) {
             val rate = cm.getPeriodRate(timestamp)
             val day = cm.getDayOfYear(timestamp)
-            Some((house, household, plug, rate, day),
+            val hour = cm.getHourOfDay(timestamp)
+            Some((house, household, plug, rate, hour, day),
               new MaxMinHolder(value, value))
           } else None
         }
@@ -183,9 +204,28 @@ object Query3 extends Serializable {
           val household = d._1._2
           val plug = d._1._3
           val rate = d._1._4
+          val day = d._1._6
           val value = d._2
 
-          ((house, household, plug, rate), (value.delta(), 1))
+          ((house, household, plug, rate, day), (value.delta(), 1))
+        }
+      )
+      .reduceByKey {
+        case ((sum1, count1), (sum2, count2)) =>
+
+          (sum1 + sum2, count1 + count2)
+      }
+      .map(
+        d =>  {
+          val house = d._1._1
+          val household = d._1._2
+          val plug = d._1._3
+          val rate = d._1._4
+          val sum = d._2._1
+          val count = d._2._2
+          val avg = sum / count
+
+          ((house, household, plug, rate), (avg, 1))
         }
       )
       .reduceByKey {
