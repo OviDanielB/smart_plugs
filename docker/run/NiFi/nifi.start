@@ -20,10 +20,7 @@ if [[ $(wget http://$HOST:$PORT/ -O-) ]] 2>/dev/null
     java -jar nifi-deploy-config-1.1.32.jar -nifi http://$HOST:$PORT/nifi-api -conf /tmp/config.json -mode extractConfig
     java -jar nifi-deploy-config-1.1.32.jar -nifi http://$HOST:$PORT/nifi-api -conf /tmp/config.json -mode updateConfig
 
-  else
-    echo "waiting for the service..."
-    sleep 1000
- fi
+fi
 
 
 
