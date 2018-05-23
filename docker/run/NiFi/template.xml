@@ -1,89 +1,97 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <template encoding-version="1.2">
-    <description>Convert .csv files in Avro and Parquet files. Save it on HDFS. 
-Files to convert should be placed in the directory /data.
-Please note that the .csv must have a given structure.</description>
-    <groupId>653a696f-0163-1000-e406-5ec17cd42117</groupId>
-    <name>CsvToParquetAndAVro</name>
+    <description></description>
+    <groupId>8ddc0ccd-0163-1000-39dc-0f4edbc83d2e</groupId>
+    <name>template2.0</name>
     <snippet>
         <connections>
-            <id>a0071128-8942-32b5-0000-000000000000</id>
-            <parentGroupId>15ed5f19-b68c-349a-0000-000000000000</parentGroupId>
+            <id>815b4c9e-3b48-36ab-0000-000000000000</id>
+            <parentGroupId>c3808f8b-5f28-3e08-0000-000000000000</parentGroupId>
             <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
             <backPressureObjectThreshold>10000</backPressureObjectThreshold>
-            <bends>
-                <x>1419.8650232409948</x>
-                <y>16.307721047209952</y>
-            </bends>
             <destination>
-                <groupId>15ed5f19-b68c-349a-0000-000000000000</groupId>
-                <id>b35a9084-5c4f-33e4-0000-000000000000</id>
+                <groupId>c3808f8b-5f28-3e08-0000-000000000000</groupId>
+                <id>3743c9ab-5b5c-3bd3-0000-000000000000</id>
                 <type>PROCESSOR</type>
             </destination>
             <flowFileExpiration>0 sec</flowFileExpiration>
             <labelIndex>1</labelIndex>
             <name></name>
             <source>
-                <groupId>f672951e-5d4e-38e3-0000-000000000000</groupId>
-                <id>83072343-0f92-35b2-0000-000000000000</id>
+                <groupId>15a184d0-e90a-3fd2-0000-000000000000</groupId>
+                <id>1f613f2f-8c55-3c90-0000-000000000000</id>
                 <type>OUTPUT_PORT</type>
             </source>
             <zIndex>0</zIndex>
         </connections>
         <connections>
-            <id>b8535392-56b1-3f7a-0000-000000000000</id>
-            <parentGroupId>15ed5f19-b68c-349a-0000-000000000000</parentGroupId>
+            <id>8d97f713-68b7-320a-0000-000000000000</id>
+            <parentGroupId>c3808f8b-5f28-3e08-0000-000000000000</parentGroupId>
             <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
             <backPressureObjectThreshold>10000</backPressureObjectThreshold>
             <destination>
-                <groupId>15ed5f19-b68c-349a-0000-000000000000</groupId>
-                <id>1cdf4503-613c-3505-0000-000000000000</id>
+                <groupId>c3808f8b-5f28-3e08-0000-000000000000</groupId>
+                <id>0e78b57a-6417-382e-0000-000000000000</id>
                 <type>PROCESSOR</type>
             </destination>
             <flowFileExpiration>0 sec</flowFileExpiration>
             <labelIndex>1</labelIndex>
             <name></name>
-            <selectedRelationships>success</selectedRelationships>
             <source>
-                <groupId>15ed5f19-b68c-349a-0000-000000000000</groupId>
-                <id>88191120-c413-33b4-0000-000000000000</id>
-                <type>PROCESSOR</type>
+                <groupId>15a184d0-e90a-3fd2-0000-000000000000</groupId>
+                <id>1f613f2f-8c55-3c90-0000-000000000000</id>
+                <type>OUTPUT_PORT</type>
             </source>
             <zIndex>0</zIndex>
         </connections>
         <connections>
-            <id>ba295894-ee87-37ac-0000-000000000000</id>
-            <parentGroupId>15ed5f19-b68c-349a-0000-000000000000</parentGroupId>
+            <id>303fee55-4d67-3b5d-0000-000000000000</id>
+            <parentGroupId>c3808f8b-5f28-3e08-0000-000000000000</parentGroupId>
             <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
             <backPressureObjectThreshold>10000</backPressureObjectThreshold>
-            <bends>
-                <x>1846.8052842897152</x>
-                <y>286.92699194185235</y>
-            </bends>
             <destination>
-                <groupId>5b3ad8ab-d00a-3a59-0000-000000000000</groupId>
-                <id>ae514d80-c130-306a-0000-000000000000</id>
+                <groupId>c3808f8b-5f28-3e08-0000-000000000000</groupId>
+                <id>9cfec32c-d6f8-3735-0000-000000000000</id>
+                <type>PROCESSOR</type>
+            </destination>
+            <flowFileExpiration>0 sec</flowFileExpiration>
+            <labelIndex>1</labelIndex>
+            <name></name>
+            <source>
+                <groupId>15a184d0-e90a-3fd2-0000-000000000000</groupId>
+                <id>1f613f2f-8c55-3c90-0000-000000000000</id>
+                <type>OUTPUT_PORT</type>
+            </source>
+            <zIndex>0</zIndex>
+        </connections>
+        <connections>
+            <id>4481f71f-9e3b-36c5-0000-000000000000</id>
+            <parentGroupId>c3808f8b-5f28-3e08-0000-000000000000</parentGroupId>
+            <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
+            <backPressureObjectThreshold>10000</backPressureObjectThreshold>
+            <destination>
+                <groupId>15a184d0-e90a-3fd2-0000-000000000000</groupId>
+                <id>03e7751f-4e2c-3955-0000-000000000000</id>
                 <type>INPUT_PORT</type>
             </destination>
             <flowFileExpiration>0 sec</flowFileExpiration>
             <labelIndex>1</labelIndex>
             <name></name>
-            <selectedRelationships>failure</selectedRelationships>
             <source>
-                <groupId>15ed5f19-b68c-349a-0000-000000000000</groupId>
-                <id>2b846daf-80f5-3a77-0000-000000000000</id>
-                <type>PROCESSOR</type>
+                <groupId>11f608b7-b6c6-399a-0000-000000000000</groupId>
+                <id>2da12d9c-13b2-31ff-0000-000000000000</id>
+                <type>OUTPUT_PORT</type>
             </source>
             <zIndex>0</zIndex>
         </connections>
         <connections>
-            <id>c1fa6cb6-2a9f-354d-0000-000000000000</id>
-            <parentGroupId>15ed5f19-b68c-349a-0000-000000000000</parentGroupId>
+            <id>542e0788-e077-3164-0000-000000000000</id>
+            <parentGroupId>c3808f8b-5f28-3e08-0000-000000000000</parentGroupId>
             <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
             <backPressureObjectThreshold>10000</backPressureObjectThreshold>
             <destination>
-                <groupId>15ed5f19-b68c-349a-0000-000000000000</groupId>
-                <id>88191120-c413-33b4-0000-000000000000</id>
+                <groupId>c3808f8b-5f28-3e08-0000-000000000000</groupId>
+                <id>186c998e-3ac9-35c1-0000-000000000000</id>
                 <type>PROCESSOR</type>
             </destination>
             <flowFileExpiration>0 sec</flowFileExpiration>
@@ -91,139 +99,15 @@ Please note that the .csv must have a given structure.</description>
             <name></name>
             <selectedRelationships>success</selectedRelationships>
             <source>
-                <groupId>15ed5f19-b68c-349a-0000-000000000000</groupId>
-                <id>5bf6ef45-de0b-330c-0000-000000000000</id>
+                <groupId>c3808f8b-5f28-3e08-0000-000000000000</groupId>
+                <id>3743c9ab-5b5c-3bd3-0000-000000000000</id>
                 <type>PROCESSOR</type>
-            </source>
-            <zIndex>0</zIndex>
-        </connections>
-        <connections>
-            <id>e5e9e3a3-9334-3795-0000-000000000000</id>
-            <parentGroupId>15ed5f19-b68c-349a-0000-000000000000</parentGroupId>
-            <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
-            <backPressureObjectThreshold>10000</backPressureObjectThreshold>
-            <destination>
-                <groupId>15ed5f19-b68c-349a-0000-000000000000</groupId>
-                <id>b35a9084-5c4f-33e4-0000-000000000000</id>
-                <type>PROCESSOR</type>
-            </destination>
-            <flowFileExpiration>0 sec</flowFileExpiration>
-            <labelIndex>0</labelIndex>
-            <name></name>
-            <selectedRelationships>success</selectedRelationships>
-            <source>
-                <groupId>15ed5f19-b68c-349a-0000-000000000000</groupId>
-                <id>88191120-c413-33b4-0000-000000000000</id>
-                <type>PROCESSOR</type>
-            </source>
-            <zIndex>0</zIndex>
-        </connections>
-        <connections>
-            <id>fc6e4c1f-2e34-349d-0000-000000000000</id>
-            <parentGroupId>15ed5f19-b68c-349a-0000-000000000000</parentGroupId>
-            <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
-            <backPressureObjectThreshold>10000</backPressureObjectThreshold>
-            <destination>
-                <groupId>15ed5f19-b68c-349a-0000-000000000000</groupId>
-                <id>2b846daf-80f5-3a77-0000-000000000000</id>
-                <type>PROCESSOR</type>
-            </destination>
-            <flowFileExpiration>0 sec</flowFileExpiration>
-            <labelIndex>1</labelIndex>
-            <name></name>
-            <source>
-                <groupId>5b3ad8ab-d00a-3a59-0000-000000000000</groupId>
-                <id>f54cdbdc-a551-3857-0000-000000000000</id>
-                <type>OUTPUT_PORT</type>
-            </source>
-            <zIndex>0</zIndex>
-        </connections>
-        <connections>
-            <id>138afc22-758b-3f65-0000-000000000000</id>
-            <parentGroupId>15ed5f19-b68c-349a-0000-000000000000</parentGroupId>
-            <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
-            <backPressureObjectThreshold>10000</backPressureObjectThreshold>
-            <destination>
-                <groupId>f672951e-5d4e-38e3-0000-000000000000</groupId>
-                <id>a897089a-5b2d-3fcf-0000-000000000000</id>
-                <type>INPUT_PORT</type>
-            </destination>
-            <flowFileExpiration>0 sec</flowFileExpiration>
-            <labelIndex>1</labelIndex>
-            <name></name>
-            <selectedRelationships>failure</selectedRelationships>
-            <selectedRelationships>retry</selectedRelationships>
-            <source>
-                <groupId>15ed5f19-b68c-349a-0000-000000000000</groupId>
-                <id>b35a9084-5c4f-33e4-0000-000000000000</id>
-                <type>PROCESSOR</type>
-            </source>
-            <zIndex>0</zIndex>
-        </connections>
-        <connections>
-            <id>53f60988-1fba-3389-0000-000000000000</id>
-            <parentGroupId>15ed5f19-b68c-349a-0000-000000000000</parentGroupId>
-            <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
-            <backPressureObjectThreshold>10000</backPressureObjectThreshold>
-            <destination>
-                <groupId>15ed5f19-b68c-349a-0000-000000000000</groupId>
-                <id>2b846daf-80f5-3a77-0000-000000000000</id>
-                <type>PROCESSOR</type>
-            </destination>
-            <flowFileExpiration>0 sec</flowFileExpiration>
-            <labelIndex>1</labelIndex>
-            <name></name>
-            <selectedRelationships>success</selectedRelationships>
-            <source>
-                <groupId>15ed5f19-b68c-349a-0000-000000000000</groupId>
-                <id>1cdf4503-613c-3505-0000-000000000000</id>
-                <type>PROCESSOR</type>
-            </source>
-            <zIndex>0</zIndex>
-        </connections>
-        <connections>
-            <id>6d093f66-57ef-381e-0000-000000000000</id>
-            <parentGroupId>15ed5f19-b68c-349a-0000-000000000000</parentGroupId>
-            <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
-            <backPressureObjectThreshold>10000</backPressureObjectThreshold>
-            <destination>
-                <groupId>15ed5f19-b68c-349a-0000-000000000000</groupId>
-                <id>f133a948-8abb-379b-0000-000000000000</id>
-                <type>FUNNEL</type>
-            </destination>
-            <flowFileExpiration>0 sec</flowFileExpiration>
-            <labelIndex>1</labelIndex>
-            <name></name>
-            <source>
-                <groupId>5b3ad8ab-d00a-3a59-0000-000000000000</groupId>
-                <id>64dadd9c-e4a9-3bb0-0000-000000000000</id>
-                <type>OUTPUT_PORT</type>
-            </source>
-            <zIndex>0</zIndex>
-        </connections>
-        <connections>
-            <id>7a2b6665-35a6-3054-0000-000000000000</id>
-            <parentGroupId>15ed5f19-b68c-349a-0000-000000000000</parentGroupId>
-            <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
-            <backPressureObjectThreshold>10000</backPressureObjectThreshold>
-            <destination>
-                <groupId>15ed5f19-b68c-349a-0000-000000000000</groupId>
-                <id>f133a948-8abb-379b-0000-000000000000</id>
-                <type>FUNNEL</type>
-            </destination>
-            <flowFileExpiration>0 sec</flowFileExpiration>
-            <labelIndex>1</labelIndex>
-            <name></name>
-            <source>
-                <groupId>f672951e-5d4e-38e3-0000-000000000000</groupId>
-                <id>bbc004b8-884a-3360-0000-000000000000</id>
-                <type>OUTPUT_PORT</type>
             </source>
             <zIndex>0</zIndex>
         </connections>
         <controllerServices>
-            <id>1bd1b38e-125c-34b7-0000-000000000000</id>
-            <parentGroupId>15ed5f19-b68c-349a-0000-000000000000</parentGroupId>
+            <id>6062332d-da65-3bde-0000-000000000000</id>
+            <parentGroupId>c3808f8b-5f28-3e08-0000-000000000000</parentGroupId>
             <bundle>
                 <artifact>nifi-record-serialization-services-nar</artifact>
                 <group>org.apache.nifi</group>
@@ -445,99 +329,23 @@ Please note that the .csv must have a given structure.</description>
             <state>ENABLED</state>
             <type>org.apache.nifi.csv.CSVReader</type>
         </controllerServices>
-        <funnels>
-            <id>f133a948-8abb-379b-0000-000000000000</id>
-            <parentGroupId>15ed5f19-b68c-349a-0000-000000000000</parentGroupId>
-            <position>
-                <x>2227.7936155715297</x>
-                <y>71.88690213290593</y>
-            </position>
-        </funnels>
         <processGroups>
-            <id>f672951e-5d4e-38e3-0000-000000000000</id>
-            <parentGroupId>15ed5f19-b68c-349a-0000-000000000000</parentGroupId>
+            <id>11f608b7-b6c6-399a-0000-000000000000</id>
+            <parentGroupId>c3808f8b-5f28-3e08-0000-000000000000</parentGroupId>
             <position>
-                <x>1587.5367890167424</x>
+                <x>0.0</x>
                 <y>0.0</y>
             </position>
-            <comments>This flow will track how many times a given flow file routes through it.  If the number of times exceeds a specific maximum then it will route to the 'limit exceeded' port.  Otherwise it will route to 'retry'.
-
-The attributes it uses are 'retry.counter' and 'retry.maxcount'.  If the 'retry.maxcount' is specified on a given flowfile then it will be honored.  Otherwise a default of '3' is set as the maximum retry count.
-
-As the flowfile goes through this flow it increments the 'retry.maxcount' attribute by 1.  It then checks if this value exceeds 'retry.maxcount' and if so then it routes the flowfile to 'limit exceeded' otherwise it routes to 'retry'.
-
-So you can configure the 'retry' relationship to loop back to the process you want and you can send the 'limit exceeded' to move on from that process to something else.</comments>
+            <comments></comments>
             <contents>
                 <connections>
-                    <id>a5fc980c-2c6e-3550-0000-000000000000</id>
-                    <parentGroupId>f672951e-5d4e-38e3-0000-000000000000</parentGroupId>
-                    <backPressureDataSizeThreshold>0 MB</backPressureDataSizeThreshold>
-                    <backPressureObjectThreshold>10</backPressureObjectThreshold>
+                    <id>cbe40cbe-57b5-3bdc-0000-000000000000</id>
+                    <parentGroupId>11f608b7-b6c6-399a-0000-000000000000</parentGroupId>
+                    <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
+                    <backPressureObjectThreshold>10000</backPressureObjectThreshold>
                     <destination>
-                        <groupId>f672951e-5d4e-38e3-0000-000000000000</groupId>
-                        <id>47171212-befa-397b-0000-000000000000</id>
-                        <type>PROCESSOR</type>
-                    </destination>
-                    <flowFileExpiration>0 sec</flowFileExpiration>
-                    <labelIndex>1</labelIndex>
-                    <name></name>
-                    <selectedRelationships>unmatched</selectedRelationships>
-                    <source>
-                        <groupId>f672951e-5d4e-38e3-0000-000000000000</groupId>
-                        <id>e6d42587-a452-3e05-0000-000000000000</id>
-                        <type>PROCESSOR</type>
-                    </source>
-                    <zIndex>0</zIndex>
-                </connections>
-                <connections>
-                    <id>f9ec389d-8765-39ad-0000-000000000000</id>
-                    <parentGroupId>f672951e-5d4e-38e3-0000-000000000000</parentGroupId>
-                    <backPressureDataSizeThreshold>0 MB</backPressureDataSizeThreshold>
-                    <backPressureObjectThreshold>10</backPressureObjectThreshold>
-                    <destination>
-                        <groupId>f672951e-5d4e-38e3-0000-000000000000</groupId>
-                        <id>f8ee49df-b1b1-3b84-0000-000000000000</id>
-                        <type>PROCESSOR</type>
-                    </destination>
-                    <flowFileExpiration>0 sec</flowFileExpiration>
-                    <labelIndex>1</labelIndex>
-                    <name></name>
-                    <source>
-                        <groupId>f672951e-5d4e-38e3-0000-000000000000</groupId>
-                        <id>a897089a-5b2d-3fcf-0000-000000000000</id>
-                        <type>INPUT_PORT</type>
-                    </source>
-                    <zIndex>0</zIndex>
-                </connections>
-                <connections>
-                    <id>1e89948c-71ab-3946-0000-000000000000</id>
-                    <parentGroupId>f672951e-5d4e-38e3-0000-000000000000</parentGroupId>
-                    <backPressureDataSizeThreshold>0 MB</backPressureDataSizeThreshold>
-                    <backPressureObjectThreshold>10</backPressureObjectThreshold>
-                    <destination>
-                        <groupId>f672951e-5d4e-38e3-0000-000000000000</groupId>
-                        <id>e6d42587-a452-3e05-0000-000000000000</id>
-                        <type>PROCESSOR</type>
-                    </destination>
-                    <flowFileExpiration>0 sec</flowFileExpiration>
-                    <labelIndex>1</labelIndex>
-                    <name></name>
-                    <selectedRelationships>success</selectedRelationships>
-                    <source>
-                        <groupId>f672951e-5d4e-38e3-0000-000000000000</groupId>
-                        <id>f8ee49df-b1b1-3b84-0000-000000000000</id>
-                        <type>PROCESSOR</type>
-                    </source>
-                    <zIndex>0</zIndex>
-                </connections>
-                <connections>
-                    <id>4132664b-72bb-3c12-0000-000000000000</id>
-                    <parentGroupId>f672951e-5d4e-38e3-0000-000000000000</parentGroupId>
-                    <backPressureDataSizeThreshold>0 MB</backPressureDataSizeThreshold>
-                    <backPressureObjectThreshold>10</backPressureObjectThreshold>
-                    <destination>
-                        <groupId>f672951e-5d4e-38e3-0000-000000000000</groupId>
-                        <id>bbc004b8-884a-3360-0000-000000000000</id>
+                        <groupId>11f608b7-b6c6-399a-0000-000000000000</groupId>
+                        <id>2da12d9c-13b2-31ff-0000-000000000000</id>
                         <type>OUTPUT_PORT</type>
                     </destination>
                     <flowFileExpiration>0 sec</flowFileExpiration>
@@ -545,76 +353,51 @@ So you can configure the 'retry' relationship to loop back to the process you wa
                     <name></name>
                     <selectedRelationships>success</selectedRelationships>
                     <source>
-                        <groupId>f672951e-5d4e-38e3-0000-000000000000</groupId>
-                        <id>47171212-befa-397b-0000-000000000000</id>
+                        <groupId>11f608b7-b6c6-399a-0000-000000000000</groupId>
+                        <id>b3d9904b-8bbb-3116-0000-000000000000</id>
                         <type>PROCESSOR</type>
                     </source>
                     <zIndex>0</zIndex>
                 </connections>
                 <connections>
-                    <id>7955530e-3334-3929-0000-000000000000</id>
-                    <parentGroupId>f672951e-5d4e-38e3-0000-000000000000</parentGroupId>
-                    <backPressureDataSizeThreshold>0 MB</backPressureDataSizeThreshold>
-                    <backPressureObjectThreshold>10</backPressureObjectThreshold>
+                    <id>131d4040-463c-3943-0000-000000000000</id>
+                    <parentGroupId>11f608b7-b6c6-399a-0000-000000000000</parentGroupId>
+                    <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
+                    <backPressureObjectThreshold>10000</backPressureObjectThreshold>
                     <destination>
-                        <groupId>f672951e-5d4e-38e3-0000-000000000000</groupId>
-                        <id>83072343-0f92-35b2-0000-000000000000</id>
-                        <type>OUTPUT_PORT</type>
+                        <groupId>11f608b7-b6c6-399a-0000-000000000000</groupId>
+                        <id>b3d9904b-8bbb-3116-0000-000000000000</id>
+                        <type>PROCESSOR</type>
                     </destination>
                     <flowFileExpiration>0 sec</flowFileExpiration>
                     <labelIndex>1</labelIndex>
                     <name></name>
-                    <selectedRelationships>Try again</selectedRelationships>
+                    <selectedRelationships>success</selectedRelationships>
                     <source>
-                        <groupId>f672951e-5d4e-38e3-0000-000000000000</groupId>
-                        <id>e6d42587-a452-3e05-0000-000000000000</id>
+                        <groupId>11f608b7-b6c6-399a-0000-000000000000</groupId>
+                        <id>74607076-719e-3617-0000-000000000000</id>
                         <type>PROCESSOR</type>
                     </source>
                     <zIndex>0</zIndex>
                 </connections>
-                <inputPorts>
-                    <id>a897089a-5b2d-3fcf-0000-000000000000</id>
-                    <parentGroupId>f672951e-5d4e-38e3-0000-000000000000</parentGroupId>
-                    <position>
-                        <x>664.4999861037905</x>
-                        <y>144.719996142636</y>
-                    </position>
-                    <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
-                    <name>data</name>
-                    <state>STOPPED</state>
-                    <type>INPUT_PORT</type>
-                </inputPorts>
                 <outputPorts>
-                    <id>83072343-0f92-35b2-0000-000000000000</id>
-                    <parentGroupId>f672951e-5d4e-38e3-0000-000000000000</parentGroupId>
+                    <id>2da12d9c-13b2-31ff-0000-000000000000</id>
+                    <parentGroupId>11f608b7-b6c6-399a-0000-000000000000</parentGroupId>
                     <position>
-                        <x>403.8604444778141</x>
-                        <y>830.8000063660247</y>
-                    </position>
-                    <comments>Items sent to this port have not yet exceeded the maximum retry count.</comments>
-                    <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
-                    <name>retry</name>
-                    <state>STOPPED</state>
-                    <type>OUTPUT_PORT</type>
-                </outputPorts>
-                <outputPorts>
-                    <id>bbc004b8-884a-3360-0000-000000000000</id>
-                    <parentGroupId>f672951e-5d4e-38e3-0000-000000000000</parentGroupId>
-                    <position>
-                        <x>1065.7360243117982</x>
-                        <y>1094.012761492978</y>
+                        <x>1679.0</x>
+                        <y>616.0</y>
                     </position>
                     <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
-                    <name>limit exceeded</name>
+                    <name>success</name>
                     <state>STOPPED</state>
                     <type>OUTPUT_PORT</type>
                 </outputPorts>
                 <processors>
-                    <id>e6d42587-a452-3e05-0000-000000000000</id>
-                    <parentGroupId>f672951e-5d4e-38e3-0000-000000000000</parentGroupId>
+                    <id>b3d9904b-8bbb-3116-0000-000000000000</id>
+                    <parentGroupId>11f608b7-b6c6-399a-0000-000000000000</parentGroupId>
                     <position>
-                        <x>561.1387495315249</x>
-                        <y>524.8906704285247</y>
+                        <x>1201.6621069335354</x>
+                        <y>579.0464966583804</y>
                     </position>
                     <bundle>
                         <artifact>nifi-standard-nar</artifact>
@@ -627,15 +410,39 @@ So you can configure the 'retry' relationship to loop back to the process you wa
                         <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
                         <descriptors>
                             <entry>
-<key>Routing Strategy</key>
+<key>File to Fetch</key>
 <value>
-    <name>Routing Strategy</name>
+    <name>File to Fetch</name>
 </value>
                             </entry>
                             <entry>
-<key>Try again</key>
+<key>Completion Strategy</key>
 <value>
-    <name>Try again</name>
+    <name>Completion Strategy</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Move Destination Directory</key>
+<value>
+    <name>Move Destination Directory</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Move Conflict Strategy</key>
+<value>
+    <name>Move Conflict Strategy</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Log level when file not found</key>
+<value>
+    <name>Log level when file not found</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Log level when permission denied</key>
+<value>
+    <name>Log level when permission denied</name>
 </value>
                             </entry>
                         </descriptors>
@@ -644,12 +451,27 @@ So you can configure the 'retry' relationship to loop back to the process you wa
                         <penaltyDuration>30 sec</penaltyDuration>
                         <properties>
                             <entry>
-<key>Routing Strategy</key>
-<value>Route to Property name</value>
+<key>File to Fetch</key>
+<value>${absolute.path}/${filename}</value>
                             </entry>
                             <entry>
-<key>Try again</key>
-<value>${retry.counter:le('${retry.maxcount}')}</value>
+<key>Completion Strategy</key>
+<value>None</value>
+                            </entry>
+                            <entry>
+<key>Move Destination Directory</key>
+                            </entry>
+                            <entry>
+<key>Move Conflict Strategy</key>
+<value>Replace File</value>
+                            </entry>
+                            <entry>
+<key>Log level when file not found</key>
+<value>ERROR</value>
+                            </entry>
+                            <entry>
+<key>Log level when permission denied</key>
+<value>ERROR</value>
                             </entry>
                         </properties>
                         <runDurationMillis>0</runDurationMillis>
@@ -657,28 +479,36 @@ So you can configure the 'retry' relationship to loop back to the process you wa
                         <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
                         <yieldDuration>1 sec</yieldDuration>
                     </config>
-                    <name>Check Retry Count</name>
+                    <name>FetchFile</name>
                     <relationships>
-                        <autoTerminate>false</autoTerminate>
-                        <name>Try again</name>
+                        <autoTerminate>true</autoTerminate>
+                        <name>failure</name>
+                    </relationships>
+                    <relationships>
+                        <autoTerminate>true</autoTerminate>
+                        <name>not.found</name>
+                    </relationships>
+                    <relationships>
+                        <autoTerminate>true</autoTerminate>
+                        <name>permission.denied</name>
                     </relationships>
                     <relationships>
                         <autoTerminate>false</autoTerminate>
-                        <name>unmatched</name>
+                        <name>success</name>
                     </relationships>
                     <state>STOPPED</state>
                     <style/>
-                    <type>org.apache.nifi.processors.standard.RouteOnAttribute</type>
+                    <type>org.apache.nifi.processors.standard.FetchFile</type>
                 </processors>
                 <processors>
-                    <id>f8ee49df-b1b1-3b84-0000-000000000000</id>
-                    <parentGroupId>f672951e-5d4e-38e3-0000-000000000000</parentGroupId>
+                    <id>74607076-719e-3617-0000-000000000000</id>
+                    <parentGroupId>11f608b7-b6c6-399a-0000-000000000000</parentGroupId>
                     <position>
-                        <x>553.5000318801578</x>
-                        <y>292.12000636602465</y>
+                        <x>732.0</x>
+                        <y>575.0</y>
                     </position>
                     <bundle>
-                        <artifact>nifi-update-attribute-nar</artifact>
+                        <artifact>nifi-standard-nar</artifact>
                         <group>org.apache.nifi</group>
                         <version>1.6.0</version>
                     </bundle>
@@ -688,112 +518,69 @@ So you can configure the 'retry' relationship to loop back to the process you wa
                         <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
                         <descriptors>
                             <entry>
-<key>Delete Attributes Expression</key>
+<key>Input Directory</key>
 <value>
-    <name>Delete Attributes Expression</name>
+    <name>Input Directory</name>
 </value>
                             </entry>
                             <entry>
-<key>Store State</key>
+<key>Recurse Subdirectories</key>
 <value>
-    <name>Store State</name>
+    <name>Recurse Subdirectories</name>
 </value>
                             </entry>
                             <entry>
-<key>Stateful Variables Initial Value</key>
+<key>Input Directory Location</key>
 <value>
-    <name>Stateful Variables Initial Value</name>
+    <name>Input Directory Location</name>
 </value>
                             </entry>
                             <entry>
-<key>retry.counter</key>
+<key>File Filter</key>
 <value>
-    <name>retry.counter</name>
+    <name>File Filter</name>
 </value>
                             </entry>
                             <entry>
-<key>retry.maxcount</key>
+<key>Path Filter</key>
 <value>
-    <name>retry.maxcount</name>
-</value>
-                            </entry>
-                        </descriptors>
-                        <executionNode>ALL</executionNode>
-                        <lossTolerant>false</lossTolerant>
-                        <penaltyDuration>30 sec</penaltyDuration>
-                        <properties>
-                            <entry>
-<key>Delete Attributes Expression</key>
-                            </entry>
-                            <entry>
-<key>Store State</key>
-<value>Do not store state</value>
-                            </entry>
-                            <entry>
-<key>Stateful Variables Initial Value</key>
-                            </entry>
-                            <entry>
-<key>retry.counter</key>
-<value>${retry.counter:replaceNull('0'):plus(1)}</value>
-                            </entry>
-                            <entry>
-<key>retry.maxcount</key>
-<value>${retry.maxcount:replaceNull('3')}</value>
-                            </entry>
-                        </properties>
-                        <runDurationMillis>0</runDurationMillis>
-                        <schedulingPeriod>0 sec</schedulingPeriod>
-                        <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
-                        <yieldDuration>1 sec</yieldDuration>
-                    </config>
-                    <name>Set retry counter</name>
-                    <relationships>
-                        <autoTerminate>false</autoTerminate>
-                        <name>success</name>
-                    </relationships>
-                    <state>STOPPED</state>
-                    <style/>
-                    <type>org.apache.nifi.processors.attributes.UpdateAttribute</type>
-                </processors>
-                <processors>
-                    <id>47171212-befa-397b-0000-000000000000</id>
-                    <parentGroupId>f672951e-5d4e-38e3-0000-000000000000</parentGroupId>
-                    <position>
-                        <x>944.0461967026852</x>
-                        <y>827.0586792520415</y>
-                    </position>
-                    <bundle>
-                        <artifact>nifi-update-attribute-nar</artifact>
-                        <group>org.apache.nifi</group>
-                        <version>1.6.0</version>
-                    </bundle>
-                    <config>
-                        <bulletinLevel>WARN</bulletinLevel>
-                        <comments></comments>
-                        <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
-                        <descriptors>
-                            <entry>
-<key>Delete Attributes Expression</key>
-<value>
-    <name>Delete Attributes Expression</name>
+    <name>Path Filter</name>
 </value>
                             </entry>
                             <entry>
-<key>Store State</key>
+<key>Minimum File Age</key>
 <value>
-    <name>Store State</name>
+    <name>Minimum File Age</name>
 </value>
                             </entry>
                             <entry>
-<key>Stateful Variables Initial Value</key>
+<key>Maximum File Age</key>
 <value>
-    <name>Stateful Variables Initial Value</name>
+    <name>Maximum File Age</name>
 </value>
                             </entry>
                             <entry>
-<key>retry.counter</key>
+<key>Minimum File Size</key>
 <value>
-    <name>retry.counter</name>
+    <name>Minimum File Size</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Maximum File Size</key>
+<value>
+    <name>Maximum File Size</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Ignore Hidden Files</key>
+<value>
+    <name>Ignore Hidden Files</name>
+</value>
+                            </entry>
+                            <entry>
+<key>target-system-timestamp-precision</key>
+<value>
+    <name>target-system-timestamp-precision</name>
 </value>
                             </entry>
                         </descriptors>
@@ -802,18 +589,45 @@ So you can configure the 'retry' relationship to loop back to the process you wa
                         <penaltyDuration>30 sec</penaltyDuration>
                         <properties>
                             <entry>
-<key>Delete Attributes Expression</key>
+<key>Input Directory</key>
+<value>/data</value>
                             </entry>
                             <entry>
-<key>Store State</key>
-<value>Do not store state</value>
+<key>Recurse Subdirectories</key>
+<value>true</value>
                             </entry>
                             <entry>
-<key>Stateful Variables Initial Value</key>
+<key>Input Directory Location</key>
+<value>Local</value>
                             </entry>
                             <entry>
-<key>retry.counter</key>
-<value>0</value>
+<key>File Filter</key>
+<value>^.*\.csv$</value>
+                            </entry>
+                            <entry>
+<key>Path Filter</key>
+                            </entry>
+                            <entry>
+<key>Minimum File Age</key>
+<value>0 sec</value>
+                            </entry>
+                            <entry>
+<key>Maximum File Age</key>
+                            </entry>
+                            <entry>
+<key>Minimum File Size</key>
+<value>0 B</value>
+                            </entry>
+                            <entry>
+<key>Maximum File Size</key>
+                            </entry>
+                            <entry>
+<key>Ignore Hidden Files</key>
+<value>true</value>
+                            </entry>
+                            <entry>
+<key>target-system-timestamp-precision</key>
+<value>auto-detect</value>
                             </entry>
                         </properties>
                         <runDurationMillis>0</runDurationMillis>
@@ -821,341 +635,343 @@ So you can configure the 'retry' relationship to loop back to the process you wa
                         <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
                         <yieldDuration>1 sec</yieldDuration>
                     </config>
-                    <name>Reset retry counter</name>
+                    <name>ListFile</name>
                     <relationships>
                         <autoTerminate>false</autoTerminate>
                         <name>success</name>
                     </relationships>
                     <state>STOPPED</state>
                     <style/>
-                    <type>org.apache.nifi.processors.attributes.UpdateAttribute</type>
+                    <type>org.apache.nifi.processors.standard.ListFile</type>
                 </processors>
             </contents>
-            <name>Retry Check Loop</name>
+            <name>extract</name>
             <variables/>
         </processGroups>
         <processGroups>
-            <id>5b3ad8ab-d00a-3a59-0000-000000000000</id>
-            <parentGroupId>15ed5f19-b68c-349a-0000-000000000000</parentGroupId>
+            <id>15a184d0-e90a-3fd2-0000-000000000000</id>
+            <parentGroupId>c3808f8b-5f28-3e08-0000-000000000000</parentGroupId>
             <position>
-                <x>2061.6337128448677</x>
-                <y>282.96751403808594</y>
+                <x>3.9110216715750994</x>
+                <y>316.9994092170077</y>
             </position>
-            <comments>This flow will track how many times a given flow file routes through it.  If the number of times exceeds a specific maximum then it will route to the 'limit exceeded' port.  Otherwise it will route to 'retry'.
-
-The attributes it uses are 'retry.counter' and 'retry.maxcount'.  If the 'retry.maxcount' is specified on a given flowfile then it will be honored.  Otherwise a default of '3' is set as the maximum retry count.
-
-As the flowfile goes through this flow it increments the 'retry.maxcount' attribute by 1.  It then checks if this value exceeds 'retry.maxcount' and if so then it routes the flowfile to 'limit exceeded' otherwise it routes to 'retry'.
-
-So you can configure the 'retry' relationship to loop back to the process you want and you can send the 'limit exceeded' to move on from that process to something else.</comments>
+            <comments></comments>
             <contents>
                 <connections>
-                    <id>b6149368-1dc3-3fba-0000-000000000000</id>
-                    <parentGroupId>5b3ad8ab-d00a-3a59-0000-000000000000</parentGroupId>
-                    <backPressureDataSizeThreshold>0 MB</backPressureDataSizeThreshold>
-                    <backPressureObjectThreshold>10</backPressureObjectThreshold>
+                    <id>f6dc0e83-4b68-36a3-0000-000000000000</id>
+                    <parentGroupId>15a184d0-e90a-3fd2-0000-000000000000</parentGroupId>
+                    <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
+                    <backPressureObjectThreshold>10000</backPressureObjectThreshold>
                     <destination>
-                        <groupId>5b3ad8ab-d00a-3a59-0000-000000000000</groupId>
-                        <id>77f9ce30-03fd-3f89-0000-000000000000</id>
-                        <type>PROCESSOR</type>
-                    </destination>
-                    <flowFileExpiration>0 sec</flowFileExpiration>
-                    <labelIndex>1</labelIndex>
-                    <name></name>
-                    <selectedRelationships>unmatched</selectedRelationships>
-                    <source>
-                        <groupId>5b3ad8ab-d00a-3a59-0000-000000000000</groupId>
-                        <id>7b26db32-aecc-3be1-0000-000000000000</id>
-                        <type>PROCESSOR</type>
-                    </source>
-                    <zIndex>0</zIndex>
-                </connections>
-                <connections>
-                    <id>dbd78bd1-f9fd-3e4f-0000-000000000000</id>
-                    <parentGroupId>5b3ad8ab-d00a-3a59-0000-000000000000</parentGroupId>
-                    <backPressureDataSizeThreshold>0 MB</backPressureDataSizeThreshold>
-                    <backPressureObjectThreshold>10</backPressureObjectThreshold>
-                    <destination>
-                        <groupId>5b3ad8ab-d00a-3a59-0000-000000000000</groupId>
-                        <id>64dadd9c-e4a9-3bb0-0000-000000000000</id>
-                        <type>OUTPUT_PORT</type>
-                    </destination>
-                    <flowFileExpiration>0 sec</flowFileExpiration>
-                    <labelIndex>1</labelIndex>
-                    <name></name>
-                    <selectedRelationships>success</selectedRelationships>
-                    <source>
-                        <groupId>5b3ad8ab-d00a-3a59-0000-000000000000</groupId>
-                        <id>77f9ce30-03fd-3f89-0000-000000000000</id>
-                        <type>PROCESSOR</type>
-                    </source>
-                    <zIndex>0</zIndex>
-                </connections>
-                <connections>
-                    <id>e24123fd-ff95-35ec-0000-000000000000</id>
-                    <parentGroupId>5b3ad8ab-d00a-3a59-0000-000000000000</parentGroupId>
-                    <backPressureDataSizeThreshold>0 MB</backPressureDataSizeThreshold>
-                    <backPressureObjectThreshold>10</backPressureObjectThreshold>
-                    <destination>
-                        <groupId>5b3ad8ab-d00a-3a59-0000-000000000000</groupId>
-                        <id>7b26db32-aecc-3be1-0000-000000000000</id>
-                        <type>PROCESSOR</type>
-                    </destination>
-                    <flowFileExpiration>0 sec</flowFileExpiration>
-                    <labelIndex>1</labelIndex>
-                    <name></name>
-                    <selectedRelationships>success</selectedRelationships>
-                    <source>
-                        <groupId>5b3ad8ab-d00a-3a59-0000-000000000000</groupId>
-                        <id>98f9a396-2167-3969-0000-000000000000</id>
-                        <type>PROCESSOR</type>
-                    </source>
-                    <zIndex>0</zIndex>
-                </connections>
-                <connections>
-                    <id>22d818e4-d6e7-3ffe-0000-000000000000</id>
-                    <parentGroupId>5b3ad8ab-d00a-3a59-0000-000000000000</parentGroupId>
-                    <backPressureDataSizeThreshold>0 MB</backPressureDataSizeThreshold>
-                    <backPressureObjectThreshold>10</backPressureObjectThreshold>
-                    <destination>
-                        <groupId>5b3ad8ab-d00a-3a59-0000-000000000000</groupId>
-                        <id>98f9a396-2167-3969-0000-000000000000</id>
+                        <groupId>15a184d0-e90a-3fd2-0000-000000000000</groupId>
+                        <id>e6de6fd6-c64f-391b-0000-000000000000</id>
                         <type>PROCESSOR</type>
                     </destination>
                     <flowFileExpiration>0 sec</flowFileExpiration>
                     <labelIndex>1</labelIndex>
                     <name></name>
                     <source>
-                        <groupId>5b3ad8ab-d00a-3a59-0000-000000000000</groupId>
-                        <id>ae514d80-c130-306a-0000-000000000000</id>
+                        <groupId>15a184d0-e90a-3fd2-0000-000000000000</groupId>
+                        <id>03e7751f-4e2c-3955-0000-000000000000</id>
                         <type>INPUT_PORT</type>
                     </source>
                     <zIndex>0</zIndex>
                 </connections>
                 <connections>
-                    <id>3f504ed1-04ad-3738-0000-000000000000</id>
-                    <parentGroupId>5b3ad8ab-d00a-3a59-0000-000000000000</parentGroupId>
-                    <backPressureDataSizeThreshold>0 MB</backPressureDataSizeThreshold>
-                    <backPressureObjectThreshold>10</backPressureObjectThreshold>
+                    <id>738ea917-7492-31e6-0000-000000000000</id>
+                    <parentGroupId>15a184d0-e90a-3fd2-0000-000000000000</parentGroupId>
+                    <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
+                    <backPressureObjectThreshold>10000</backPressureObjectThreshold>
                     <destination>
-                        <groupId>5b3ad8ab-d00a-3a59-0000-000000000000</groupId>
-                        <id>f54cdbdc-a551-3857-0000-000000000000</id>
+                        <groupId>15a184d0-e90a-3fd2-0000-000000000000</groupId>
+                        <id>1f613f2f-8c55-3c90-0000-000000000000</id>
                         <type>OUTPUT_PORT</type>
                     </destination>
                     <flowFileExpiration>0 sec</flowFileExpiration>
                     <labelIndex>1</labelIndex>
                     <name></name>
-                    <selectedRelationships>Try again</selectedRelationships>
+                    <selectedRelationships>filter</selectedRelationships>
                     <source>
-                        <groupId>5b3ad8ab-d00a-3a59-0000-000000000000</groupId>
-                        <id>7b26db32-aecc-3be1-0000-000000000000</id>
+                        <groupId>15a184d0-e90a-3fd2-0000-000000000000</groupId>
+                        <id>e6de6fd6-c64f-391b-0000-000000000000</id>
                         <type>PROCESSOR</type>
                     </source>
                     <zIndex>0</zIndex>
                 </connections>
+                <controllerServices>
+                    <id>414f3e53-9ccb-39a9-0000-000000000000</id>
+                    <parentGroupId>15a184d0-e90a-3fd2-0000-000000000000</parentGroupId>
+                    <bundle>
+                        <artifact>nifi-record-serialization-services-nar</artifact>
+                        <group>org.apache.nifi</group>
+                        <version>1.6.0</version>
+                    </bundle>
+                    <comments></comments>
+                    <descriptors>
+                        <entry>
+                            <key>Schema Write Strategy</key>
+                            <value>
+<name>Schema Write Strategy</name>
+                            </value>
+                        </entry>
+                        <entry>
+                            <key>schema-access-strategy</key>
+                            <value>
+<name>schema-access-strategy</name>
+                            </value>
+                        </entry>
+                        <entry>
+                            <key>schema-registry</key>
+                            <value>
+<identifiesControllerService>org.apache.nifi.schemaregistry.services.SchemaRegistry</identifiesControllerService>
+<name>schema-registry</name>
+                            </value>
+                        </entry>
+                        <entry>
+                            <key>schema-name</key>
+                            <value>
+<name>schema-name</name>
+                            </value>
+                        </entry>
+                        <entry>
+                            <key>schema-version</key>
+                            <value>
+<name>schema-version</name>
+                            </value>
+                        </entry>
+                        <entry>
+                            <key>schema-branch</key>
+                            <value>
+<name>schema-branch</name>
+                            </value>
+                        </entry>
+                        <entry>
+                            <key>schema-text</key>
+                            <value>
+<name>schema-text</name>
+                            </value>
+                        </entry>
+                        <entry>
+                            <key>Date Format</key>
+                            <value>
+<name>Date Format</name>
+                            </value>
+                        </entry>
+                        <entry>
+                            <key>Time Format</key>
+                            <value>
+<name>Time Format</name>
+                            </value>
+                        </entry>
+                        <entry>
+                            <key>Timestamp Format</key>
+                            <value>
+<name>Timestamp Format</name>
+                            </value>
+                        </entry>
+                        <entry>
+                            <key>CSV Format</key>
+                            <value>
+<name>CSV Format</name>
+                            </value>
+                        </entry>
+                        <entry>
+                            <key>Value Separator</key>
+                            <value>
+<name>Value Separator</name>
+                            </value>
+                        </entry>
+                        <entry>
+                            <key>Include Header Line</key>
+                            <value>
+<name>Include Header Line</name>
+                            </value>
+                        </entry>
+                        <entry>
+                            <key>Quote Character</key>
+                            <value>
+<name>Quote Character</name>
+                            </value>
+                        </entry>
+                        <entry>
+                            <key>Escape Character</key>
+                            <value>
+<name>Escape Character</name>
+                            </value>
+                        </entry>
+                        <entry>
+                            <key>Comment Marker</key>
+                            <value>
+<name>Comment Marker</name>
+                            </value>
+                        </entry>
+                        <entry>
+                            <key>Null String</key>
+                            <value>
+<name>Null String</name>
+                            </value>
+                        </entry>
+                        <entry>
+                            <key>Trim Fields</key>
+                            <value>
+<name>Trim Fields</name>
+                            </value>
+                        </entry>
+                        <entry>
+                            <key>Quote Mode</key>
+                            <value>
+<name>Quote Mode</name>
+                            </value>
+                        </entry>
+                        <entry>
+                            <key>Record Separator</key>
+                            <value>
+<name>Record Separator</name>
+                            </value>
+                        </entry>
+                        <entry>
+                            <key>Include Trailing Delimiter</key>
+                            <value>
+<name>Include Trailing Delimiter</name>
+                            </value>
+                        </entry>
+                        <entry>
+                            <key>csvutils-character-set</key>
+                            <value>
+<name>csvutils-character-set</name>
+                            </value>
+                        </entry>
+                    </descriptors>
+                    <name>CSVRecordSetWriter</name>
+                    <persistsState>false</persistsState>
+                    <properties>
+                        <entry>
+                            <key>Schema Write Strategy</key>
+                            <value>no-schema</value>
+                        </entry>
+                        <entry>
+                            <key>schema-access-strategy</key>
+                            <value>schema-text-property</value>
+                        </entry>
+                        <entry>
+                            <key>schema-registry</key>
+                        </entry>
+                        <entry>
+                            <key>schema-name</key>
+                            <value>plugData</value>
+                        </entry>
+                        <entry>
+                            <key>schema-version</key>
+                        </entry>
+                        <entry>
+                            <key>schema-branch</key>
+                        </entry>
+                        <entry>
+                            <key>schema-text</key>
+                            <value>{
+	"namespace": "nifi",
+	"name": "data",
+	"type": "record",
+	"fields": [
+		{ "name": "id", "type": "long" },
+		{ "name": "timestamp", "type": "long" },
+		{ "name": "value", "type": "float" },
+		{ "name": "property", "type": "int" },
+		{ "name": "plug_id", "type": "int" },
+		{ "name": "household_id", "type": "int" },
+		{ "name": "house_id", "type": "int" }
+	]
+}</value>
+                        </entry>
+                        <entry>
+                            <key>Date Format</key>
+                        </entry>
+                        <entry>
+                            <key>Time Format</key>
+                        </entry>
+                        <entry>
+                            <key>Timestamp Format</key>
+                        </entry>
+                        <entry>
+                            <key>CSV Format</key>
+                            <value>custom</value>
+                        </entry>
+                        <entry>
+                            <key>Value Separator</key>
+                            <value>,</value>
+                        </entry>
+                        <entry>
+                            <key>Include Header Line</key>
+                            <value>false</value>
+                        </entry>
+                        <entry>
+                            <key>Quote Character</key>
+                            <value>"</value>
+                        </entry>
+                        <entry>
+                            <key>Escape Character</key>
+                            <value>\</value>
+                        </entry>
+                        <entry>
+                            <key>Comment Marker</key>
+                        </entry>
+                        <entry>
+                            <key>Null String</key>
+                        </entry>
+                        <entry>
+                            <key>Trim Fields</key>
+                            <value>true</value>
+                        </entry>
+                        <entry>
+                            <key>Quote Mode</key>
+                            <value>MINIMAL</value>
+                        </entry>
+                        <entry>
+                            <key>Record Separator</key>
+                            <value>\n</value>
+                        </entry>
+                        <entry>
+                            <key>Include Trailing Delimiter</key>
+                            <value>true</value>
+                        </entry>
+                        <entry>
+                            <key>csvutils-character-set</key>
+                            <value>UTF-8</value>
+                        </entry>
+                    </properties>
+                    <state>ENABLED</state>
+                    <type>org.apache.nifi.csv.CSVRecordSetWriter</type>
+                </controllerServices>
                 <inputPorts>
-                    <id>ae514d80-c130-306a-0000-000000000000</id>
-                    <parentGroupId>5b3ad8ab-d00a-3a59-0000-000000000000</parentGroupId>
+                    <id>03e7751f-4e2c-3955-0000-000000000000</id>
+                    <parentGroupId>15a184d0-e90a-3fd2-0000-000000000000</parentGroupId>
                     <position>
-                        <x>664.4999861037905</x>
-                        <y>144.719996142636</y>
+                        <x>589.2132348301182</x>
+                        <y>222.95309249446427</y>
                     </position>
                     <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
-                    <name>data</name>
+                    <name>file</name>
                     <state>STOPPED</state>
                     <type>INPUT_PORT</type>
                 </inputPorts>
                 <outputPorts>
-                    <id>f54cdbdc-a551-3857-0000-000000000000</id>
-                    <parentGroupId>5b3ad8ab-d00a-3a59-0000-000000000000</parentGroupId>
+                    <id>1f613f2f-8c55-3c90-0000-000000000000</id>
+                    <parentGroupId>15a184d0-e90a-3fd2-0000-000000000000</parentGroupId>
                     <position>
-                        <x>403.8604444778141</x>
-                        <y>830.8000063660247</y>
-                    </position>
-                    <comments>Items sent to this port have not yet exceeded the maximum retry count.</comments>
-                    <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
-                    <name>retry</name>
-                    <state>STOPPED</state>
-                    <type>OUTPUT_PORT</type>
-                </outputPorts>
-                <outputPorts>
-                    <id>64dadd9c-e4a9-3bb0-0000-000000000000</id>
-                    <parentGroupId>5b3ad8ab-d00a-3a59-0000-000000000000</parentGroupId>
-                    <position>
-                        <x>1065.7360243117982</x>
-                        <y>1094.012761492978</y>
+                        <x>1564.8248590662547</x>
+                        <y>197.58552381217658</y>
                     </position>
                     <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
-                    <name>limit exceeded</name>
+                    <name>filteredFile</name>
                     <state>STOPPED</state>
                     <type>OUTPUT_PORT</type>
                 </outputPorts>
                 <processors>
-                    <id>98f9a396-2167-3969-0000-000000000000</id>
-                    <parentGroupId>5b3ad8ab-d00a-3a59-0000-000000000000</parentGroupId>
+                    <id>e6de6fd6-c64f-391b-0000-000000000000</id>
+                    <parentGroupId>15a184d0-e90a-3fd2-0000-000000000000</parentGroupId>
                     <position>
-                        <x>553.5000318801578</x>
-                        <y>292.12000636602465</y>
-                    </position>
-                    <bundle>
-                        <artifact>nifi-update-attribute-nar</artifact>
-                        <group>org.apache.nifi</group>
-                        <version>1.6.0</version>
-                    </bundle>
-                    <config>
-                        <bulletinLevel>WARN</bulletinLevel>
-                        <comments></comments>
-                        <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
-                        <descriptors>
-                            <entry>
-<key>Delete Attributes Expression</key>
-<value>
-    <name>Delete Attributes Expression</name>
-</value>
-                            </entry>
-                            <entry>
-<key>Store State</key>
-<value>
-    <name>Store State</name>
-</value>
-                            </entry>
-                            <entry>
-<key>Stateful Variables Initial Value</key>
-<value>
-    <name>Stateful Variables Initial Value</name>
-</value>
-                            </entry>
-                            <entry>
-<key>retry.counter</key>
-<value>
-    <name>retry.counter</name>
-</value>
-                            </entry>
-                            <entry>
-<key>retry.maxcount</key>
-<value>
-    <name>retry.maxcount</name>
-</value>
-                            </entry>
-                        </descriptors>
-                        <executionNode>ALL</executionNode>
-                        <lossTolerant>false</lossTolerant>
-                        <penaltyDuration>30 sec</penaltyDuration>
-                        <properties>
-                            <entry>
-<key>Delete Attributes Expression</key>
-                            </entry>
-                            <entry>
-<key>Store State</key>
-<value>Do not store state</value>
-                            </entry>
-                            <entry>
-<key>Stateful Variables Initial Value</key>
-                            </entry>
-                            <entry>
-<key>retry.counter</key>
-<value>${retry.counter:replaceNull('0'):plus(1)}</value>
-                            </entry>
-                            <entry>
-<key>retry.maxcount</key>
-<value>${retry.maxcount:replaceNull('3')}</value>
-                            </entry>
-                        </properties>
-                        <runDurationMillis>0</runDurationMillis>
-                        <schedulingPeriod>0 sec</schedulingPeriod>
-                        <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
-                        <yieldDuration>1 sec</yieldDuration>
-                    </config>
-                    <name>Set retry counter</name>
-                    <relationships>
-                        <autoTerminate>false</autoTerminate>
-                        <name>success</name>
-                    </relationships>
-                    <state>STOPPED</state>
-                    <style/>
-                    <type>org.apache.nifi.processors.attributes.UpdateAttribute</type>
-                </processors>
-                <processors>
-                    <id>77f9ce30-03fd-3f89-0000-000000000000</id>
-                    <parentGroupId>5b3ad8ab-d00a-3a59-0000-000000000000</parentGroupId>
-                    <position>
-                        <x>944.0461967026852</x>
-                        <y>827.0586792520415</y>
-                    </position>
-                    <bundle>
-                        <artifact>nifi-update-attribute-nar</artifact>
-                        <group>org.apache.nifi</group>
-                        <version>1.6.0</version>
-                    </bundle>
-                    <config>
-                        <bulletinLevel>WARN</bulletinLevel>
-                        <comments></comments>
-                        <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
-                        <descriptors>
-                            <entry>
-<key>Delete Attributes Expression</key>
-<value>
-    <name>Delete Attributes Expression</name>
-</value>
-                            </entry>
-                            <entry>
-<key>Store State</key>
-<value>
-    <name>Store State</name>
-</value>
-                            </entry>
-                            <entry>
-<key>Stateful Variables Initial Value</key>
-<value>
-    <name>Stateful Variables Initial Value</name>
-</value>
-                            </entry>
-                            <entry>
-<key>retry.counter</key>
-<value>
-    <name>retry.counter</name>
-</value>
-                            </entry>
-                        </descriptors>
-                        <executionNode>ALL</executionNode>
-                        <lossTolerant>false</lossTolerant>
-                        <penaltyDuration>30 sec</penaltyDuration>
-                        <properties>
-                            <entry>
-<key>Delete Attributes Expression</key>
-                            </entry>
-                            <entry>
-<key>Store State</key>
-<value>Do not store state</value>
-                            </entry>
-                            <entry>
-<key>Stateful Variables Initial Value</key>
-                            </entry>
-                            <entry>
-<key>retry.counter</key>
-<value>0</value>
-                            </entry>
-                        </properties>
-                        <runDurationMillis>0</runDurationMillis>
-                        <schedulingPeriod>0 sec</schedulingPeriod>
-                        <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
-                        <yieldDuration>1 sec</yieldDuration>
-                    </config>
-                    <name>Reset retry counter</name>
-                    <relationships>
-                        <autoTerminate>false</autoTerminate>
-                        <name>success</name>
-                    </relationships>
-                    <state>STOPPED</state>
-                    <style/>
-                    <type>org.apache.nifi.processors.attributes.UpdateAttribute</type>
-                </processors>
-                <processors>
-                    <id>7b26db32-aecc-3be1-0000-000000000000</id>
-                    <parentGroupId>5b3ad8ab-d00a-3a59-0000-000000000000</parentGroupId>
-                    <position>
-                        <x>555.0000776565249</x>
-                        <y>527.9600063660247</y>
+                        <x>1056.136266886325</x>
+                        <y>136.48358994156922</y>
                     </position>
                     <bundle>
                         <artifact>nifi-standard-nar</artifact>
@@ -1168,15 +984,35 @@ So you can configure the 'retry' relationship to loop back to the process you wa
                         <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
                         <descriptors>
                             <entry>
-<key>Routing Strategy</key>
+<key>record-reader</key>
 <value>
-    <name>Routing Strategy</name>
+    <identifiesControllerService>org.apache.nifi.serialization.RecordReaderFactory</identifiesControllerService>
+    <name>record-reader</name>
 </value>
                             </entry>
                             <entry>
-<key>Try again</key>
+<key>record-writer</key>
 <value>
-    <name>Try again</name>
+    <identifiesControllerService>org.apache.nifi.serialization.RecordSetWriterFactory</identifiesControllerService>
+    <name>record-writer</name>
+</value>
+                            </entry>
+                            <entry>
+<key>include-zero-record-flowfiles</key>
+<value>
+    <name>include-zero-record-flowfiles</name>
+</value>
+                            </entry>
+                            <entry>
+<key>cache-schema</key>
+<value>
+    <name>cache-schema</name>
+</value>
+                            </entry>
+                            <entry>
+<key>filter</key>
+<value>
+    <name>filter</name>
 </value>
                             </entry>
                         </descriptors>
@@ -1185,12 +1021,24 @@ So you can configure the 'retry' relationship to loop back to the process you wa
                         <penaltyDuration>30 sec</penaltyDuration>
                         <properties>
                             <entry>
-<key>Routing Strategy</key>
-<value>Route to Property name</value>
+<key>record-reader</key>
+<value>6062332d-da65-3bde-0000-000000000000</value>
                             </entry>
                             <entry>
-<key>Try again</key>
-<value>${retry.counter:le('${retry.maxcount}')}</value>
+<key>record-writer</key>
+<value>414f3e53-9ccb-39a9-0000-000000000000</value>
+                            </entry>
+                            <entry>
+<key>include-zero-record-flowfiles</key>
+<value>true</value>
+                            </entry>
+                            <entry>
+<key>cache-schema</key>
+<value>true</value>
+                            </entry>
+                            <entry>
+<key>filter</key>
+<value>SELECT * FROM FLOWFILE WHERE "value" &lt;&gt; 0</value>
                             </entry>
                         </properties>
                         <runDurationMillis>0</runDurationMillis>
@@ -1198,137 +1046,33 @@ So you can configure the 'retry' relationship to loop back to the process you wa
                         <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
                         <yieldDuration>1 sec</yieldDuration>
                     </config>
-                    <name>Check Retry Count</name>
+                    <name>QueryRecord</name>
                     <relationships>
-                        <autoTerminate>false</autoTerminate>
-                        <name>Try again</name>
+                        <autoTerminate>true</autoTerminate>
+                        <name>failure</name>
                     </relationships>
                     <relationships>
                         <autoTerminate>false</autoTerminate>
-                        <name>unmatched</name>
+                        <name>filter</name>
+                    </relationships>
+                    <relationships>
+                        <autoTerminate>true</autoTerminate>
+                        <name>original</name>
                     </relationships>
                     <state>STOPPED</state>
                     <style/>
-                    <type>org.apache.nifi.processors.standard.RouteOnAttribute</type>
+                    <type>org.apache.nifi.processors.standard.QueryRecord</type>
                 </processors>
             </contents>
-            <name>Copy of Retry Check Loop</name>
+            <name>transform</name>
             <variables/>
         </processGroups>
         <processors>
-            <id>88191120-c413-33b4-0000-000000000000</id>
-            <parentGroupId>15ed5f19-b68c-349a-0000-000000000000</parentGroupId>
+            <id>9cfec32c-d6f8-3735-0000-000000000000</id>
+            <parentGroupId>c3808f8b-5f28-3e08-0000-000000000000</parentGroupId>
             <position>
-                <x>469.6621069335354</x>
-                <y>28.219176435175243</y>
-            </position>
-            <bundle>
-                <artifact>nifi-standard-nar</artifact>
-                <group>org.apache.nifi</group>
-                <version>1.6.0</version>
-            </bundle>
-            <config>
-                <bulletinLevel>WARN</bulletinLevel>
-                <comments></comments>
-                <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
-                <descriptors>
-                    <entry>
-                        <key>File to Fetch</key>
-                        <value>
-                            <name>File to Fetch</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>Completion Strategy</key>
-                        <value>
-                            <name>Completion Strategy</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>Move Destination Directory</key>
-                        <value>
-                            <name>Move Destination Directory</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>Move Conflict Strategy</key>
-                        <value>
-                            <name>Move Conflict Strategy</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>Log level when file not found</key>
-                        <value>
-                            <name>Log level when file not found</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>Log level when permission denied</key>
-                        <value>
-                            <name>Log level when permission denied</name>
-                        </value>
-                    </entry>
-                </descriptors>
-                <executionNode>ALL</executionNode>
-                <lossTolerant>false</lossTolerant>
-                <penaltyDuration>30 sec</penaltyDuration>
-                <properties>
-                    <entry>
-                        <key>File to Fetch</key>
-                        <value>${absolute.path}/${filename}</value>
-                    </entry>
-                    <entry>
-                        <key>Completion Strategy</key>
-                        <value>None</value>
-                    </entry>
-                    <entry>
-                        <key>Move Destination Directory</key>
-                    </entry>
-                    <entry>
-                        <key>Move Conflict Strategy</key>
-                        <value>Replace File</value>
-                    </entry>
-                    <entry>
-                        <key>Log level when file not found</key>
-                        <value>ERROR</value>
-                    </entry>
-                    <entry>
-                        <key>Log level when permission denied</key>
-                        <value>ERROR</value>
-                    </entry>
-                </properties>
-                <runDurationMillis>0</runDurationMillis>
-                <schedulingPeriod>0 sec</schedulingPeriod>
-                <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
-                <yieldDuration>1 sec</yieldDuration>
-            </config>
-            <name>FetchFile</name>
-            <relationships>
-                <autoTerminate>true</autoTerminate>
-                <name>failure</name>
-            </relationships>
-            <relationships>
-                <autoTerminate>true</autoTerminate>
-                <name>not.found</name>
-            </relationships>
-            <relationships>
-                <autoTerminate>true</autoTerminate>
-                <name>permission.denied</name>
-            </relationships>
-            <relationships>
-                <autoTerminate>false</autoTerminate>
-                <name>success</name>
-            </relationships>
-            <state>STOPPED</state>
-            <style/>
-            <type>org.apache.nifi.processors.standard.FetchFile</type>
-        </processors>
-        <processors>
-            <id>b35a9084-5c4f-33e4-0000-000000000000</id>
-            <parentGroupId>15ed5f19-b68c-349a-0000-000000000000</parentGroupId>
-            <position>
-                <x>923.2413531683719</x>
-                <y>25.847726640318328</y>
+                <x>666.9973346136844</x>
+                <y>90.72643452606053</y>
             </position>
             <bundle>
                 <artifact>nifi-parquet-nar</artifact>
@@ -1495,7 +1239,7 @@ So you can configure the 'retry' relationship to loop back to the process you wa
                     </entry>
                     <entry>
                         <key>record-reader</key>
-                        <value>1bd1b38e-125c-34b7-0000-000000000000</value>
+                        <value>6062332d-da65-3bde-0000-000000000000</value>
                     </entry>
                     <entry>
                         <key>Directory</key>
@@ -1551,30 +1295,30 @@ So you can configure the 'retry' relationship to loop back to the process you wa
             </config>
             <name>PutParquet</name>
             <relationships>
-                <autoTerminate>false</autoTerminate>
+                <autoTerminate>true</autoTerminate>
                 <name>failure</name>
             </relationships>
             <relationships>
-                <autoTerminate>false</autoTerminate>
+                <autoTerminate>true</autoTerminate>
                 <name>retry</name>
             </relationships>
             <relationships>
                 <autoTerminate>true</autoTerminate>
                 <name>success</name>
             </relationships>
-            <state>RUNNING</state>
+            <state>STOPPED</state>
             <style/>
             <type>org.apache.nifi.processors.parquet.PutParquet</type>
         </processors>
         <processors>
-            <id>1cdf4503-613c-3505-0000-000000000000</id>
-            <parentGroupId>15ed5f19-b68c-349a-0000-000000000000</parentGroupId>
+            <id>0e78b57a-6417-382e-0000-000000000000</id>
+            <parentGroupId>c3808f8b-5f28-3e08-0000-000000000000</parentGroupId>
             <position>
-                <x>923.8885498046875</x>
-                <y>288.17643343890416</y>
+                <x>680.7479920086857</x>
+                <y>569.5443065848526</y>
             </position>
             <bundle>
-                <artifact>nifi-kite-nar</artifact>
+                <artifact>nifi-hadoop-nar</artifact>
                 <group>org.apache.nifi</group>
                 <version>1.6.0</version>
             </bundle>
@@ -1584,57 +1328,94 @@ So you can configure the 'retry' relationship to loop back to the process you wa
                 <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
                 <descriptors>
                     <entry>
-                        <key>Hadoop configuration files</key>
+                        <key>Hadoop Configuration Resources</key>
                         <value>
-                            <name>Hadoop configuration files</name>
+                            <name>Hadoop Configuration Resources</name>
                         </value>
                     </entry>
                     <entry>
-                        <key>Record schema</key>
+                        <key>kerberos-credentials-service</key>
                         <value>
-                            <name>Record schema</name>
+                            <identifiesControllerService>org.apache.nifi.kerberos.KerberosCredentialsService</identifiesControllerService>
+                            <name>kerberos-credentials-service</name>
                         </value>
                     </entry>
                     <entry>
-                        <key>CSV charset</key>
+                        <key>Kerberos Principal</key>
                         <value>
-                            <name>CSV charset</name>
+                            <name>Kerberos Principal</name>
                         </value>
                     </entry>
                     <entry>
-                        <key>CSV delimiter</key>
+                        <key>Kerberos Keytab</key>
                         <value>
-                            <name>CSV delimiter</name>
+                            <name>Kerberos Keytab</name>
                         </value>
                     </entry>
                     <entry>
-                        <key>CSV quote character</key>
+                        <key>Kerberos Relogin Period</key>
                         <value>
-                            <name>CSV quote character</name>
+                            <name>Kerberos Relogin Period</name>
                         </value>
                     </entry>
                     <entry>
-                        <key>CSV escape character</key>
+                        <key>Additional Classpath Resources</key>
                         <value>
-                            <name>CSV escape character</name>
+                            <name>Additional Classpath Resources</name>
                         </value>
                     </entry>
                     <entry>
-                        <key>Use CSV header line</key>
+                        <key>Directory</key>
                         <value>
-                            <name>Use CSV header line</name>
+                            <name>Directory</name>
                         </value>
                     </entry>
                     <entry>
-                        <key>Lines to skip</key>
+                        <key>Conflict Resolution Strategy</key>
                         <value>
-                            <name>Lines to skip</name>
+                            <name>Conflict Resolution Strategy</name>
                         </value>
                     </entry>
                     <entry>
-                        <key>kite-compression-type</key>
+                        <key>Block Size</key>
                         <value>
-                            <name>kite-compression-type</name>
+                            <name>Block Size</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>IO Buffer Size</key>
+                        <value>
+                            <name>IO Buffer Size</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Replication</key>
+                        <value>
+                            <name>Replication</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Permissions umask</key>
+                        <value>
+                            <name>Permissions umask</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Remote Owner</key>
+                        <value>
+                            <name>Remote Owner</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Remote Group</key>
+                        <value>
+                            <name>Remote Group</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Compression codec</key>
+                        <value>
+                            <name>Compression codec</name>
                         </value>
                     </entry>
                 </descriptors>
@@ -1643,53 +1424,54 @@ So you can configure the 'retry' relationship to loop back to the process you wa
                 <penaltyDuration>30 sec</penaltyDuration>
                 <properties>
                     <entry>
-                        <key>Hadoop configuration files</key>
+                        <key>Hadoop Configuration Resources</key>
                         <value>/core-site.xml, /hdfs-site.xml</value>
                     </entry>
                     <entry>
-                        <key>Record schema</key>
-                        <value>{
-	"namespace": "nifi",
-	"name": "data",
-	"type": "record",
-	"fields": [
-		{ "name": "id", "type": "long" },
-		{ "name": "timestamp", "type": "long" },
-		{ "name": "value", "type": "float" },
-		{ "name": "property", "type": "int" },
-		{ "name": "plug_id", "type": "int" },
-		{ "name": "household_id", "type": "int" },
-		{ "name": "house_id", "type": "int" }
-	]
-}</value>
+                        <key>kerberos-credentials-service</key>
                     </entry>
                     <entry>
-                        <key>CSV charset</key>
-                        <value>utf8</value>
+                        <key>Kerberos Principal</key>
                     </entry>
                     <entry>
-                        <key>CSV delimiter</key>
-                        <value>,</value>
+                        <key>Kerberos Keytab</key>
                     </entry>
                     <entry>
-                        <key>CSV quote character</key>
-                        <value>"</value>
+                        <key>Kerberos Relogin Period</key>
+                        <value>4 hours</value>
                     </entry>
                     <entry>
-                        <key>CSV escape character</key>
-                        <value>\</value>
+                        <key>Additional Classpath Resources</key>
                     </entry>
                     <entry>
-                        <key>Use CSV header line</key>
-                        <value>false</value>
+                        <key>Directory</key>
+                        <value>/nifi</value>
                     </entry>
                     <entry>
-                        <key>Lines to skip</key>
-                        <value>0</value>
+                        <key>Conflict Resolution Strategy</key>
+                        <value>fail</value>
                     </entry>
                     <entry>
-                        <key>kite-compression-type</key>
-                        <value>SNAPPY</value>
+                        <key>Block Size</key>
+                    </entry>
+                    <entry>
+                        <key>IO Buffer Size</key>
+                    </entry>
+                    <entry>
+                        <key>Replication</key>
+                    </entry>
+                    <entry>
+                        <key>Permissions umask</key>
+                    </entry>
+                    <entry>
+                        <key>Remote Owner</key>
+                    </entry>
+                    <entry>
+                        <key>Remote Group</key>
+                    </entry>
+                    <entry>
+                        <key>Compression codec</key>
+                        <value>NONE</value>
                     </entry>
                 </properties>
                 <runDurationMillis>0</runDurationMillis>
@@ -1697,29 +1479,25 @@ So you can configure the 'retry' relationship to loop back to the process you wa
                 <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
                 <yieldDuration>1 sec</yieldDuration>
             </config>
-            <name>ConvertCSVToAvro</name>
+            <name>PutHDFS</name>
             <relationships>
                 <autoTerminate>true</autoTerminate>
                 <name>failure</name>
             </relationships>
             <relationships>
                 <autoTerminate>true</autoTerminate>
-                <name>incompatible</name>
-            </relationships>
-            <relationships>
-                <autoTerminate>false</autoTerminate>
                 <name>success</name>
             </relationships>
             <state>STOPPED</state>
             <style/>
-            <type>org.apache.nifi.processors.kite.ConvertCSVToAvro</type>
+            <type>org.apache.nifi.processors.hadoop.PutHDFS</type>
         </processors>
         <processors>
-            <id>2b846daf-80f5-3a77-0000-000000000000</id>
-            <parentGroupId>15ed5f19-b68c-349a-0000-000000000000</parentGroupId>
+            <id>186c998e-3ac9-35c1-0000-000000000000</id>
+            <parentGroupId>c3808f8b-5f28-3e08-0000-000000000000</parentGroupId>
             <position>
-                <x>1438.872851828313</x>
-                <y>296.9645032928844</y>
+                <x>1182.6288332736256</x>
+                <y>361.8432111786266</y>
             </position>
             <bundle>
                 <artifact>nifi-hadoop-nar</artifact>
@@ -1885,7 +1663,7 @@ So you can configure the 'retry' relationship to loop back to the process you wa
             </config>
             <name>PutHDFS</name>
             <relationships>
-                <autoTerminate>false</autoTerminate>
+                <autoTerminate>true</autoTerminate>
                 <name>failure</name>
             </relationships>
             <relationships>
@@ -1897,14 +1675,14 @@ So you can configure the 'retry' relationship to loop back to the process you wa
             <type>org.apache.nifi.processors.hadoop.PutHDFS</type>
         </processors>
         <processors>
-            <id>5bf6ef45-de0b-330c-0000-000000000000</id>
-            <parentGroupId>15ed5f19-b68c-349a-0000-000000000000</parentGroupId>
+            <id>3743c9ab-5b5c-3bd3-0000-000000000000</id>
+            <parentGroupId>c3808f8b-5f28-3e08-0000-000000000000</parentGroupId>
             <position>
-                <x>0.0</x>
-                <y>24.172679776794766</y>
+                <x>667.64453125</x>
+                <y>353.05514132464634</y>
             </position>
             <bundle>
-                <artifact>nifi-standard-nar</artifact>
+                <artifact>nifi-kite-nar</artifact>
                 <group>org.apache.nifi</group>
                 <version>1.6.0</version>
             </bundle>
@@ -1914,69 +1692,57 @@ So you can configure the 'retry' relationship to loop back to the process you wa
                 <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
                 <descriptors>
                     <entry>
-                        <key>Input Directory</key>
+                        <key>Hadoop configuration files</key>
                         <value>
-                            <name>Input Directory</name>
+                            <name>Hadoop configuration files</name>
                         </value>
                     </entry>
                     <entry>
-                        <key>Recurse Subdirectories</key>
+                        <key>Record schema</key>
                         <value>
-                            <name>Recurse Subdirectories</name>
+                            <name>Record schema</name>
                         </value>
                     </entry>
                     <entry>
-                        <key>Input Directory Location</key>
+                        <key>CSV charset</key>
                         <value>
-                            <name>Input Directory Location</name>
+                            <name>CSV charset</name>
                         </value>
                     </entry>
                     <entry>
-                        <key>File Filter</key>
+                        <key>CSV delimiter</key>
                         <value>
-                            <name>File Filter</name>
+                            <name>CSV delimiter</name>
                         </value>
                     </entry>
                     <entry>
-                        <key>Path Filter</key>
+                        <key>CSV quote character</key>
                         <value>
-                            <name>Path Filter</name>
+                            <name>CSV quote character</name>
                         </value>
                     </entry>
                     <entry>
-                        <key>Minimum File Age</key>
+                        <key>CSV escape character</key>
                         <value>
-                            <name>Minimum File Age</name>
+                            <name>CSV escape character</name>
                         </value>
                     </entry>
                     <entry>
-                        <key>Maximum File Age</key>
+                        <key>Use CSV header line</key>
                         <value>
-                            <name>Maximum File Age</name>
+                            <name>Use CSV header line</name>
                         </value>
                     </entry>
                     <entry>
-                        <key>Minimum File Size</key>
+                        <key>Lines to skip</key>
                         <value>
-                            <name>Minimum File Size</name>
+                            <name>Lines to skip</name>
                         </value>
                     </entry>
                     <entry>
-                        <key>Maximum File Size</key>
+                        <key>kite-compression-type</key>
                         <value>
-                            <name>Maximum File Size</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>Ignore Hidden Files</key>
-                        <value>
-                            <name>Ignore Hidden Files</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>target-system-timestamp-precision</key>
-                        <value>
-                            <name>target-system-timestamp-precision</name>
+                            <name>kite-compression-type</name>
                         </value>
                     </entry>
                 </descriptors>
@@ -1985,45 +1751,53 @@ So you can configure the 'retry' relationship to loop back to the process you wa
                 <penaltyDuration>30 sec</penaltyDuration>
                 <properties>
                     <entry>
-                        <key>Input Directory</key>
-                        <value>/data</value>
+                        <key>Hadoop configuration files</key>
+                        <value>/core-site.xml, /hdfs-site.xml</value>
                     </entry>
                     <entry>
-                        <key>Recurse Subdirectories</key>
-                        <value>true</value>
+                        <key>Record schema</key>
+                        <value>{
+	"namespace": "nifi",
+	"name": "data",
+	"type": "record",
+	"fields": [
+		{ "name": "id", "type": "long" },
+		{ "name": "timestamp", "type": "long" },
+		{ "name": "value", "type": "float" },
+		{ "name": "property", "type": "int" },
+		{ "name": "plug_id", "type": "int" },
+		{ "name": "household_id", "type": "int" },
+		{ "name": "house_id", "type": "int" }
+	]
+}</value>
                     </entry>
                     <entry>
-                        <key>Input Directory Location</key>
-                        <value>Local</value>
+                        <key>CSV charset</key>
+                        <value>utf8</value>
                     </entry>
                     <entry>
-                        <key>File Filter</key>
-                        <value>[^\.].*</value>
+                        <key>CSV delimiter</key>
+                        <value>,</value>
                     </entry>
                     <entry>
-                        <key>Path Filter</key>
+                        <key>CSV quote character</key>
+                        <value>"</value>
                     </entry>
                     <entry>
-                        <key>Minimum File Age</key>
-                        <value>0 sec</value>
+                        <key>CSV escape character</key>
+                        <value>\</value>
                     </entry>
                     <entry>
-                        <key>Maximum File Age</key>
+                        <key>Use CSV header line</key>
+                        <value>false</value>
                     </entry>
                     <entry>
-                        <key>Minimum File Size</key>
-                        <value>0 B</value>
+                        <key>Lines to skip</key>
+                        <value>0</value>
                     </entry>
                     <entry>
-                        <key>Maximum File Size</key>
-                    </entry>
-                    <entry>
-                        <key>Ignore Hidden Files</key>
-                        <value>true</value>
-                    </entry>
-                    <entry>
-                        <key>target-system-timestamp-precision</key>
-                        <value>auto-detect</value>
+                        <key>kite-compression-type</key>
+                        <value>SNAPPY</value>
                     </entry>
                 </properties>
                 <runDurationMillis>0</runDurationMillis>
@@ -2031,15 +1805,23 @@ So you can configure the 'retry' relationship to loop back to the process you wa
                 <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
                 <yieldDuration>1 sec</yieldDuration>
             </config>
-            <name>ListFile</name>
+            <name>ConvertCSVToAvro</name>
+            <relationships>
+                <autoTerminate>true</autoTerminate>
+                <name>failure</name>
+            </relationships>
+            <relationships>
+                <autoTerminate>true</autoTerminate>
+                <name>incompatible</name>
+            </relationships>
             <relationships>
                 <autoTerminate>false</autoTerminate>
                 <name>success</name>
             </relationships>
             <state>STOPPED</state>
             <style/>
-            <type>org.apache.nifi.processors.standard.ListFile</type>
+            <type>org.apache.nifi.processors.kite.ConvertCSVToAvro</type>
         </processors>
     </snippet>
-    <timestamp>05/15/2018 20:37:20 UTC</timestamp>
+    <timestamp>05/23/2018 16:45:05 UTC</timestamp>
 </template>
