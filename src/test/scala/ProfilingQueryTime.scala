@@ -9,6 +9,8 @@ import org.apache.spark.sql.types.StructType
 import utils.{CalendarManager, ProfilingTime}
 import com.databricks.spark.avro._
 
+import scala.collection.immutable.ListMap
+
 
 class ProfilingQueryTime extends FlatSpec {
 
@@ -140,16 +142,18 @@ class ProfilingQueryTime extends FlatSpec {
 
     val file = new PrintWriter(new File(TIMES_FILENAME))
 
+    var keyList = ListMap(res.toSeq.sortBy(_._1):_*)
+
     // header
-    for (k <- res.keys) {
-      file.write(k)
+    for (k <- keyList) {
+      file.write(k._1)
       file.write(",")
     }
     file.write("\n")
 
     // results
-    for (k <- res.keys) {
-      file.write(res(k).toString)
+    for (k <- keyList) {
+      file.write(k._2.toString)
       file.write(",")
     }
 

@@ -100,7 +100,7 @@ object QueryTwoSQL {
 
   }
 
-
+ // TODO
   private def executeOnSlotUDF(df: DataFrame): Unit = {
     val data = df
       // Keep only value for energy consumption
@@ -172,7 +172,7 @@ object QueryTwoSQL {
       .orderBy("house_id", "window")
       .select("*")
 
-    data.show()
+//    data.show
   }
 
 

@@ -1,7 +1,7 @@
 import config.{Properties, SmartPlugConfig}
 import org.apache.spark.sql.types.{DataTypes, StructType}
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import utils.{CalendarManager, udfDataFunction}
+import utils.udfDataFunction
 import org.apache.spark.sql.functions._
 import com.databricks.spark.avro._
 
@@ -64,7 +64,7 @@ object QueryThreeSQL {
       // Ranking sorted by decreasing value of score
       .orderBy(desc("score"))
 
-    spark.time(res.show(100))
+//    spark.time(res.show(100))
   }
 
   def main(args: Array[String]): Unit ={

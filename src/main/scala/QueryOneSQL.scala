@@ -65,7 +65,7 @@ object QueryOneSQL {
       .sort($"house_id")
 
 
-    spark.time(res.show(100))
+//    spark.time(res.show(100))
 
   }
 
