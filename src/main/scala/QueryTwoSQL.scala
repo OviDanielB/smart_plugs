@@ -31,6 +31,18 @@ object QueryTwoSQL {
     executeOnSlot(df)
   }
 
+  def executeOnCsvUDF(): Unit = {
+
+    // Load DataFrame from parquet file
+    val df = spark.read.format("csv")
+      .option("header", "false")
+      .option("delimiter", ",")
+      .schema(customSchema)
+      .load(SmartPlugConfig.get(Properties.CSV_DATASET_URL)).persist()
+
+    executeOnSlotUDF(df)
+  }
+
   def executeOnParquet(): Unit = {
     val df = spark.read.parquet(SmartPlugConfig.get(Properties.PARQUET_DATASET_URL)).persist()
     executeOnSlot(df)
@@ -88,13 +100,47 @@ object QueryTwoSQL {
 
   }
 
+
+  private def executeOnSlotUDF(df: DataFrame): Unit = {
+    val data = df
+      // Keep only value for energy consumption
+      .where("property == 0")
+      // Convert value to DecimalType for avoiding float precision issues
+      .withColumn("value", $"value".cast(DataTypes.createDecimalType(20, 5)))
+
+      // For each plug and for each time slot, compute difference between the first value in the time slot and the last.
+      // The result is the consumption for a plug in a given time slot
+
+      .withColumn("slot", udfDataFunction.getTimeSlotUDF('timestamp))
+      .withColumn("day", udfDataFunction.getDayOfYearUDF('timestamp))
+
+      .groupBy($"house_id", $"household_id", $"plug_id", $"slot", $"day")
+      .agg(
+        when(last("value") >= first("value"), last("value") - first("value"))
+          .otherwise(last("value"))
+          .alias("plug_consumption")
+      )
+      // The sum of the energy consumption of each plug of a given house is the consumption for the house
+      .groupBy("house_id", "slot")
+      .agg(sum($"plug_consumption_by_day").as("home_consumption"))
+
+      //Then we can compute statistics into each time slot over all the days for each house
+      .groupBy($"house_id", $"slot")
+      .agg(avg("home_consumption").as("avg"), stddev("home_consumption").as("stddev"))
+
+      .orderBy("house_id", "slot")
+      .select("*")
+
+    data.show()
+  }
+
   /**
     * Compute energy consumption in a period as the difference between the value of the last record of the period
     * and the first. It does NOT keep into account errors obtained for plugs that have been reset into a period
     *
     * @param df DataFrame
     */
-  private def executeOnSlot(df: DataFrame): Unit = {
+  def executeOnSlot(df: DataFrame): Unit = {
 
     val data = df
       // Keep only value for energy consumption
@@ -132,7 +178,7 @@ object QueryTwoSQL {
 
   def main(args: Array[String]): Unit = {
     ProfilingTime.time {
-      executeOnCsv()
+      executeOnCsvUDF()
     }
 
 //    ProfilingTime.time {

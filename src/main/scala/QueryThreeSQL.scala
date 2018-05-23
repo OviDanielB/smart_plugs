@@ -3,6 +3,7 @@ import org.apache.spark.sql.types.{DataTypes, StructType}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import utils.{CalendarManager, udfDataFunction}
 import org.apache.spark.sql.functions._
+import com.databricks.spark.avro._
 
 
 object QueryThreeSQL {
@@ -15,7 +16,7 @@ object QueryThreeSQL {
 
 
 
-  def executeCSV(): Unit = {
+  def executeOnCSV(): Unit = {
 
     val df = spark.read.format("csv")
       .option("header", "false")
@@ -27,8 +28,12 @@ object QueryThreeSQL {
   }
 
   def executeOnParquet(): Unit = {
+    val df = spark.read.parquet(SmartPlugConfig.get(Properties.PARQUET_DATASET_URL)).persist()
+    execute(df)
+  }
 
-    val df = spark.read.load(SmartPlugConfig.get(Properties.PARQUET_DATASET_URL))
+  def executeOnAvro(): Unit = {
+    val df = spark.read.avro(SmartPlugConfig.get(Properties.AVRO_DATASET_URL)).persist()
     execute(df)
   }
 
@@ -63,7 +68,7 @@ object QueryThreeSQL {
   }
 
   def main(args: Array[String]): Unit ={
-    executeCSV()
+    executeOnCSV()
   }
 
 }

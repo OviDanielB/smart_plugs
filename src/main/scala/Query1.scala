@@ -3,6 +3,8 @@ import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Row
 import utils.{CSVParser, ProfilingTime}
+import com.databricks.spark.avro._
+
 
 object Query1 extends Serializable {
 
@@ -68,10 +70,10 @@ object Query1 extends Serializable {
   def executeFasterParquet(sc: SparkContext, filePath: String): Array[Int] = {
     val spark = SparkController.defaultSparkSession()
     val data_p = spark.read.parquet(filePath)
-    executeFasterParquet(sc, data_p.rdd)
+    executeParquet(sc, data_p.rdd)
   }
 
-  def executeFasterParquet(sc: SparkContext, data: RDD[Row]): Array[Int] = {
+  def executeParquet(sc: SparkContext, data: RDD[Row]): Array[Int] = {
 
     val q = data
       .flatMap {
@@ -102,6 +104,7 @@ object Query1 extends Serializable {
 
     val spark = SparkController.defaultSparkSession()
     val data_p = spark.read.parquet(SmartPlugConfig.get(Properties.PARQUET_DATASET_URL))
+    val data_a = spark.read.avro(SmartPlugConfig.get(Properties.AVRO_DATASET_URL))
 
     ProfilingTime.time {
       executeCSV(sc, data)                  // 6,6
@@ -110,7 +113,10 @@ object Query1 extends Serializable {
       executeFasterCSV(sc, data)            // 2,4 BEST
     }
     ProfilingTime.time {
-      executeFasterParquet(sc, data_p.rdd)  // 2,7
+      executeParquet(sc, data_p.rdd)  // 2,7
     }
+//    ProfilingTime.time {
+//      executeAvro(sc, data_a)
+//    }
   }
 }

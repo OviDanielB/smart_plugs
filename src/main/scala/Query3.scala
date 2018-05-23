@@ -11,6 +11,195 @@ object Query3 extends Serializable {
     : Array[((Int,Int,Int,Int),Double)] = {
 
     val q = data
+      .flatMap(
+        line => {
+          val f = line.split(",")
+          val house = f(6).toInt
+          val household = f(5).toInt
+          val plug = f(4).toInt
+          val property = f(3).toInt
+          val timestamp = f(1).toLong
+          val value = f(2).toFloat
+
+          if (property == 0 && value != 0) {
+            val rate = cm.getPeriodRate(timestamp)
+            val day = cm.getDayOfYear(timestamp)
+            Some((house, household, plug, rate, day),
+              new MaxMinHolder(value, value))
+          } else None
+        }
+      )
+      .reduceByKey(
+        (x,y) => Statistics.computeOnlineMaxMin(x,y)
+      )
+      .map(
+        d =>  {
+          val house = d._1._1
+          val household = d._1._2
+          val plug = d._1._3
+          val rate = d._1._4
+          val value = d._2
+
+          ((house, household, plug, rate), (value.delta(), 1))
+        }
+      )
+      .reduceByKey {
+        case ((sum1, count1), (sum2, count2)) =>
+
+          (sum1 + sum2, count1 + count2)
+      }
+      .map (
+        d => {
+          val house = d._1._1
+          val household = d._1._2
+          val plug = d._1._3
+          val rate = d._1._4
+          val sum = d._2._1
+          val count = d._2._2
+          val avg = sum/count
+
+          if (rate < 0)
+            ((house, household, plug, math.abs(rate)), -avg)
+          else
+            ((house, household, plug, math.abs(rate)), avg)
+        }
+      )
+      .reduceByKey(_+_)
+      .sortBy(_._2, false)
+      .collect()
+
+    for (x<-q) {
+      println(x)
+    }
+
+    q
+  }
+
+  def executeFasterCSV(sc: SparkContext, data: RDD[String], cm: CalendarManager)
+    : Array[((Int,Int,Int,Int),Double)] = {
+
+    val q = data
+      .map(
+        line => CSVParser.parse(line)
+      )
+      .flatMap(
+        d =>
+          if (d.get.isWorkMeasurement() && d.isDefined) {
+            val rate = cm.getPeriodRate(d.get.timestamp)
+            val day = cm.getDayOfMonth(d.get.timestamp)
+            Some((d.get.house_id, d.get.household_id, d.get.plug_id, rate, day),
+              new MaxMinHolder(d.get.value,d.get.value))
+          } else None
+      )
+      .reduceByKey(
+        (x,y) => Statistics.computeOnlineMaxMin(x,y)
+      )
+      .map(
+        d =>  {
+          val house = d._1._1
+          val household = d._1._2
+          val plug = d._1._3
+          val rate = d._1._4
+          val value = d._2
+
+          ((house, household, plug, rate), (value.delta(), 1))
+        }
+      )
+      .reduceByKey {
+        case ((sum1, count1), (sum2, count2)) =>
+
+          (sum1 + sum2, count1 + count2)
+      }
+      .map (
+        d => {
+          val house = d._1._1
+          val household = d._1._2
+          val plug = d._1._3
+          val rate = d._1._4
+          val sum = d._2._1
+          val count = d._2._2
+          val avg = sum/count
+
+          if (rate < 0)
+            ((house, household, plug, math.abs(rate)), -avg)
+          else
+            ((house, household, plug, math.abs(rate)), avg)
+        }
+      )
+      .reduceByKey(_+_)
+      .sortBy(_._2, false)
+      .collect()
+
+    q
+  }
+
+  def executeParquet(sc: SparkContext, data: RDD[Row], cm: CalendarManager)
+  : Array[((Int,Int,Int,Int),Double)] = {
+
+    val q = data
+      .flatMap(
+        f => {
+          val house = f(6).toString.toInt
+          val household = f(5).toString.toInt
+          val plug = f(4).toString.toInt
+          val property = f(3).toString.toInt
+          val timestamp = f(1).toString.toLong
+          val value = f(2).toString.toFloat
+
+          if (property == 0 && value != 0) {
+            val rate = cm.getPeriodRate(timestamp)
+            val day = cm.getDayOfYear(timestamp)
+            Some((house, household, plug, rate, day),
+              new MaxMinHolder(value, value))
+          } else None
+        }
+      )
+      .reduceByKey(
+        (x,y) => Statistics.computeOnlineMaxMin(x,y)
+      )
+      .map(
+        d =>  {
+          val house = d._1._1
+          val household = d._1._2
+          val plug = d._1._3
+          val rate = d._1._4
+          val value = d._2
+
+          ((house, household, plug, rate), (value.delta(), 1))
+        }
+      )
+      .reduceByKey {
+        case ((sum1, count1), (sum2, count2)) =>
+
+          (sum1 + sum2, count1 + count2)
+      }
+      .map (
+        d => {
+          val house = d._1._1
+          val household = d._1._2
+          val plug = d._1._3
+          val rate = d._1._4
+          val sum = d._2._1
+          val count = d._2._2
+          val avg = sum/count
+
+          if (rate < 0)
+            ((house, household, plug, math.abs(rate)), -avg)
+          else
+            ((house, household, plug, math.abs(rate)), avg)
+        }
+      )
+      .reduceByKey(_+_)
+      .sortBy(_._2, false)
+      .collect()
+
+    q
+  }
+
+  def executeCSV_Sort(sc: SparkContext, data: RDD[String], cm: CalendarManager)
+    : Array[((Int,Int,Int,Int),Double)] = {
+
+    val q = data
       .map(
         line => CSVParser.parse(line)
       )
@@ -38,31 +227,28 @@ object Query3 extends Serializable {
       )
       .reduceByKey(
         (x,y) => Statistics.computeOnlineMean(x,y) // average on month per rate
-      ).map {
+      )
+      .map {
         case (k, v) =>
           if (k._4 < 0)  // if lowest rate invert sign
             ((k._1, k._2, k._3, math.abs(k._4)), -v.mean())
           else
             ((k._1, k._2, k._3, math.abs(k._4)), v.mean())
-        }
+      }
       .reduceByKey(_+_)
       .sortBy(_._2, false)
       .collect()
 
-    for (x<-q) {
-      println(x._1,x._2)
-    }
-
     q
   }
 
-  def executeCSV(sc: SparkContext, cm: CalendarManager, filePath: String):
+  def executeCSV_Sort(sc: SparkContext, cm: CalendarManager, filePath: String):
   Array[((Int,Int,Int,Int),Double)] = {
     val data = sc.textFile(filePath)
-    executeCSV(sc,data,cm)
+    executeCSV_Sort(sc,data,cm)
   }
 
-  def executeFasterCSV(sc: SparkContext, data: RDD[String], cm: CalendarManager)
+  def executeFasterCSV_Sort(sc: SparkContext, data: RDD[String], cm: CalendarManager)
     : Array[((Int,Int,Int,Int),Double)] = {
 
     val q = data
@@ -113,7 +299,7 @@ object Query3 extends Serializable {
     q
   }
 
-  def executeSlowerParquet(sc: SparkContext, data: RDD[Row], cm: CalendarManager)
+  def executeSlowerParquet_Sort(sc: SparkContext, data: RDD[Row], cm: CalendarManager)
   : Array[((Int,Int,Int,Int),Double)] = {
 
     val q = data

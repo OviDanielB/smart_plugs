@@ -2,6 +2,7 @@ import config.{SmartPlugConfig, Properties}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.functions._
+import com.databricks.spark.avro._
 
 
 /**
@@ -37,12 +38,22 @@ object QueryOneSQL {
     */
   def executeOnParquet(): Unit = {
 
-    val df = spark.read.load(SmartPlugConfig.get(Properties.CSV_DATASET_URL))
+    val df = spark.read.load(SmartPlugConfig.get(Properties.PARQUET_DATASET_URL))
     execute(df)
 
   }
 
-  private def execute(df: DataFrame): Unit = {
+  /**
+    * Execute query creating a DataFrame from a avro file
+    */
+  def executeOnAvro(): Unit = {
+
+    val df = spark.read.avro(SmartPlugConfig.get(Properties.AVRO_DATASET_URL))
+    execute(df)
+
+  }
+
+  def execute(df: DataFrame): Unit = {
 
     val res = df
       .where("property = 1")

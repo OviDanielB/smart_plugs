@@ -9,4 +9,10 @@ object ProfilingTime {
     ret
   }
 
+  def getTime[A](f: => A): Double = {
+    val s = System.nanoTime()
+    f
+    (System.nanoTime - s) / 1e6
+  }
+
 }
