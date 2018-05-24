@@ -29,7 +29,7 @@ class QueryOneTestSuite extends FlatSpec {
   }
 
   "The first query with CSV dataset (faster version)" should "return houses" in {
-    val actualHousesIdFaster : Array[Int] = Query1.executeFasterCSV(sparkContext, SmartPlugConfig.get(Properties.Test.CSV_DATASET_URL))
+    val actualHousesIdFaster : Array[Int] = Query1.executeCSV(sparkContext, SmartPlugConfig.get(Properties.Test.CSV_DATASET_URL))
     for (actualHouse <- actualHousesIdFaster) {
       assert(expectedHousesID.contains(actualHouse))
     }
@@ -38,7 +38,7 @@ class QueryOneTestSuite extends FlatSpec {
 
 
   "The first query with Parquet dataset" should "return houses" in {
-    val actualHousesIdParquet : Array[Int] = Query1.executeFasterParquet(sparkContext, SmartPlugConfig.get(Properties.Test.PARQUET_DATASET_URL))
+    val actualHousesIdParquet : Array[Int] = Query1.executeParquet(sparkContext, SmartPlugConfig.get(Properties.Test.PARQUET_DATASET_URL))
     for (actualHouse <- actualHousesIdParquet) {
       assert(expectedHousesID.contains(actualHouse))
     }

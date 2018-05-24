@@ -43,7 +43,7 @@ class QueryTwoTestSuite extends FlatSpec {
     /* keep track of plug IDs */
     var plugIDs : SortedSet[Int] = SortedSet()
     for(d <- dataList){
-      if(d.isWorkMeasurement() && d.house_id == TEST_HOUSE_ID && calManager.getInterval(d.timestamp) == TEST_TIME_PERIOD){
+      if(d.isWorkMeasurement() && d.house_id == TEST_HOUSE_ID && calManager.getTimeSlot(d.timestamp) == TEST_TIME_PERIOD){
         triple = (d.plug_id, calManager.getDayAndMonth(d.timestamp)(0), d.value)
         plugIDs += d.plug_id
         valList.append( triple )
