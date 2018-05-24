@@ -1,9 +1,20 @@
 package utils
 
-
 import de.jollyday.HolidayManager
 import org.joda.time.{DateTime, DateTimeZone}
 
+/**
+  * This class implements method to manage timestamp values
+  * as a date, referring to the Europe/Berlin timezone,
+  * to check if a day is a holiday (in Germany) or not,
+  * weekend (Saturday, Sunday) or not and to retrieve
+  * what rate (high or low) the date and hour are referring to
+  * or what slot hour of the timestamp is referring to.
+  *
+  * @author Ovidiu Daniel Barba
+  * @author Laura Trivelloni
+  * @author Emanuele Vannacci
+  */
 class CalendarManager extends Serializable {
 
   val TIMEZONE: DateTimeZone = DateTimeZone.forID("Europe/Berlin")
@@ -22,12 +33,10 @@ class CalendarManager extends Serializable {
     * among the four ranges:
     * [00:00,05:59], [06:00,11:59], [12:00, 17:59], [18:00, 23:59]
     *
-    * @param timestamp of measurement
-    * @return interval index
+    * @param date of measurement
+    * @return slot index
     */
-  def getTimeSlot(timestamp : Long) : Int = {
-    val date = getDateFromTimestamp(timestamp)
-
+  def getTimeSlot(date : DateTime) : Int = {
     if (date.getHourOfDay <= 5 ) {                                  // [00:00,05:59]
       return 0
     } else if (date.getHourOfDay > 5 && date.getHourOfDay <= 11) {  // [06:00,11:59]
@@ -38,33 +47,19 @@ class CalendarManager extends Serializable {
       return 3
     }
     -1
-  }
-
-  def getInterval(timestamp: Long) : Int = {
-    val date = getDateFromTimestamp(timestamp)
-    getInterval(date)
   }
 
   /**
-    * Retrieve the interval index related to the date
+    * Retrieve the interval index related to the value of timestamp
     * among the four ranges:
     * [00:00,05:59], [06:00,11:59], [12:00, 17:59], [18:00, 23:59]
     *
-    * @param date of measurement
-    * @return interval index
+    * @param timestamp timestamp
+    * @return slot index
     */
-  def getInterval(date : DateTime) : Int = {
-
-    if (date.getHourOfDay <= 5 ) {                                  // [00:00,05:59]
-      return 0
-    } else if (date.getHourOfDay > 5 && date.getHourOfDay <= 11) {  // [06:00,11:59]
-      return 1
-    } else if (date.getHourOfDay > 11 && date.getHourOfDay <= 17) { // [12:00, 17:59]
-      return 2
-    } else if (date.getHourOfDay > 17 && date.getHourOfDay <= 23) { // [18:00, 23:59]
-      return 3
-    }
-    -1
+  def getTimeSlot(timestamp: Long) : Int = {
+    val date = getDateFromTimestamp(timestamp)
+    getTimeSlot(date)
   }
 
   /**
@@ -78,7 +73,7 @@ class CalendarManager extends Serializable {
   def getTimeReference(timestamp: Long) : Array[Int] = {
     val date = getDateFromTimestamp(timestamp)
     val res = new Array[Int](3)
-    res(0) = getInterval(date)
+    res(0) = getTimeSlot(date)
     res(1) = date.getDayOfMonth
     res(2) = date.getMonthOfYear
     res
@@ -167,6 +162,13 @@ class CalendarManager extends Serializable {
     hm.isHoliday(dateTime.toGregorianCalendar, HOLIDAY_HIERARCHY)
   }
 
+  /**
+    * Get date format equivalent to the given timestamp
+    * following Europe/Berlin Timezone.
+    *
+    * @param timestamp timestamp
+    * @return date
+    */
   def getDateFromTimestamp(timestamp: Long) : DateTime = {
     new DateTime(timestamp * 1000L, TIMEZONE)
   }

@@ -1,5 +1,5 @@
 import config.{Properties, SmartPlugConfig}
-import model.{MaxMinHolder, MeanStdHolder}
+import model.MaxMinHolder
 import org.apache.spark.rdd.RDD
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.Row

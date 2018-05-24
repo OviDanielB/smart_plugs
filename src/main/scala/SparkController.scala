@@ -21,7 +21,6 @@ object SparkController {
       .getOrCreate()
   }
 
-
   private[this] lazy val sparkTestContext : SparkContext = {
     val conf = new SparkConf()
     conf.setAppName(SmartPlugConfig.get(Properties.Test.SPARK_APP_NAME))

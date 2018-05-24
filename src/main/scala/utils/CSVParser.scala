@@ -1,19 +1,31 @@
 package utils
 
-import config.{SmartPlugConfig, Properties}
+import java.io.{File, PrintWriter}
+
 import model.PlugData
 
+import scala.collection.immutable.ListMap
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
 import scala.util.control.Breaks.{break, breakable}
 
+/**
+  * This object implements functions to read data from CSV files
+  * as list of Plug Data object or write CSV file as a list of
+  * execution times and the related name of query executed.
+  *
+  * @author Ovidiu Daniel Barba
+  * @author Laura Trivelloni
+  * @author Emanuele Vannacci
+  */
 object CSVParser {
 
   private val CSV_DELIMITER = ","
   private var count :Int = 0
 
   /**
-    * returns all lines from csv dataset as PlugData class
+    * Returns all lines from csv dataset as PlugData class.
+    *
     * @return mutable list of PlugData
     */
   def readDataFromLocalFile(path: String): ListBuffer[PlugData] = {
@@ -34,7 +46,8 @@ object CSVParser {
   }
 
   /**
-    * parses a csv line string into Plug data class
+    * Parses a csv line string into Plug data class.
+    *
     * @param line
     * @return plug data
     */
@@ -58,5 +71,34 @@ object CSVParser {
       case _ => throw new Exception
     }
 
+  }
+
+  /**
+    * Write a list of couples (name-of-query, execution-time) into a
+    * CSV file.
+    *
+    * @param res couples query/time
+    * @param filename file to write
+    */
+  def writeTimesToCSV(res: Map[String,Double], filename: String): Unit = {
+
+    val file = new PrintWriter(new File(filename))
+
+    var keyList = ListMap(res.toSeq.sortBy(_._1):_*)
+
+    // header
+    for (k <- keyList) {
+      file.write(k._1)
+      file.write(",")
+    }
+    file.write("\n")
+
+    // results
+    for (k <- keyList) {
+      file.write(k._2.toString)
+      file.write(",")
+    }
+
+    file.close()
   }
 }

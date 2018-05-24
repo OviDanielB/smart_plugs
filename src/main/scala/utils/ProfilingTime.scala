@@ -1,5 +1,13 @@
 package utils
 
+/**
+  * This object implements function to measure time in ms
+  * to compare queries executions.
+  *
+  * @author Ovidiu Daniel Barba
+  * @author Laura Trivelloni
+  * @author Emanuele Vannacci
+  */
 object ProfilingTime {
 
   def time[A](f: => A): A = {

@@ -51,18 +51,18 @@ class StatisticsTestSuite extends FlatSpec {
   }
 
   "The online algorithm" should "calculate mean with equal values" in {
-    val values = Seq((2f,1), (2f,1), (2f,1))
+    val values = Seq(new MeanHolder(2f,1), new MeanHolder(2f,1), new MeanHolder(2f,1))
 
     val actualMean = values.reduce((s,v) => Statistics.computeOnlineMean(s,v))
-    assert(actualMean._1 == expectedMeanTuple(values))
-    assert(actualMean._2 == values.length)
+    assert(actualMean.mean() == expectedMean(values).mean())
+    assert(actualMean.count == values.length)
   }
 
   it should "be equal calculate mean with different values" in {
-    val values = Seq((3f,1), (4f,1), (5f,1))
+    val values = Seq(new MeanHolder(3f,1), new MeanHolder(4f,1), new MeanHolder(5f,1))
     val actualMean = values.reduce((s,v) => Statistics.computeOnlineMean(s,v))
-    assert(actualMean._1 == expectedMeanTuple(values))
-    assert(actualMean._2 == values.length)
+    assert(actualMean.mean() == expectedMean(values).mean())
+    assert(actualMean.count == values.length)
   }
 
 
@@ -78,21 +78,21 @@ class StatisticsTestSuite extends FlatSpec {
 
 
   "The online one-pass algorithm" should "should calculate mean and std with equal values" in {
-    val values = Seq((2f,1, 0d), (2f,1, 0d), (2f,1, 0d))
+    val values = Seq(new MeanStdHolder(2f,1, 0d), new MeanStdHolder(2f,1, 0d), new MeanStdHolder(2f,1, 0d))
     val actualMeanStd = values.reduce( (s,v) => Statistics.computeOnlineMeanAndStd(s,v))
-    val expectedMeanStd = expectedMeanStdFromTriple(values)
-    assert(actualMeanStd._1 == expectedMeanStd._1)
-    assert(actualMeanStd._3 / (actualMeanStd._2 - 1) == expectedMeanStd._3)
-    assert(values.length == expectedMeanStd._2)
+    val expectedMeanStd = expectedMeanStdClass(values)
+    assert(round(STATISTICS_DECIMAL_PLACE_PRECISION)(actualMeanStd.mean()) == round(STATISTICS_DECIMAL_PLACE_PRECISION)(expectedMeanStd.mean()) )
+    assert(round(STATISTICS_DECIMAL_PLACE_PRECISION)(actualMeanStd.std()) == round(STATISTICS_DECIMAL_PLACE_PRECISION)(expectedMeanStd.std()))
+    assert(values.length == expectedMeanStd.count)
   }
 
   it should "should calculate mean and std with different values" in {
-    val values = Seq((3f,1, 0d), (4f,1, 0d), (5f,1, 0d))
+    val values = Seq(new MeanStdHolder(3f,1, 0d), new MeanStdHolder(4f,1, 0d), new MeanStdHolder(5f,1, 0d))
     val actualMeanStd = values.reduce( (s,v) => Statistics.computeOnlineMeanAndStd(s,v))
-    val expectedMeanStd = expectedMeanStdFromTriple(values)
-    assert(actualMeanStd._1 == expectedMeanStd._1)
-    assert(actualMeanStd._3 / (actualMeanStd._2 - 1) == expectedMeanStd._3)
-    assert(values.length == expectedMeanStd._2)
+    val expectedMeanStd = expectedMeanStdClass(values)
+    assert(round(STATISTICS_DECIMAL_PLACE_PRECISION)(actualMeanStd.mean()) == round(STATISTICS_DECIMAL_PLACE_PRECISION)(expectedMeanStd.mean()) )
+    assert(round(STATISTICS_DECIMAL_PLACE_PRECISION)(actualMeanStd.std()) == round(STATISTICS_DECIMAL_PLACE_PRECISION)(expectedMeanStd.std()))
+    assert(values.length == expectedMeanStd.count)
   }
 
   it should "should calculate mean and std with different values and long list with decimal places" in {
