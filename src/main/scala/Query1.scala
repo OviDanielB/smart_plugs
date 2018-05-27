@@ -1,4 +1,5 @@
-import config.{SmartPlugConfig, Properties}
+import config.{Properties, SmartPlugConfig}
+import controller.SparkController
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Row

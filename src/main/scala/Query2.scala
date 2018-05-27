@@ -1,4 +1,5 @@
 import config.{Properties, SmartPlugConfig}
+import controller.SparkController
 import model.MaxMinHolder
 import org.apache.spark.rdd.RDD
 import org.apache.spark.SparkContext
@@ -155,6 +156,11 @@ object Query2 extends Serializable {
       .collect()
 
     q
+  }
+
+  def executeCSV(sc: SparkContext, filename: String, cm: CalendarManager) : Array[((Int,Int),Double,Double)] = {
+    val data = sc.textFile(filename)
+    executeCSV(sc, data, cm)
   }
 
   /**

@@ -1,4 +1,5 @@
 import config.{Properties, SmartPlugConfig}
+import controller.SparkController
 import model.{MaxMinHolder, MeanHolder, SubMeanHolder}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Row
@@ -114,6 +115,11 @@ object Query3 extends Serializable {
     }
 
     q
+  }
+
+  def executeCSV(sc: SparkContext, filename: String, cm: CalendarManager) : Array[((Int,Int,Int,Int),Double)] = {
+    val data = sc.textFile(filename)
+    executeCSV(sc, data, cm)
   }
 
   def executeSlowCSV(sc: SparkContext, data: RDD[String], cm: CalendarManager)
