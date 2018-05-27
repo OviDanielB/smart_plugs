@@ -188,7 +188,7 @@ object HBaseDAO {
 
   def main(args: Array[String]) = {
 
-    HBaseAdmin.checkHBaseAvailable(conf)
+    HBaseAdmin.checkHBaseAvailable(HBaseController.getDefaultConfiguration)
     println("HBase is running!")
 
     if (exists("test_table")) {
