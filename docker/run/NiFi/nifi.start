@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 HOST=localhost
-PORT=9090
+PORT=9999
 JAR=1.1.32/nifi-deploy-config-1.1.32.jar
 
 docker network create --driver bridge hadoop_network
@@ -10,13 +10,13 @@ docker run -t -i -p $PORT:$PORT   -e NIFI_WEB_HTTP_PORT="$PORT" --network=hadoop
 docker cp ../../../dataset/ nifi:/data
 
 if [ -f $JAR ]; then
-    wget http://central.maven.org/maven2/com/github/hermannpencole/nifi-deploy-config/$JAR
+    wget http://central.maven.org/maven2/com/github/hermannpencole/nifi-deploy-config/1.1.32/nifi-deploy-config-1.1.32.jar
 fi
 
 
 if [[ $(wget http://$HOST:$PORT/ -O-) ]] 2>/dev/null
   then
-    java -jar nifi-deploy-config-1.1.32.jar -nifi http://$HOST:$PORT/nifi-api -conf ./template.xml -m deployTemplate
+        java -jar nifi-deploy-config-1.1.32.jar -nifi http://$HOST:$PORT/nifi-api -conf ./template.xml -m deployTemplate
     java -jar nifi-deploy-config-1.1.32.jar -nifi http://$HOST:$PORT/nifi-api -conf /tmp/config.json -mode extractConfig
     java -jar nifi-deploy-config-1.1.32.jar -nifi http://$HOST:$PORT/nifi-api -conf /tmp/config.json -mode updateConfig
 
