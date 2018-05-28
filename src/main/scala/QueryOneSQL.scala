@@ -1,8 +1,9 @@
-import config.{SmartPlugConfig, Properties}
+import config.{Properties, SmartPlugConfig}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.functions._
 import com.databricks.spark.avro._
+import controller.SparkController
 import utils.ProfilingTime
 
 /**

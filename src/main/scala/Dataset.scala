@@ -1,4 +1,5 @@
-import config.{SmartPlugConfig, Properties}
+import config.{Properties, SmartPlugConfig}
+import controller.SparkController
 import model.PlugData
 import org.apache.spark.rdd.RDD
 import org.joda.time.{DateTime, DateTimeZone}

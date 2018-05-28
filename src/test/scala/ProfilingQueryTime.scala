@@ -6,6 +6,7 @@ import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.types.StructType
 import utils.{CSVParser, CalendarManager, ProfilingTime}
 import com.databricks.spark.avro._
+import controller.SparkController
 
 
 class ProfilingQueryTime extends FlatSpec {

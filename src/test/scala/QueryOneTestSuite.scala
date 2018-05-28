@@ -1,4 +1,5 @@
 import config.{Properties, SmartPlugConfig}
+import controller.SparkController
 import model.PlugData
 import org.apache.spark.SparkContext
 import org.scalatest.FlatSpec

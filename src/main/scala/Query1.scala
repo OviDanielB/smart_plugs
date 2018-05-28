@@ -1,4 +1,5 @@
-import config.{SmartPlugConfig, Properties}
+import config.{Properties, SmartPlugConfig}
+import controller.SparkController
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Row
@@ -16,6 +17,15 @@ object Query1 extends Serializable {
   val LOAD_THRESHOLD = 350
 
 
+  /**
+    * Find houses with a instantaneous energy consumption greater or equal to 350 Watt
+    * analyzing data read from a CSV file.
+    * Slow parsing CSV version.
+    *
+    * @param sc spark context
+    * @param data rdd
+    * @return array of houses id
+    */
   def executeSlowCSV(sc: SparkContext, data: RDD[String]): Array[Int] = {
 
     val q = data
@@ -42,6 +52,7 @@ object Query1 extends Serializable {
   /**
     * Find houses with a instantaneous energy consumption greater or equal to 350 Watt
     * analyzing data read from a CSV file.
+    * Fast parsing CSV version.
     *
     * @param sc spark context
     * @param data rdd
@@ -55,19 +66,23 @@ object Query1 extends Serializable {
         val property = f(3).toInt
         val house = f(6).toInt
         val value = f(2).toFloat
+        val timestamp = f(1).toLong
 
-        if (property == 1) Some((house, value)) else None
+        if (property == 1) Some(((house, timestamp), value)) else None
       }
       .reduceByKey(_+_)
       .flatMap(
         f =>
           if (f._2 >= LOAD_THRESHOLD) {
-            Some(f._1)
+            Some(f._1._1)
           } else
             None
       )
       .distinct()
       .collect()
+
+    q.foreach(x => println(x))
+
     q
   }
 
@@ -87,14 +102,15 @@ object Query1 extends Serializable {
           val property = line(3)
           val house = line(6).toString.toInt
           val value = line(2).toString.toFloat
+          val timestamp = line(1).toString.toLong
 
-          if (property == 1) Some((house, value)) else None
+          if (property == 1) Some(((house, timestamp), value)) else None
       }
       .reduceByKey(_+_)
       .flatMap(
         f =>
           if (f._2 >= LOAD_THRESHOLD) {
-            Some(f._1)
+            Some(f._1._1)
           } else
             None
       )
@@ -127,14 +143,14 @@ object Query1 extends Serializable {
     val spark = SparkController.defaultSparkSession()
     val data_p = spark.read.parquet(SmartPlugConfig.get(Properties.PARQUET_DATASET_URL))
 
-    ProfilingTime.time {
-      executeSlowCSV(sc, data)                  // 6,6
-    }
+//    ProfilingTime.time {
+//      executeSlowCSV(sc, data)                  // 6,6
+//    }
     ProfilingTime.time {
       executeCSV(sc, data)            // 2,4 BEST
     }
-    ProfilingTime.time {
-      executeParquet(sc, data_p.rdd)  // 2,7
-    }
+//    ProfilingTime.time {
+//      executeParquet(sc, data_p.rdd)  // 2,7
+//    }
   }
 }
