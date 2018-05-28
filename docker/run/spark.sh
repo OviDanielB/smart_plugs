@@ -53,7 +53,7 @@ if [ "$1" == $START_COMMAND ]; then
     for i in $(seq 1 ${NUM_SLAVES})
     do
         SLAVES="${SLAVES};${SPARK_SLAVE_CONTAINER_NAME_BASE}${i}"
-        SLAVE_CREATE=$(docker run -i -t -d -p $((4039 + ${i})):4040 -p $((8080 + ${i})):8080 --network ${SPARK_DOCKER_NETWORK} --name ${SPARK_SLAVE_CONTAINER_NAME_BASE}${i} ${SPARK_DOCKER_IMAGE})
+        SLAVE_CREATE=$(docker run -i -t -d -p $((4039 + ${i})):4040 -p $((8080 + ${i})):8081 --network ${SPARK_DOCKER_NETWORK} --name ${SPARK_SLAVE_CONTAINER_NAME_BASE}${i} ${SPARK_DOCKER_IMAGE})
 
         if [ $? == 0 ]; then
             echo "Successfully created slave ${SPARK_SLAVE_CONTAINER_NAME_BASE}${i}"

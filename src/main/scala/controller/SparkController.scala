@@ -7,6 +7,12 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 object SparkController {
 
+  lazy val sparkContextNoMaster : SparkContext = {
+    val conf = new SparkConf()
+    conf.setAppName(SmartPlugConfig.get(Properties.SPARK_APP_NAME))
+    SparkContext.getOrCreate()
+  }
+
   private[this] lazy val sparkContext : SparkContext = {
     val conf = new SparkConf()
     conf.setAppName(SmartPlugConfig.get(Properties.SPARK_APP_NAME))
