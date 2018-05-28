@@ -56,14 +56,15 @@ object Query1 extends Serializable {
         val property = f(3).toInt
         val house = f(6).toInt
         val value = f(2).toFloat
+        val timestamp = f(1).toLong
 
-        if (property == 1) Some((house, value)) else None
+        if (property == 1) Some(((house, timestamp), value)) else None
       }
       .reduceByKey(_+_)
       .flatMap(
         f =>
           if (f._2 >= LOAD_THRESHOLD) {
-            Some(f._1)
+            Some(f._1._1)
           } else
             None
       )
@@ -88,14 +89,15 @@ object Query1 extends Serializable {
           val property = line(3)
           val house = line(6).toString.toInt
           val value = line(2).toString.toFloat
+          val timestamp = line(1).toString.toLong
 
-          if (property == 1) Some((house, value)) else None
+          if (property == 1) Some(((house, timestamp), value)) else None
       }
       .reduceByKey(_+_)
       .flatMap(
         f =>
           if (f._2 >= LOAD_THRESHOLD) {
-            Some(f._1)
+            Some(f._1._1)
           } else
             None
       )
