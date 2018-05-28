@@ -23,4 +23,14 @@ object ProfilingTime {
     (System.nanoTime - s) / 1e6
   }
 
+  def getMeanTime[A](f: => A): Double = {
+    var t = 0.0
+    for (i <- 0 until 100) {
+      t = t + getTime(f)
+    }
+
+    println("Time: " + t / 100.0 + "ms")
+    t / 100.0
+  }
+
 }

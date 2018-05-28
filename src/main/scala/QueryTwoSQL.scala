@@ -37,94 +37,6 @@ object QueryTwoSQL {
       .persist()
   }
 
-  /**
-    * Compute energy consumption as the difference between an event and the previous.
-    *
-    * @param df DataFrame
-    */
-  private def executeOnEvent(df: DataFrame): Unit = {
-
-    /*
-      Use window functions to find given an event the previous.
-      Useful to find the difference between the value of an event and the previous one to compute consumption
-      https://databricks.com/blog/2015/07/15/introducing-window-functions-in-spark-sql.html
-     */
-    val windowSpec = Window.partitionBy("house_id", "household_id", "plug_id")
-      .orderBy("timestamp")
-
-    val data = df
-      .where("property == 0 AND value <> 0")
-      .withColumn("timestamp", to_utc_timestamp(from_unixtime($"timestamp"), "Etc/GMT+2"))
-      // Convert value to DecimalType for avoiding float precision issues
-      .withColumn("value", $"value".cast(DataTypes.createDecimalType(10, 3)))
-
-      // For each plug compute the difference between the current value and the previous.
-      .withColumn("plug_consumption", when(lag($"value", 1, -1).over(windowSpec) === -1, 0)
-      //      .when($"value".leq(lag("value", 1, 0).over(windowSpec)), 0)
-      .otherwise($"value" - lag("value", 1, 0).over(windowSpec))
-    )
-
-      // For each plug compute the consumption on each time slot for each day
-      // out schema:|house_id|household_id|plug_id|window|tot_cons|
-      .groupBy($"house_id", window($"timestamp", "6 hours"))
-      .agg(sum("plug_consumption").alias("slot_consumption"))
-
-      // window: [window.start: TimestampType, window.end: TimestampType]
-      // Reformat window to remove year,month and day. Then we can compute statistics with a groupBy on the same time slot
-      .withColumn("window", struct(date_format($"window.start", "HH:mm"), date_format($"window.end", "HH:mm")))
-
-      // Aggregate for each house and time slot
-      .groupBy("house_id", "window")
-      .agg(avg("slot_consumption").as("avg"), stddev("slot_consumption").as("stddev"))
-
-      // Format DataFrame
-      .orderBy("house_id", "window")
-      .select("*")
-      .collect()
-
-  }
-
-  /**
-    * Compute mean and standard deviation statistics of every house energy consumption
-    * during each time slot in [00:00,05:59], [06:00,11:59], [12:00, 17:59], [18:00, 23:59].
-    * Single value of energy consumption is computed as the difference between the value
-    * of the last record of the period and the first one, because it is a cumulative quantity.
-    * It does NOT keep into account errors obtained for plugs that have been reset into a period
-    *
-    * @param df DataFrame
-    */
-  def executeOnSlotUDF(df: DataFrame): Unit = {
-    val data = df
-      // Keep only value for energy consumption
-      .where("property == 0")
-      // Convert value to DecimalType for avoiding float precision issues
-      .withColumn("value", $"value".cast(DataTypes.createDecimalType(20, 5)))
-
-      // For each plug and for each time slot, compute difference between the first value in the time slot and the last.
-      // The result is the consumption for a plug in a given time slot
-
-      .withColumn("slot", udfDataFunction.getTimeSlotUDF('timestamp))
-      .withColumn("day", udfDataFunction.getDayOfYearUDF('timestamp))
-
-      .groupBy($"house_id", $"household_id", $"plug_id", $"slot", $"day")
-      .agg(
-        when(last("value") >= first("value"), last("value") - first("value"))
-          .otherwise(last("value"))
-          .alias("plug_consumption_by_day")
-      )
-      // The sum of the energy consumption of each plug of a given house is the consumption for the house
-      .groupBy("house_id", "day", "slot")
-      .agg(sum($"plug_consumption_by_day").as("home_consumption"))
-
-      //Then we can compute statistics into each time slot over all the days for each house
-      .groupBy($"house_id", $"slot")
-      .agg(avg("home_consumption").as("avg"), stddev("home_consumption").as("stddev"))
-
-      .orderBy("house_id", "slot")
-      .select("*")
-
-    spark.time(data.show(100))
-  }
 
   /**
     * Compute mean and standard deviation statistics of every house energy consumption
@@ -175,11 +87,6 @@ object QueryTwoSQL {
     executeOnSlot(df)
   }
 
-  def executeOnCsvUDF(): Unit = {
-    val df = loadDataframeFromCSV()
-    executeOnSlotUDF(df)
-  }
-
   def executeOnParquet(): Unit = {
     val df = spark.read.parquet(SmartPlugConfig.get(Properties.PARQUET_DATASET_URL)).persist()
     executeOnSlot(df)
@@ -192,9 +99,7 @@ object QueryTwoSQL {
 
 
   def main(args: Array[String]): Unit = {
-    ProfilingTime.time {
-      executeOnCsvUDF() // slower
-    }
+
     ProfilingTime.time {
       executeOnCsv()
     }
