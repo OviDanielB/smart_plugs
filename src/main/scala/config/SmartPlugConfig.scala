@@ -21,6 +21,10 @@ object Properties {
   val PARQUET_DATASET_URL = "dataset.parquet.url"
   val AVRO_DATASET_URL = "dataset.avro.url"
 
+  val CSV_DATASET_URL_FILTERED = "filteredDataset.csv.url"
+  val PARQUET_DATASET_URL_FILTERED = "filteredDataset.parquet.url"
+  val AVRO_DATASET_URL_FILTERED = "filteredDataset.avro.url"
+
   val SPARK_APP_NAME = "spark.app.name"
   val SPARK_MASTER_URL = "spark.master.url"
 
