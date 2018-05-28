@@ -2,8 +2,8 @@ import java.io.{File, PrintWriter}
 
 import config.{Properties, SmartPlugConfig}
 import controller.SparkController
+import controller.SparkController
 import model.PlugData
-import org.apache.spark.{SparkConf, SparkContext}
 import org.joda.time.{DateTime, DateTimeZone}
 import org.scalatest.FlatSpec
 import utils.{CSVParser, CalendarManager}

@@ -65,8 +65,8 @@ object QueryThreeSQL {
       .agg(sum("avg").as("score"))
       // Ranking sorted by decreasing value of score
       .orderBy(desc("score"))
+      .collect()
 
-    spark.time(res.show(100))
   }
 
   def executeOnCSV(): Unit = {
