@@ -17,6 +17,15 @@ object Query1 extends Serializable {
   val LOAD_THRESHOLD = 350
 
 
+  /**
+    * Find houses with a instantaneous energy consumption greater or equal to 350 Watt
+    * analyzing data read from a CSV file.
+    * Slow parsing CSV version.
+    *
+    * @param sc spark context
+    * @param data rdd
+    * @return array of houses id
+    */
   def executeSlowCSV(sc: SparkContext, data: RDD[String]): Array[Int] = {
 
     val q = data
@@ -43,6 +52,7 @@ object Query1 extends Serializable {
   /**
     * Find houses with a instantaneous energy consumption greater or equal to 350 Watt
     * analyzing data read from a CSV file.
+    * Fast parsing CSV version.
     *
     * @param sc spark context
     * @param data rdd
@@ -70,6 +80,9 @@ object Query1 extends Serializable {
       )
       .distinct()
       .collect()
+
+    q.foreach(x => println(x))
+
     q
   }
 
@@ -130,14 +143,14 @@ object Query1 extends Serializable {
     val spark = SparkController.defaultSparkSession()
     val data_p = spark.read.parquet(SmartPlugConfig.get(Properties.PARQUET_DATASET_URL))
 
-    ProfilingTime.time {
-      executeSlowCSV(sc, data)                  // 6,6
-    }
+//    ProfilingTime.time {
+//      executeSlowCSV(sc, data)                  // 6,6
+//    }
     ProfilingTime.time {
       executeCSV(sc, data)            // 2,4 BEST
     }
-    ProfilingTime.time {
-      executeParquet(sc, data_p.rdd)  // 2,7
-    }
+//    ProfilingTime.time {
+//      executeParquet(sc, data_p.rdd)  // 2,7
+//    }
   }
 }

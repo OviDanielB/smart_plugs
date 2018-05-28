@@ -16,6 +16,19 @@ import utils.{CSVParser, CalendarManager, ProfilingTime, Statistics}
 object Query2 extends Serializable {
 
 
+  /**
+    * Compute mean and standard deviation statistics of every house energy consumption
+    * during each time slot in [00:00,05:59], [06:00,11:59], [12:00, 17:59], [18:00, 23:59].
+    * Single value of energy consumption is computed as the difference between the value
+    * of the last record of the period and the first one, because it is a cumulative quantity.
+    * It does NOT keep into account errors obtained for plugs that have been reset into a period.
+    * RDD is created by reading a CSV file (slow version).
+    *
+    * @param sc Spark context
+    * @param data rdd
+    * @param cm calendar manager
+    * @return array of statistics for each house
+    */
   def executeSlowCSV(sc: SparkContext, data: RDD[String], cm: CalendarManager): Array[((Int,Int),Double,Double)] = {
     val q = data
       .map(
@@ -23,7 +36,7 @@ object Query2 extends Serializable {
       )
       .flatMap (
         d =>
-          if (d.get.isWorkMeasurement() && d.isDefined) {
+          if (d.get.isWorkMeasurement()) {
             val d_m = cm.getDayAndMonth(d.get.timestamp)
             val day = d_m(0)
             val month = d_m(1)
@@ -84,7 +97,7 @@ object Query2 extends Serializable {
     * Single value of energy consumption is computed as the difference between the value
     * of the last record of the period and the first one, because it is a cumulative quantity.
     * It does NOT keep into account errors obtained for plugs that have been reset into a period.
-    * RDD is created by reading a CSV file.
+    * RDD is created by reading a CSV file (fast version).
     *
     * @param sc Spark context
     * @param data rdd
@@ -104,7 +117,7 @@ object Query2 extends Serializable {
           val timestamp = f(1).toLong
           val value = f(2).toFloat
 
-          if (property == 0 && value != 0) {
+          if (property == 0) {
             val d_m = cm.getDayAndMonth(timestamp)
             val day = d_m(0)
             val month = d_m(1)
@@ -189,7 +202,7 @@ object Query2 extends Serializable {
           val timestamp = f(1).toString.toLong
           val value = f(2).toString.toFloat
 
-          if (property == 0 && value != 0) {
+          if (property == 0) {
             val d_m = cm.getDayAndMonth(timestamp)
             val day = d_m(0)
             val month = d_m(1)
