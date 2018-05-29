@@ -7,6 +7,7 @@ RUN apt-get update \
 
 ADD config/core-site.xml /core-site.xml
 ADD config/hdfs-site.xml /hdfs-site.xml
+ADD config/hbase-site.xml /hbase-site.xml
 
 # Apply configuration and start NiFi
 CMD ${NIFI_BASE_DIR}/scripts/start.sh

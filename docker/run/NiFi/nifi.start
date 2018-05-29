@@ -14,7 +14,7 @@ if [ -f $JAR ]; then
 fi
 
 
-if [[ $(wget http://$HOST:$PORT/ -O-) ]] 2>/dev/null
+if [[ $(wget http://$HOST:$PORT/ -O-) ]]
   then
         java -jar nifi-deploy-config-1.1.32.jar -nifi http://$HOST:$PORT/nifi-api -conf ./template.xml -m deployTemplate
     java -jar nifi-deploy-config-1.1.32.jar -nifi http://$HOST:$PORT/nifi-api -conf /tmp/config.json -mode extractConfig

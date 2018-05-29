@@ -71,8 +71,8 @@ object QueryOneSQL {
       .where("sum >= 350")
       .distinct()
       .sort($"house_id")
+      .collect()
 
-    spark.time(res.show(100))
   }
 
   def main(args: Array[String]): Unit = {

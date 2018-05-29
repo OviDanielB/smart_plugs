@@ -81,7 +81,7 @@ object Query1 extends Serializable {
       .distinct()
       .collect()
 
-    q.foreach(x => println(x))
+//    q.foreach(x => println(x))
 
     q
   }
@@ -135,7 +135,7 @@ object Query1 extends Serializable {
     executeParquet(sc, data_p.rdd)
   }
 
-  def main(args: Array[String]): Unit = {
+  def mainOld(args: Array[String]): Unit = {
 
     val sc = SparkController.defaultSparkContext()
     val data = sc.textFile(SmartPlugConfig.get(Properties.CSV_DATASET_URL))
@@ -152,5 +152,25 @@ object Query1 extends Serializable {
 //    ProfilingTime.time {
 //      executeParquet(sc, data_p.rdd)  // 2,7
 //    }
+  }
+
+
+
+  /* TODO remove; used for testing */
+  def main(args: Array[String]): Unit = {
+
+    val sc = SparkController.sparkContextNoMaster
+    val data = sc.textFile(args(0))
+
+
+    //    ProfilingTime.time {
+    //      executeSlowCSV(sc, data)                  // 6,6
+    //    }
+    ProfilingTime.time {
+      executeCSV(sc, data)            // 2,4 BEST
+    }
+    //    ProfilingTime.time {
+    //      executeParquet(sc, data_p.rdd)  // 2,7
+    //    }
   }
 }

@@ -79,8 +79,7 @@ object QueryTwoSQL {
 
       .orderBy("house_id", "window")
       .select("*")
-
-      data.show(100)
+      .collect()
   }
 
   def executeOnCsv(): Unit = {
