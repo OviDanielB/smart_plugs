@@ -1,3 +1,4 @@
+import DAO.hdfsDAO
 import QueryOneSQL.{customSchema, spark}
 import com.databricks.spark.avro._
 import config.{Properties, SmartPlugConfig}
@@ -56,15 +57,15 @@ object Main {
       Spark core queries
       Note: For queries on Parquet and Avro, dataframes are converted to RDD[Row]
      */
-    Query1.executeCSV(sc, datasetPathCSV)
+    hdfsDAO.writeQuery1Results(Query1.executeCSV(sc, datasetPathCSV))
     Query1.executeOnRow(sc, data_p.rdd)
     Query1.executeOnRow(sc, data_a.rdd)
 
-    Query2.executeCSV(sc, data, calendarManager)
+    hdfsDAO.writeQuery2Results(Query2.executeCSV(sc, data, calendarManager))
     Query2.executeOnRow(sc, data_p.rdd, calendarManager)
     Query2.executeOnRow(sc, data_a.rdd, calendarManager)
 
-    Query3.executeCSV(sc, data, calendarManager)
+    hdfsDAO.writeQuery3Results(Query3.executeCSV(sc, data, calendarManager))
     Query3.executeOnRow(sc, data_p.rdd, calendarManager)
     Query3.executeOnRow(sc, data_a.rdd, calendarManager)
 

@@ -40,7 +40,7 @@ object hdfsDAO {
     val rdd = sparkContext.parallelize(results)
     val df = sparkSession.createDataFrame(rdd, schema_1)
 
-    df.write.parquet(RESULTS_1_FILENAME)
+    df.coalesce(1).write.parquet(RESULTS_1_FILENAME)
   }
 
   def writeQuery1Results(res: Dataset[Row]) : Unit = {
@@ -54,7 +54,7 @@ object hdfsDAO {
     val rdd = sparkContext.parallelize(results)
     val df = sparkSession.createDataFrame(rdd, schema_2)
 
-    df.write.parquet(RESULTS_2_FILENAME)
+    df.coalesce(1).write.parquet(RESULTS_2_FILENAME)
 
     sparkSession.read.parquet(RESULTS_2_FILENAME).show()
   }
@@ -69,7 +69,7 @@ object hdfsDAO {
     val rdd = sparkContext.parallelize(results)
     val df = sparkSession.createDataFrame(rdd, schema_3)
 
-    df.write.parquet(RESULTS_3_FILENAME)
+    df.coalesce(1).write.parquet(RESULTS_3_FILENAME)
 
 //    sparkSession.read.parquet(RESULTS_3_FILENAME).show()
   }
