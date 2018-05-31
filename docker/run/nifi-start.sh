@@ -17,8 +17,6 @@ until $(curl --output /dev/null --silent --head --fail http://$HOST:$PORT); do
 done
 
 docker exec -it nifi java -jar /nifi-deploy-config-1.1.32.jar -nifi http://$HOSTNAME:$PORT/nifi-api -conf /template.xml -m deployTemplate
-docker exec -it nifi java -jar /nifi-deploy-config-1.1.32.jar -nifi http://$HOSTNAME:$PORT/nifi-api -conf /tmp/config.json -mode extractConfig
-docker exec -it nifi java -jar /nifi-deploy-config-1.1.32.jar -nifi http://$HOSTNAME:$PORT/nifi-api -conf /tmp/config.json -mode updateConfig
 
 
 
