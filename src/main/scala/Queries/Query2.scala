@@ -1,3 +1,5 @@
+package Queries
+
 import com.databricks.spark.avro._
 import config.{Properties, SmartPlugConfig}
 import controller.SparkController

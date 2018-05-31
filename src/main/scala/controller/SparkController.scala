@@ -9,8 +9,14 @@ object SparkController {
 
   lazy val sparkContextNoMaster : SparkContext = {
     val conf = new SparkConf()
-    conf.setAppName(SmartPlugConfig.get(Properties.SPARK_APP_NAME))
-    SparkContext.getOrCreate()
+    conf.setAppName("Main App No Defined master")
+    //conf.setMaster("local[2]")
+    //conf.setJars(Seq("jars/alluxio-1.7.1-client.jar"))
+    //conf.set("spark.driver.extraClassPath", "jars/alluxio-1.7.1-client.jar")
+    //conf.set("spark.executor.extraClassPath", "jars/alluxio-1.7.1-client.jar")
+    //conf.set("fs.alluxio.impl", "alluxio.hadoop.FileSystem")
+
+    SparkContext.getOrCreate(conf)
   }
 
   private[this] lazy val sparkContext : SparkContext = {
@@ -18,6 +24,14 @@ object SparkController {
     conf.setAppName(SmartPlugConfig.get(Properties.SPARK_APP_NAME))
     conf.setMaster(SmartPlugConfig.get(Properties.SPARK_MASTER_URL))
     new SparkContext(conf)
+  }
+
+  lazy val sparkSessionNoMaster : SparkSession = {
+    SparkSession
+      .builder()
+      .appName("Main SQL App No Specified Master")
+      .config("spark.sql.session.timeZone", "UTC")
+      .getOrCreate()
   }
 
   private[this] lazy val sparkSession : SparkSession = {
@@ -28,6 +42,8 @@ object SparkController {
       .config("spark.sql.session.timeZone", "UTC")
       .getOrCreate()
   }
+
+
 
   private[this] lazy val sparkTestContext : SparkContext = {
     val conf = new SparkConf()

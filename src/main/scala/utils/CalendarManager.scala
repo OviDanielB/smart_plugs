@@ -33,17 +33,17 @@ class CalendarManager extends Serializable {
     * among the four ranges:
     * [00:00,05:59], [06:00,11:59], [12:00, 17:59], [18:00, 23:59]
     *
-    * @param date of measurement
+    * @param hour of measurement
     * @return slot index
     */
-  def getTimeSlot(date : DateTime) : Int = {
-    if (date.getHourOfDay <= 5 ) {                                  // [00:00,05:59]
+  def getTimeSlot(hour : Int) : Int = {
+    if (hour <= 5 ) {                                  // [00:00,05:59]
       return 0
-    } else if (date.getHourOfDay > 5 && date.getHourOfDay <= 11) {  // [06:00,11:59]
+    } else if (hour > 5 && hour <= 11) {  // [06:00,11:59]
       return 1
-    } else if (date.getHourOfDay > 11 && date.getHourOfDay <= 17) { // [12:00, 17:59]
+    } else if (hour > 11 && hour <= 17) { // [12:00, 17:59]
       return 2
-    } else if (date.getHourOfDay > 17 && date.getHourOfDay <= 23) { // [18:00, 23:59]
+    } else if (hour > 17 && hour <= 23) { // [18:00, 23:59]
       return 3
     }
     -1
@@ -59,7 +59,7 @@ class CalendarManager extends Serializable {
     */
   def getTimeSlot(timestamp: Long) : Int = {
     val date = getDateFromTimestamp(timestamp)
-    getTimeSlot(date)
+    getTimeSlot(date.getHourOfDay)
   }
 
   /**
@@ -73,7 +73,7 @@ class CalendarManager extends Serializable {
   def getTimeReference(timestamp: Long) : Array[Int] = {
     val date = getDateFromTimestamp(timestamp)
     val res = new Array[Int](3)
-    res(0) = getTimeSlot(date)
+    res(0) = getTimeSlot(date.getHourOfDay)
     res(1) = date.getDayOfMonth
     res(2) = date.getMonthOfYear
     res

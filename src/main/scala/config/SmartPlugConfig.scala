@@ -32,6 +32,14 @@ object Properties {
   val SPARK_QUERY_TWO_NAME = "spark.query.two.name"
   val SPARK_QUERY_THREE_NAME = "spark.query.three.name"
 
+  val JSON_TIMES_URL = "results.times.url"
+  val JSON_RESULTS_1_URL = "results.times.res.query1.url"
+  val JSON_RESULTS_SQL_1_URL = "results.times.res.query1SQL.url"
+  val JSON_RESULTS_2_URL = "results.times.res.query2.url"
+  val JSON_RESULTS_SQL_2_URL = "results.times.res.query2SQL.url"
+  val JSON_RESULTS_3_URL = "results.times.res.query3.url"
+  val JSON_RESULTS_SQL_3_URL = "results.times.res.query3SQL.url"
+
   object Test {
     private val TEST_PREFIX = "test."
 

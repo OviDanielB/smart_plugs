@@ -1,10 +1,12 @@
+package Queries
+
+import com.databricks.spark.avro._
 import config.{Properties, SmartPlugConfig}
+import controller.SparkController
+import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.{DataTypes, StructType}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import utils.udfDataFunction
-import org.apache.spark.sql.functions._
-import com.databricks.spark.avro._
-import controller.SparkController
 
 
 /**

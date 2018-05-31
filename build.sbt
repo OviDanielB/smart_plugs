@@ -15,13 +15,17 @@ resolvers += "Apache HBase" at
   "https://repository.apache.org/content/repositories/releases"
 resolvers += "Thrift" at "https://people.apache.org/~rawson/repo/"
 
+val depManagement = "provided"
+
+libraryDependencies += "org.alluxio" % "alluxio-core-client-hdfs" % "1.7.1"
+
 libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "2.9.9",
   "org.joda" % "joda-convert" % "2.0.1",
-  "org.scalactic" %% "scalactic" % "3.0.1" % "provided",
+  "org.scalactic" %% "scalactic" % "3.0.1" % depManagement ,
   "org.scalatest" %% "scalatest" % "3.0.0" % "test",
-  "org.apache.spark" %% "spark-core" % sparkVersion ,
-  "org.apache.spark" %% "spark-sql" % sparkVersion,
+  "org.apache.spark" %% "spark-core" % sparkVersion % depManagement,
+  "org.apache.spark" %% "spark-sql" % sparkVersion % depManagement,
   "de.jollyday" % "jollyday" % "0.5.5",
   "com.databricks" %% "spark-avro" % "4.0.0",
   "com.typesafe" % "config" % "1.3.2",
