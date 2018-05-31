@@ -1,6 +1,6 @@
 import Queries._
 import com.google.gson.Gson
-import config.{Properties, SmartPlugConfig}
+
 import controller.SparkController
 import org.apache.spark.sql.types.StructType
 import utils.{CalendarManager, ProfilingTime}
@@ -15,16 +15,18 @@ object BenchmarkMain {
     val schema: StructType = SparkController.defaultCustomSchema()
 
     //    val sparkContext = SparkController.sparkContextNoMaster
-    var sparkContext = SparkController.defaultSparkContext()
-    var sparkSession = SparkController.defaultSparkSession()
+    //var sparkContext = SparkController.defaultSparkContext()
+    //var sparkSession = SparkController.defaultSparkSession()
 
+    var sparkContext = SparkController.sparkContextNoMaster
+    var sparkSession = SparkController.sparkSessionNoMaster
     /*
        Default path to dataset and output file
      */
-    var outputPath = SmartPlugConfig.get(Properties.JSON_TIMES_URL)
-    var datasetPathCSV: String = SmartPlugConfig.get(Properties.CSV_DATASET_URL)
-    var datasetPathParquet: String = SmartPlugConfig.get(Properties.PARQUET_DATASET_URL)
-    var datasetPathAvro: String = SmartPlugConfig.get(Properties.AVRO_DATASET_URL)
+    var outputPath = ""//SmartPlugConfig.get(Properties.JSON_TIMES_URL)
+    var datasetPathCSV: String = ""//SmartPlugConfig.get(Properties.CSV_DATASET_URL)
+    var datasetPathParquet: String = ""//SmartPlugConfig.get(Properties.PARQUET_DATASET_URL)
+    var datasetPathAvro: String = ""//SmartPlugConfig.get(Properties.AVRO_DATASET_URL)
     var deployMode = "local"
     var cacheOrNot = "no_cache"
 
@@ -59,7 +61,7 @@ object BenchmarkMain {
       .option("header", "false")
       .option("delimiter", ",")
       .schema(schema)
-      .load(SmartPlugConfig.get(Properties.CSV_DATASET_URL))
+      .load(datasetPathCSV)
 
     if (cacheOrNot.equals("cache")) {
       rddCSV = rddCSV.cache()
