@@ -25,12 +25,12 @@ object Properties {
   val PARQUET_DATASET_URL_FILTERED = "filteredDataset.parquet.url"
   val AVRO_DATASET_URL_FILTERED = "filteredDataset.avro.url"
 
-  val SPARK_APP_NAME = "spark.app.name"
-  val SPARK_MASTER_URL = "spark.master.url"
+  val SPARK_APP_NAME = "sp.spark.app.name"
+  val SPARK_MASTER_URL = "sp.spark.mastername.url"
 
-  val SPARK_QUERY_ONE_NAME = "spark.query.one.name"
-  val SPARK_QUERY_TWO_NAME = "spark.query.two.name"
-  val SPARK_QUERY_THREE_NAME = "spark.query.three.name"
+  val SPARK_QUERY_ONE_NAME = "sp.spark.query.one.name"
+  val SPARK_QUERY_TWO_NAME = "sp.spark.query.two.name"
+  val SPARK_QUERY_THREE_NAME = "sp.spark.query.three.name"
 
   val JSON_TIMES_URL = "results.times.url"
   val JSON_RESULTS_1_URL = "results.times.res.query1.url"
