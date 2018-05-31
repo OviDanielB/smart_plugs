@@ -1,26 +1,22 @@
 #!/usr/bin/env bash
 
 HOST=localhost
-PORT=9999
+PORT=9998
 JAR=1.1.32/nifi-deploy-config-1.1.32.jar
 
 docker network create --driver bridge hadoop_network
-docker run -t -i -p $PORT:$PORT   -e NIFI_WEB_HTTP_PORT="$PORT" --network=hadoop_network -d --name=nifi zanna94/nifi
+docker run -t -i -p $PORT:$PORT -e NIFI_WEB_HTTP_PORT="$PORT" --network=hadoop_network -d --name=nifi zanna94/nifi
 
-docker cp ../../../dataset/ nifi:/data
+printf 'waiting for NiFi...\n'
+until $(curl --output /dev/null --silent --head --fail http://$HOST:$PORT); do
+    printf '.'
+    sleep 5
+done
 
-if [ -f $JAR ]; then
-    wget http://central.maven.org/maven2/com/github/hermannpencole/nifi-deploy-config/1.1.32/nifi-deploy-config-1.1.32.jar
-fi
+docker exec -it nifi java -jar /nifi-deploy-config-1.1.32.jar -nifi http://$HOST:$PORT/nifi-api -conf /template.xml -m deployTemplate
+docker exec -it nifi java -jar /nifi-deploy-config-1.1.32.jar -nifi http://$HOST:$PORT/nifi-api -conf /tmp/config.json -mode extractConfig
+docker exec -it nifi java -jar /nifi-deploy-config-1.1.32.jar -nifi http://$HOST:$PORT/nifi-api -conf /tmp/config.json -mode updateConfig
 
-
-if [[ $(wget http://$HOST:$PORT/ -O-) ]]
-  then
-        java -jar nifi-deploy-config-1.1.32.jar -nifi http://$HOST:$PORT/nifi-api -conf ./template.xml -m deployTemplate
-    java -jar nifi-deploy-config-1.1.32.jar -nifi http://$HOST:$PORT/nifi-api -conf /tmp/config.json -mode extractConfig
-    java -jar nifi-deploy-config-1.1.32.jar -nifi http://$HOST:$PORT/nifi-api -conf /tmp/config.json -mode updateConfig
-
-fi
 
 
 
