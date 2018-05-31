@@ -114,10 +114,6 @@ object Query3 extends Serializable {
       .sortBy(_._2, ascending = false)
       .collect()
 
-    for (x <- q) {
-      println(x)
-    }
-
     q
   }
 
