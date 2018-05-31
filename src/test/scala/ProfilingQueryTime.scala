@@ -1,4 +1,4 @@
-import QueryOneSQL.spark
+import Queries._
 import org.scalatest.FlatSpec
 import config.{Properties, SmartPlugConfig}
 import org.apache.spark.SparkContext
@@ -36,7 +36,7 @@ class ProfilingQueryTime extends FlatSpec {
 
     val dataFramePARQUET = sparkSession.read.parquet(PARQUET_FILE)
     val dataFrameAVRO = sparkSession.read.avro(AVRO_FILE)
-    val dataFrameCSV = spark.read.format("csv")
+    val dataFrameCSV = sparkSession.read.format("csv")
       .option("header", "false")
       .option("delimiter", ",")
       .schema(schema)

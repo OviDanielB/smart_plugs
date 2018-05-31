@@ -1,97 +1,74 @@
 package DAO
 
-import controller.SparkController
-import org.apache.spark.SparkContext
-import org.apache.spark.sql.types._
+import com.google.gson.Gson
+import config.{Properties, SmartPlugConfig}
 import org.apache.spark.sql.{Dataset, Row, SparkSession}
-import utils.CalendarManager
+
 
 object hdfsDAO {
 
-  private val RESULTS_1_FILENAME = "results/results1.parquet"
-  private val RESULTS_2_FILENAME = "results/results2.parquet"
-  private val RESULTS_3_FILENAME = "results/results3.parquet"
+  private val gson : Gson = new Gson()
 
-  private val schema_1 : StructType = StructType(Array(
-    StructField("house_id", IntegerType, nullable = false)))
+  def writeQuery1Results(sparkSession : SparkSession, res : Array[Int], output: String) : Unit = {
 
-  private val schema_2 : StructType = StructType(Array(
-    StructField("house_id", IntegerType, nullable = false),
-    StructField("slot", IntegerType, nullable = false),
-    StructField("avg", DoubleType, nullable = false),
-    StructField("stddev", DoubleType, nullable = false)
-  ))
+    val tmp = Array(System.currentTimeMillis(), res)
 
-  private val schema_3 : StructType = StructType(Array(
-    StructField("house_id", IntegerType, nullable = false),
-    StructField("household_id", IntegerType, nullable = false),
-    StructField("plug_id", IntegerType, nullable = false),
-    StructField("month", IntegerType, nullable = false),
-    StructField("score", DoubleType, nullable = false)
-  ))
+    val results = gson.toJson(tmp)
 
-  val sparkContext : SparkContext = SparkController.defaultSparkContext()
-  val sparkSession : SparkSession = SparkController.defaultSparkSession()
+    val df = sparkSession.read.textFile(results)
 
-  def writeQuery1Results(res: Array[Int]) : Unit = {
-
-    val results = res.map(r => Row(r))
-
-    val rdd = sparkContext.parallelize(results)
-    val df = sparkSession.createDataFrame(rdd, schema_1)
-
-    df.coalesce(1).write.parquet(RESULTS_1_FILENAME)
+    df.coalesce(1).write.json(SmartPlugConfig.get(output))
   }
 
-  def writeQuery1Results(res: Dataset[Row]) : Unit = {
+  def writeQuery1SQLResults(sparkSession : SparkSession, res: Dataset[Row]) : Unit = {
 
+    val tmp = Array(System.currentTimeMillis(), res)
+
+    val results = gson.toJson(tmp)
+
+    val df = sparkSession.read.textFile(results)
+
+    df.coalesce(1).write.json(SmartPlugConfig.get(Properties.JSON_RESULTS_SQL_1_URL))
   }
 
-  def writeQuery2Results(res: Array[((Int,Int),Double,Double)]) : Unit = {
+  def writeQuery2Results(sparkSession : SparkSession, res: Array[((Int,Int),Double,Double)], output : String) : Unit = {
 
-    val results = res.map(r => Row(r._1._1, r._1._2, r._2, r._3))
+    val tmp = Array(System.currentTimeMillis(), res)
 
-    val rdd = sparkContext.parallelize(results)
-    val df = sparkSession.createDataFrame(rdd, schema_2)
+    val results = gson.toJson(tmp)
 
-    df.coalesce(1).write.parquet(RESULTS_2_FILENAME)
+    val df = sparkSession.read.textFile(results)
 
-    sparkSession.read.parquet(RESULTS_2_FILENAME).show()
+    df.coalesce(1).write.json(output)
   }
 
-  def writeQuery2Results(res: Dataset[Row]) : Unit = {
+  def writeQuery2SQLResults(sparkSession : SparkSession, res: Dataset[Row]) : Unit = {
+    val tmp = Array(System.currentTimeMillis(), res)
 
+    val results = gson.toJson(tmp)
+
+    val df = sparkSession.read.textFile(results)
+
+    df.coalesce(1).write.json(SmartPlugConfig.get(Properties.JSON_RESULTS_SQL_2_URL))
   }
 
-  def writeQuery3Results(res: Array[((Int,Int,Int,Int),Double)]) : Unit = {
-    val results = res.map(r => Row(r._1._1, r._1._2, r._1._3, r._1._4, r._2))
+  def writeQuery3Results(sparkSession: SparkSession, res: Array[((Int,Int,Int,Int),Double)], output : String) : Unit = {
+    val tmp = Array(System.currentTimeMillis(), res)
 
-    val rdd = sparkContext.parallelize(results)
-    val df = sparkSession.createDataFrame(rdd, schema_3)
+    val results = gson.toJson(tmp)
 
-    df.coalesce(1).write.parquet(RESULTS_3_FILENAME)
+    val df = sparkSession.read.textFile(results)
 
-//    sparkSession.read.parquet(RESULTS_3_FILENAME).show()
+    df.coalesce(1).write.json(output)
   }
 
-  def writeQuery3Results(res: Dataset[Row]) : Unit = {
+  def writeQuery3SQLResults(sparkSession: SparkSession, res: Dataset[Row]) : Unit = {
+    val tmp = Array(System.currentTimeMillis(), res)
 
+    val results = gson.toJson(tmp)
+
+    val df = sparkSession.read.textFile(results)
+
+    df.coalesce(1).write.json(SmartPlugConfig.get(Properties.JSON_RESULTS_SQL_3_URL))
   }
-
-  def main(args: Array[String]) : Unit = {
-    val cm = new CalendarManager()
-//    val res1 = Query1.executeCSV(sparkContext, "dataset/d14_filtered.csv")
-//    writeQuery1Results(res1)
-//    val res2 = Query2.executeCSV(sparkContext, "dataset/d14_filtered.csv", cm)
-//    writeQuery2Results(res2)
-//    val res3 = Query3.executeCSV(sparkContext, "dataset/d14_filtered.csv", cm)
-//    writeQuery3Results(res3)
-
-//    sparkSession.read.parquet(RESULTS_3_FILENAME).show(100)
-
-    val rdd2 = sparkSession.read.textFile("hdfs://master:54310/dataset/d14_filtered.csv")
-    rdd2.toDF().show()
-
-  }
-
 }
