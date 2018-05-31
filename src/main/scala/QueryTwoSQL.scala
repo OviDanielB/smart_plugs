@@ -48,7 +48,7 @@ object QueryTwoSQL {
     *
     * @param df DataFrame
     */
-  def executeOnSlot(df: DataFrame): Unit = {
+  def execute(df: DataFrame): Unit = {
 
     val data = df
       // Keep only value for energy consumption
@@ -84,17 +84,17 @@ object QueryTwoSQL {
 
   def executeOnCsv(): Unit = {
     val df = loadDataframeFromCSV()
-    executeOnSlot(df)
+    execute(df)
   }
 
   def executeOnParquet(): Unit = {
     val df = spark.read.parquet(SmartPlugConfig.get(Properties.PARQUET_DATASET_URL)).persist()
-    executeOnSlot(df)
+    execute(df)
   }
 
   def executeOnAvro(): Unit = {
     val df = spark.read.avro(SmartPlugConfig.get(Properties.AVRO_DATASET_URL)).persist()
-    executeOnSlot(df)
+    execute(df)
   }
 
 

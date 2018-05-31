@@ -3,7 +3,9 @@ import controller.SparkController
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Row
-import utils.{CSVParser, ProfilingTime}
+import utils.ProfilingTime
+import com.databricks.spark.avro._
+
 
 /**
   * QUERY 1 USING SPARK CORE
@@ -20,41 +22,9 @@ object Query1 extends Serializable {
   /**
     * Find houses with a instantaneous energy consumption greater or equal to 350 Watt
     * analyzing data read from a CSV file.
-    * Slow parsing CSV version.
-    *
-    * @param sc spark context
-    * @param data rdd
-    * @return array of houses id
-    */
-  def executeSlowCSV(sc: SparkContext, data: RDD[String]): Array[Int] = {
-
-    val q = data
-      .map(
-        line => CSVParser.parse(line))
-      .flatMap(
-        f => if (f.get.isLoadMeasurement())
-              Some((f.get.house_id, f.get.timestamp), f.get.value)
-        else None
-      )
-      .reduceByKey(_ + _)
-      .flatMap(
-        f =>
-          if (f._2 >= LOAD_THRESHOLD) {
-            Some(f._1._1)
-          } else
-            None
-      )
-      .distinct()
-      .collect()
-    q
-  }
-
-  /**
-    * Find houses with a instantaneous energy consumption greater or equal to 350 Watt
-    * analyzing data read from a CSV file.
     * Fast parsing CSV version.
     *
-    * @param sc spark context
+    * @param sc   spark context
     * @param data rdd
     * @return array of houses id
     */
@@ -70,7 +40,7 @@ object Query1 extends Serializable {
 
         if (property == 1) Some(((house, timestamp), value)) else None
       }
-      .reduceByKey(_+_)
+      .reduceByKey(_ + _)
       .flatMap(
         f =>
           if (f._2 >= LOAD_THRESHOLD) {
@@ -81,7 +51,7 @@ object Query1 extends Serializable {
       .distinct()
       .collect()
 
-//    q.foreach(x => println(x))
+    //    q.foreach(x => println(x))
 
     q
   }
@@ -90,11 +60,11 @@ object Query1 extends Serializable {
     * Find houses with a instantaneous energy consumption greater or equal to 350 Watt
     * analyzing data converting a DataFrame read from a Parquet file.
     *
-    * @param sc spark context
+    * @param sc   spark context
     * @param data rdd
     * @return array of houses id
     */
-  def executeParquet(sc: SparkContext, data: RDD[Row]): Array[Int] = {
+  def executeOnRow(sc: SparkContext, data: RDD[Row]): Array[Int] = {
 
     val q = data
       .flatMap {
@@ -106,7 +76,7 @@ object Query1 extends Serializable {
 
           if (property == 1) Some(((house, timestamp), value)) else None
       }
-      .reduceByKey(_+_)
+      .reduceByKey(_ + _)
       .flatMap(
         f =>
           if (f._2 >= LOAD_THRESHOLD) {
@@ -119,12 +89,7 @@ object Query1 extends Serializable {
     q
   }
 
-  def executeSlowCSV(sc: SparkContext, fileURL : String): Array[Int] = {
-    val data = sc.textFile(fileURL)
-    executeSlowCSV(sc, data)
-  }
-
-  def executeCSV(sc: SparkContext, fileURL : String): Array[Int] = {
+  def executeCSV(sc: SparkContext, fileURL: String): Array[Int] = {
     val data = sc.textFile(fileURL)
     executeCSV(sc, data)
   }
@@ -132,45 +97,49 @@ object Query1 extends Serializable {
   def executeParquet(sc: SparkContext, filePath: String): Array[Int] = {
     val spark = SparkController.defaultSparkSession()
     val data_p = spark.read.parquet(filePath)
-    executeParquet(sc, data_p.rdd)
+    executeOnRow(sc, data_p.rdd)
   }
 
-  def mainOld(args: Array[String]): Unit = {
-
-    val sc = SparkController.defaultSparkContext()
-    val data = sc.textFile(SmartPlugConfig.get(Properties.CSV_DATASET_URL))
-
+  def executeAvro(sc: SparkContext, filePath: String): Array[Int] = {
     val spark = SparkController.defaultSparkSession()
-    val data_p = spark.read.parquet(SmartPlugConfig.get(Properties.PARQUET_DATASET_URL))
-
-//    ProfilingTime.time {
-//      executeSlowCSV(sc, data)                  // 6,6
-//    }
-    ProfilingTime.time {
-      executeCSV(sc, data)            // 2,4 BEST
-    }
-//    ProfilingTime.time {
-//      executeParquet(sc, data_p.rdd)  // 2,7
-//    }
+    val data_p = spark.read.avro(filePath)
+    executeOnRow(sc, data_p.rdd)
   }
 
-
-
-  /* TODO remove; used for testing */
   def main(args: Array[String]): Unit = {
 
-    val sc = SparkController.sparkContextNoMaster
-    val data = sc.textFile(args(0))
+    //    val sc = SparkController.sparkContextNoMaster
+    val sc = SparkController.defaultSparkContext()
+    val spark = SparkController.defaultSparkSession()
 
+    var datasetCSV: String = SmartPlugConfig.get(Properties.CSV_DATASET_URL)
+    var datasetParquet: String = SmartPlugConfig.get(Properties.PARQUET_DATASET_URL)
+    var datasetAvro: String = SmartPlugConfig.get(Properties.AVRO_DATASET_URL)
 
-    //    ProfilingTime.time {
-    //      executeSlowCSV(sc, data)                  // 6,6
-    //    }
-    ProfilingTime.time {
-      executeCSV(sc, data)            // 2,4 BEST
+    if (args.length == 3) {
+      datasetCSV = args(0)
+      datasetParquet = args(1)
+      datasetAvro = args(2)
+    } else if (args.length != 0) {
+      println("Required params: csv path, parquet path, avro path!")
     }
-    //    ProfilingTime.time {
-    //      executeParquet(sc, data_p.rdd)  // 2,7
-    //    }
+
+    val data = sc.textFile(datasetCSV)
+    val data_p = spark.read.parquet(datasetParquet)
+    val data_a = spark.read.avro(datasetAvro)
+
+
+    ProfilingTime.time {
+      executeCSV(sc, data)
+    }
+
+    ProfilingTime.time {
+      executeOnRow(sc, data_p.rdd)
+    }
+
+    ProfilingTime.time {
+      executeOnRow(sc, data_a.rdd)
+    }
+
   }
 }
