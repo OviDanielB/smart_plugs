@@ -17,8 +17,8 @@ object Main {
     val schema: StructType = SparkController.defaultCustomSchema()
 
     //    val sc = SparkController.sparkContextNoMaster
-    val sc = SparkController.defaultSparkContext()
-    val spark = SparkController.defaultSparkSession()
+    var sc = SparkController.defaultSparkContext()
+    var spark = SparkController.defaultSparkSession()
 
     /*
        Default path to dataset and output file
@@ -27,12 +27,20 @@ object Main {
     var datasetPathCSV: String = SmartPlugConfig.get(Properties.CSV_DATASET_URL)
     var datasetPathParquet: String = SmartPlugConfig.get(Properties.PARQUET_DATASET_URL)
     var datasetPathAvro: String = SmartPlugConfig.get(Properties.AVRO_DATASET_URL)
+    var deployMode = "local"
+    var cacheOrNot = "no_cache"
 
-    if (args.length == 4) {
+    if (args.length == 6) {
       outputPath = args(0)
       datasetPathCSV = args(1)
       datasetPathParquet = args(2)
       datasetPathAvro = args(3)
+      deployMode = args(4)
+      if(deployMode.equals("cluster")){
+        sc = SparkController.sparkContextNoMaster
+        spark = SparkController.sparkSessionNoMaster
+      }
+      cacheOrNot = args(5)
     } else if (args.length != 0) {
       println("Required params: csv path, parquet path, avro path!")
     }
@@ -40,18 +48,25 @@ object Main {
     /*
        Get RDD[String] from csv file
      */
-    val data = sc.textFile(datasetPathCSV)
+    var data = sc.textFile(datasetPathCSV)
 
     /*
       Get dataframes from Parquet and Avro files
      */
-    val data_p = spark.read.parquet(datasetPathParquet)
-    val data_a = spark.read.avro(datasetPathAvro)
-    val df = spark.read.format("csv")
+    var data_p = spark.read.parquet(datasetPathParquet)
+    var data_a = spark.read.avro(datasetPathAvro)
+    var df = spark.read.format("csv")
       .option("header", "false")
       .option("delimiter", ",")
       .schema(customSchema)
       .load(SmartPlugConfig.get(Properties.CSV_DATASET_URL))
+
+    if(cacheOrNot.equals("cache")){
+      data = data.cache()
+      data_p = data_p.cache()
+      data_a = data_a.cache()
+      df = df.cache()
+    }
 
     /*
       Spark core queries
