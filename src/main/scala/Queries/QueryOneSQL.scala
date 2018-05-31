@@ -17,7 +17,7 @@ import utils.ProfilingTime
   */
 object QueryOneSQL {
 
-  val spark: SparkSession = SparkController.defaultSparkSession()
+  lazy val spark: SparkSession = SparkController.defaultSparkSession()
 
   import spark.implicits._
 

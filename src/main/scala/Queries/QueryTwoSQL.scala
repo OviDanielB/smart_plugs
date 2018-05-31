@@ -18,9 +18,9 @@ import utils.ProfilingTime
   */
 object QueryTwoSQL {
 
-  val spark : SparkSession = SparkController.defaultSparkSession()
+  lazy val spark : SparkSession = SparkController.defaultSparkSession()
 
-  val customSchema : StructType = SparkController.defaultCustomSchema()
+  lazy val customSchema : StructType = SparkController.defaultCustomSchema()
 
   import spark.implicits._
 

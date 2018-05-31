@@ -18,9 +18,9 @@ import utils.udfDataFunction
   */
 object QueryThreeSQL {
 
-  val spark: SparkSession = SparkController.defaultSparkSession()
+  lazy val spark: SparkSession = SparkController.defaultSparkSession()
 
-  val schema : StructType = SparkController.defaultCustomSchema()
+  lazy val schema : StructType = SparkController.defaultCustomSchema()
 
   import spark.implicits._
 
