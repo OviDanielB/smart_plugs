@@ -29,8 +29,9 @@ object BenchmarkMain {
     var datasetPathAvro: String = ""//SmartPlugConfig.get(Properties.AVRO_DATASET_URL)
     var deployMode = "local"
     var cacheOrNot = "no_cache"
+    var runString = "1"
 
-    if (args.length == 6) {
+    if (args.length == 7) {
       outputPath = args(0)
       datasetPathCSV = args(1)
       datasetPathParquet = args(2)
@@ -41,6 +42,7 @@ object BenchmarkMain {
         sparkSession = SparkController.sparkSessionNoMaster
       }
       cacheOrNot = args(5)
+      runString = args(6)
     } else if (args.length != 0) {
       println("Required params: csv path, parquet path, avro path!")
     }
@@ -75,7 +77,7 @@ object BenchmarkMain {
       Note: For queries on Parquet and Avro, dataframes are converted to RDD[Row]
      */
     var res: Map[String, Double] = Map() // keep results
-    val RUN = 5
+    val RUN = runString.toInt
 
     /*
       Query 1
@@ -155,8 +157,11 @@ object BenchmarkMain {
     t = ProfilingTime.getMeanTime(RUN, QueryThreeSQL.execute(dataFrameAvro))
     res += ("query3SQLavro" -> t)
 
+    sparkContext.parallelize(Seq(System.currentTimeMillis(), res))
+      .saveAsTextFile(outputPath)
+
     // Write times as JSON file
-    val times = sparkSession.read.textFile(gson.toJson(Array(System.currentTimeMillis(), res)))
-    times.write.json(outputPath)
+    /*val times = sparkSession.read.textFile(gson.toJson(Array(System.currentTimeMillis(), res)))
+    times.write.json(outputPath) */
   }
 }

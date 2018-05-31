@@ -35,6 +35,8 @@ spec:
         env:
           - name: NIFI_WEB_HTTP_PORT
             value: "9999"
+          - name: HDFS_DEFAULTS_FS
+            value: hdfs://35.204.99.42:8020
  #         - name: NIFI_WEB_HTTP_HOST
  #           value: "nifi"
         ports:
