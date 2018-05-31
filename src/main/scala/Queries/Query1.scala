@@ -1,3 +1,5 @@
+package Queries
+
 import config.{Properties, SmartPlugConfig}
 import controller.SparkController
 import org.apache.spark.SparkContext

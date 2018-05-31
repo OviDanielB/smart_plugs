@@ -1,4 +1,7 @@
+package Queries
+
 import com.databricks.spark.avro._
+
 import config.{Properties, SmartPlugConfig}
 import controller.SparkController
 import model.MaxMinHolder
@@ -44,7 +47,7 @@ object Query3 extends Serializable {
           val timestamp = f(1).toLong
           val value = f(2).toFloat
 
-          if (property == 0 && value != 0) {
+          if (property == 0) {
             val rate = cm.getPeriodRate(timestamp)
             val day = cm.getDayOfYear(timestamp)
             val hour = cm.getHourOfDay(timestamp)
