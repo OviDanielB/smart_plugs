@@ -9,8 +9,14 @@ object SparkController {
 
   lazy val sparkContextNoMaster : SparkContext = {
     val conf = new SparkConf()
-    conf.setAppName(SmartPlugConfig.get(Properties.SPARK_APP_NAME))
-    SparkContext.getOrCreate()
+    conf.setAppName("No master specified demo")
+    conf.setMaster("local[2]")
+    //conf.setJars(Seq("jars/alluxio-1.7.1-client.jar"))
+    //conf.set("spark.driver.extraClassPath", "jars/alluxio-1.7.1-client.jar")
+    //conf.set("spark.executor.extraClassPath", "jars/alluxio-1.7.1-client.jar")
+    //conf.set("fs.alluxio.impl", "alluxio.hadoop.FileSystem")
+
+    SparkContext.getOrCreate(conf)
   }
 
   private[this] lazy val sparkContext : SparkContext = {

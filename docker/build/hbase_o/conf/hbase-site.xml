@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>hbase.cluster.distributed</name>
+    <value>false</value>
+  </property>
+  <!--<property>
+    <name>zookeeper.znode.parent</name>
+    <value>/hbase-unsecure</value>
+  </property>-->
+  <property>
+    <name>hbase.rootdir</name>
+    <!--> don't change this value, pass it as HBASE_ROOT_DIR env var <-->
+    <!--<value> rootDirectory </value>-->
+    <value> alluxio://alluxio-master:19998/hbase </value>
+  </property>
+  <!--<property>
+    <name>hbase.zookeeper.property.dataDir</name>
+    <value>/home/testuser/zookeeper</value>
+  </property> -->
+  <!--> Alluxio implementations <-->
+  <property>
+    <name>fs.alluxio.impl</name>
+    <value>alluxio.hadoop.FileSystem</value>
+  </property>
+  <property>
+    <name>fs.AbstractFileSystem.alluxio.impl</name>
+    <value>alluxio.hadoop.AlluxioFileSystem</value>
+  </property>
+
+</configuration>
