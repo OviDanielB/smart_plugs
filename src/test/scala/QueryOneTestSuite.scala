@@ -1,3 +1,4 @@
+import Queries.Query1
 import config.{Properties, SmartPlugConfig}
 import controller.SparkController
 import model.PlugData
