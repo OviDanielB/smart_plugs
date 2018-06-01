@@ -66,6 +66,7 @@ Google Cloud Deployment
 ##### Software Needed
 * *kubectl* - Kubernetes CLI
 * *gcloud*  - Google Cloud CLI
+* *sbt* - SBT CLI
 
 
 ##### Region, Zone and VPC
@@ -137,3 +138,52 @@ Mongo is used for storing query results. To deploy it, run
 ```
 kubernetes/mongodb/deploy_mongo.sh
 ```
+
+##### NiFi Deployment
+Go to *kubernetes/nifi* directory and run
+```
+kubectl apply -f nifi_service.yaml
+```
+
+##### App Jar
+Spark needs an application jar to distribute the code to all the nodes in 
+the cluster. To build one, go to root of the project (where the *build.sbt* file is located)
+```
+sbt assembly
+```
+Load the jar to a Google Cloud Storage bucket where it will be retrieved
+by Dataproc to run the Spark job.
+
+and it will output a "fat" jar in the *target/scala-2.11* directory. Be sure 
+not to include spark libraries since it will conflict with existing ones 
+on the cluster.
+
+##### Load data on HDFS
+First create a directory on HDFS for Alluxio, */alluxio* 
+(they need to be put here for Alluxio to see them).
+Load the datasets on HDFS by any means you want:
+* SSH into namenode, download files and manually and put them on file system
+* use NiFi with the template in *docker/build/NiFi/templace2.0.xml*
+(note that NiFi also needs HDFS's configuration files)
+
+##### Start Spark Job
+From the *Jobs* section in DataProc, create a new Spark job on the cluster
+by specifying the jar's url, the main class (e.g. *BenchmarkMain*) on GCS and its arguments, e.g.
+```
+//args
+alluxio://<all-ip>:<all-port>/results       // output path
+alluxio://<all-ip>:<all-port>/data.csv      // csv dataset
+alluxio://<all-ip>:<all-port>/data.parquet  // parquet dataset
+alluxio://<all-ip>:<all-port>/data.avro     // avro dataset
+cluster                                     // deploy type
+no_cache                                    // cache or not initial rdds
+5                                           // # runs for each query to compute mean time
+```
+
+If you want to use HDFS directly, use 
+```
+hdfs://mIP:8020/<file>
+```
+in the previous example.
+
+ 

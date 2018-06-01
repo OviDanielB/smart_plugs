@@ -13,7 +13,6 @@ resolvers ++= Seq(
 
 val depManagement = "provided"
 
-libraryDependencies += "org.alluxio" % "alluxio-core-client-hdfs" % "1.7.1"
 
 libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "2.9.9",
@@ -26,7 +25,8 @@ libraryDependencies ++= Seq(
   "com.databricks" %% "spark-avro" % "4.0.0",
   "com.typesafe" % "config" % "1.3.2",
   "org.apache.hadoop" % "hadoop-common" % "2.7.3" % depManagement,
-  "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.5"
+  "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.5",
+  "org.alluxio" % "alluxio-core-client-hdfs" % "1.7.1"
 )
 test in assembly := {}
 
