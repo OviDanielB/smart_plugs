@@ -16,6 +16,7 @@ object SparkController {
     //conf.set("spark.executor.extraClassPath", "jars/alluxio-1.7.1-client.jar")
     //conf.set("fs.alluxio.impl", "alluxio.hadoop.FileSystem")
 
+    conf.set("alluxio.user.file.writetype.default","CACHE_THROUGH")
     SparkContext.getOrCreate(conf)
   }
 
