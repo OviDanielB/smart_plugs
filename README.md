@@ -1,3 +1,40 @@
+Table of Contents
+=================
+
+* [Local Deployment](#local-deployment)
+   * [Data Ingestion: Apache NiFi](#data-ingestion-apache-nifi)
+   * [Alluxio](#alluxio)
+* [Google Cloud Deployment](#google-cloud-deployment)
+   * [Software Needed](#software-needed)
+   * [Region, Zone and VPC](#region-zone-and-vpc)
+   * [DataProc Cluster](#dataproc-cluster)
+   * [Kubernetes Cluster](#kubernetes-cluster)
+   * [Alluxio Deployment](#alluxio-deployment)
+   * [MongoDB Deployment](#mongodb-deployment)
+
+
+
+#### Local Deployment
+
+To deploy locally the layers of the application you can exploit Docker.
+Several scripts are available in the directory `/docker/run`
+
+##### Data Ingestion: Apache NiFi
+The framework Apache NiFi is used to transform the dataset from csv to Avro and Parquet formats.
+The dataset is filtered removing tuple with value field equals to zero and then it is loaded into HDFS.
+In order to create the NiFi container using Docker, you can run the `nifi-start.sh` script. 
+It defines the environment variable HDFS_DEFAULT_FS to which is assigned the address for HDFS.
+The default is hdfs://master:54310 but you can change it before run the script.
+
+The image already contains the template that is instantiated automatically on NiFi.
+To start it, you can access the NiFi UI at <http://localhost:9999/nifi/>. After the container startup
+the UI can take several minute to be available.
+To start the dataFlow you must first enable all the controller services as describet at <https://nifi.apache.org/docs/nifi-docs/html/user-guide.html#Enabling_Disabling_Controller_Services>
+For more info please refers to <https://nifi.apache.org/docs/nifi-docs/html/user-guide.html#starting-a-component>
+
+##### Alluxio
+To build and run Alluxio docker image please refer to: [Build and run alluxio docker image](https://github.com/trillaura/smart_plugs/blob/master/docker/build/alluxio/README.md)
+
 #### Google Cloud Deployment
 
 ##### Software Needed
