@@ -19,9 +19,8 @@ object hdfsDAO {
 
     val results = JSONConverter.results1ToJSON(res)
 
-    val df = spark.read.json(Seq(results).toDS)
-
-    df.write.json(SmartPlugConfig.get(Properties.JSON_RESULTS_1_URL))
+    sparkSession.sparkContext.parallelize(Seq(results))
+      .saveAsTextFile(SmartPlugConfig.get(Properties.JSON_RESULTS_1_URL))
     //    writeOnAlluxio(results, "alluxio://localhost:19998/results/results1.json")
   }
 
@@ -29,18 +28,16 @@ object hdfsDAO {
 
     val results = JSONConverter.results2ToJSON(res)
 
-    val df = spark.read.json(Seq(results).toDS)
-
-    df.write.json(SmartPlugConfig.get(Properties.JSON_RESULTS_2_URL))
+    sparkSession.sparkContext.parallelize(Seq(results))
+      .saveAsTextFile(SmartPlugConfig.get(Properties.JSON_RESULTS_2_URL))
   }
 
   def writeQuery3Results(sparkSession: SparkSession, res: Array[((Int,Int,Int,Int),Double)]) : Unit = {
 
     val results = JSONConverter.results3ToJSON(res)
 
-    val df = spark.read.json(Seq(results).toDS)
-
-    df.write.json(SmartPlugConfig.get(Properties.JSON_RESULTS_3_URL))
+    sparkSession.sparkContext.parallelize(Seq(results))
+      .saveAsTextFile(SmartPlugConfig.get(Properties.JSON_RESULTS_3_URL))
   }
 
 
