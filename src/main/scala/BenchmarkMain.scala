@@ -7,7 +7,20 @@ import com.databricks.spark.avro._
 import config.{Properties, SmartPlugConfig}
 import utils.JSONConverter.Times
 
-
+/**
+  * The Main for queries execution times measurements
+  * that requires the following input parameters:
+  *   <csv file> :path
+  *   <parquet file> : path
+  *   <avro file> : path
+  *   <deploymode> [local/cluster] : to choose running mode
+  *   <cacheOrNot> [cache/no_cache] : to include/exclude RDD caching Action
+  *   <runString> [1..] : to choose the number of runs among which average times
+  *
+  * @author Ovidiu Daniel Barba
+  * @author Laura Trivelloni
+  * @author Emanuele Vannacci
+  */
 object BenchmarkMain {
 
   def main(args: Array[String]): Unit = {
@@ -21,8 +34,6 @@ object BenchmarkMain {
 
 //    var sparkContext = SparkController.sparkContextNoMaster
 //    var sparkSession = SparkController.sparkSessionNoMaster
-
-    //import spark.implicits._
 
     /*
        Default path to dataset and output file
@@ -175,7 +186,7 @@ object BenchmarkMain {
       t3SQLcsv, t3SQLparquet, t3SQLavro)
 
     // Write times as JSON file
-    sparkContext.parallelize(JSONConverter.timesToJson(res))
+    sparkContext.parallelize(Seq(JSONConverter.timesToJson(res)))
       .saveAsTextFile(outputPath)
   }
 }

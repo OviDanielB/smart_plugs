@@ -7,7 +7,17 @@ import org.apache.spark.sql.types.StructType
 import utils.CalendarManager
 
 /**
-  * @author emanuele
+  * The Main of the application that requires the following
+  * input parameters:
+  *   <csv file> :path
+  *   <parquet file> : path
+  *   <avro file> : path
+  *   <deploymode> [local/cluster] : to choose running mode
+  *   <cacheOrNot> [cache/no_cache] : to include/exclude RDD caching Action
+  *
+  * @author Ovidiu Daniel Barba
+  * @author Laura Trivelloni
+  * @author Emanuele Vannacci
   */
 object AppMain {
 
