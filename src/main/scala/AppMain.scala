@@ -81,17 +81,17 @@ object AppMain {
     val results1 = Query1.executeCSV(sparkContext, datasetPathCSV)
     Query1.executeOnRow(sparkContext, dataFrameParquet.rdd)
     Query1.executeOnRow(sparkContext, dataFrameAvro.rdd)
-    hdfsDAO.writeQuery1Results(sparkSession, results1, outQuery1)
+    //hdfsDAO.writeQuery1Results(sparkSession, results1, outQuery1)
 
     val results2 = Query2.executeCSV(sparkContext, rddCSV, calendarManager)
     Query2.executeOnRow(sparkContext, dataFrameParquet.rdd, calendarManager)
     Query2.executeOnRow(sparkContext, dataFrameAvro.rdd, calendarManager)
-    hdfsDAO.writeQuery2Results(sparkSession, results2, outQuery2)
+  //  hdfsDAO.writeQuery2Results(sparkSession, results2, outQuery2)
 
     val results3 = Query3.executeCSV(sparkContext, rddCSV, calendarManager)
     Query3.executeOnRow(sparkContext, dataFrameParquet.rdd, calendarManager)
     Query3.executeOnRow(sparkContext, dataFrameAvro.rdd, calendarManager)
-    hdfsDAO.writeQuery3Results(sparkSession, results3, outQuery3)
+//    hdfsDAO.writeQuery3Results(sparkSession, results3, outQuery3)
 
     /*
       Spark SQL queries
