@@ -7,7 +7,7 @@ import org.apache.spark.sql.types.StructType
 import utils.CalendarManager
 
 /**
-  * @author emanuele 
+  * @author emanuele
   */
 object AppMain {
 
@@ -28,24 +28,17 @@ object AppMain {
     var datasetPathAvro: String = SmartPlugConfig.get(Properties.AVRO_DATASET_URL)
     var deployMode = "local"
     var cacheOrNot = "no_cache"
-    var outQuery1: String = SmartPlugConfig.get(Properties.JSON_RESULTS_1_URL)
-    var outQuery2: String = SmartPlugConfig.get(Properties.JSON_RESULTS_2_URL)
-    var outQuery3: String = SmartPlugConfig.get(Properties.JSON_RESULTS_3_URL)
 
-    if (args.length == 8) {
+    if (args.length == 5) {
       datasetPathCSV = args(0)
       datasetPathParquet = args(1)
       datasetPathAvro = args(2)
       deployMode = args(3)
-
-      if (deployMode.equals("cluster")) {
+      if(deployMode.equals("cluster")){
         sparkContext = SparkController.sparkContextNoMaster
         sparkSession = SparkController.sparkSessionNoMaster
       }
       cacheOrNot = args(4)
-      outQuery1 = args(5)
-      outQuery2 = args(6)
-      outQuery3 = args(7)
     } else if (args.length != 0) {
       println("Required params: csv path, parquet path, avro path!")
     }
@@ -66,7 +59,7 @@ object AppMain {
       .schema(schema)
       .load(SmartPlugConfig.get(Properties.CSV_DATASET_URL))
 
-    if (cacheOrNot.equals("cache")) {
+    if(cacheOrNot.equals("cache")){
       rddCSV = rddCSV.cache()
       dataFrameParquet = dataFrameParquet.cache()
       dataFrameAvro = dataFrameAvro.cache()
@@ -78,20 +71,20 @@ object AppMain {
       Note: For queries on Parquet and Avro, dataframes are converted to RDD[Row]
      */
 
-    val results1 = Query1.executeCSV(sparkContext, datasetPathCSV)
+    val results1 = Query1.executeCSV(sparkContext, rddCSV)
     Query1.executeOnRow(sparkContext, dataFrameParquet.rdd)
     Query1.executeOnRow(sparkContext, dataFrameAvro.rdd)
-    //hdfsDAO.writeQuery1Results(sparkSession, results1, outQuery1)
+    hdfsDAO.writeQuery1Results(sparkSession, results1)
 
     val results2 = Query2.executeCSV(sparkContext, rddCSV, calendarManager)
     Query2.executeOnRow(sparkContext, dataFrameParquet.rdd, calendarManager)
     Query2.executeOnRow(sparkContext, dataFrameAvro.rdd, calendarManager)
-  //  hdfsDAO.writeQuery2Results(sparkSession, results2, outQuery2)
+    hdfsDAO.writeQuery2Results(sparkSession, results2)
 
     val results3 = Query3.executeCSV(sparkContext, rddCSV, calendarManager)
     Query3.executeOnRow(sparkContext, dataFrameParquet.rdd, calendarManager)
     Query3.executeOnRow(sparkContext, dataFrameAvro.rdd, calendarManager)
-//    hdfsDAO.writeQuery3Results(sparkSession, results3, outQuery3)
+    hdfsDAO.writeQuery3Results(sparkSession, results3)
 
     /*
       Spark SQL queries

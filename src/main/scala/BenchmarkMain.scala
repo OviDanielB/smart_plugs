@@ -22,6 +22,7 @@ object BenchmarkMain {
 //    var sparkContext = SparkController.sparkContextNoMaster
 //    var sparkSession = SparkController.sparkSessionNoMaster
 
+    //import spark.implicits._
 
     /*
        Default path to dataset and output file
