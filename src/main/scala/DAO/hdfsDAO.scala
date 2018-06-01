@@ -12,9 +12,6 @@ import utils.{CalendarManager, JSONConverter}
 
 object hdfsDAO {
 
-  import spark.implicits._
-
-
   def writeQuery1Results(sparkSession : SparkSession, res : Array[Int]) : Unit = {
 
     val results = JSONConverter.results1ToJSON(res)
