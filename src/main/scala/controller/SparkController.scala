@@ -10,7 +10,7 @@ object SparkController {
   lazy val sparkContextNoMaster : SparkContext = {
     val conf = new SparkConf()
     conf.setAppName("Main App No Defined master")
-    //conf.setMaster("local[2]")
+//    conf.setMaster("local[2]")
     //conf.setJars(Seq("jars/alluxio-1.7.1-client.jar"))
     //conf.set("spark.driver.extraClassPath", "jars/alluxio-1.7.1-client.jar")
     //conf.set("spark.executor.extraClassPath", "jars/alluxio-1.7.1-client.jar")

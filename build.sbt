@@ -11,10 +11,6 @@ resolvers ++= Seq(
   DefaultMavenRepository, Resolver.sonatypeRepo("public")
 )
 
-resolvers += "Apache HBase" at
-  "https://repository.apache.org/content/repositories/releases"
-resolvers += "Thrift" at "https://people.apache.org/~rawson/repo/"
-
 val depManagement = "provided"
 
 libraryDependencies += "org.alluxio" % "alluxio-core-client-hdfs" % "1.7.1"
@@ -29,12 +25,9 @@ libraryDependencies ++= Seq(
   "de.jollyday" % "jollyday" % "0.5.5",
   "com.databricks" %% "spark-avro" % "4.0.0",
   "com.typesafe" % "config" % "1.3.2",
-  "org.apache.hadoop" % "hadoop-common" % "2.7.3" % "provided",
-  "org.apache.hbase" % "hbase-server" % "1.3.1" % "provided",
-  "org.apache.hbase" % "hbase-client" % "1.3.1" % "provided",
-  "org.apache.hbase" % "hbase-common" % "1.3.1" % "provided"
+  "org.apache.hadoop" % "hadoop-common" % "2.7.3" % depManagement,
+  "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.5"
 )
-
 test in assembly := {}
 
 assemblyMergeStrategy in assembly := {
@@ -47,6 +40,7 @@ assemblyMergeStrategy in assembly := {
   case PathList("com", "esotericsoftware", xs @ _*) => MergeStrategy.last
   case PathList("com", "codahale", xs @ _*) => MergeStrategy.last
   case PathList("com", "yammer", xs @ _*) => MergeStrategy.last
+  case PathList("com", "fasterxml", xs @ _*) => MergeStrategy.last
   case "about.html" => MergeStrategy.rename
   case "META-INF/ECLIPSEF.RSA" => MergeStrategy.last
   case "META-INF/mailcap" => MergeStrategy.last

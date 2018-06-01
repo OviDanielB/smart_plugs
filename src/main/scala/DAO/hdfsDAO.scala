@@ -1,74 +1,65 @@
 package DAO
 
-import com.google.gson.Gson
+import Queries.{Query1, Query2, Query3}
+import alluxio.AlluxioURI
+import alluxio.client.file.{FileOutStream, FileSystem}
 import config.{Properties, SmartPlugConfig}
-import org.apache.spark.sql.{Dataset, Row, SparkSession}
+import controller.SparkController
+import org.apache.spark.sql.SparkSession
+import utils.{CalendarManager, JSONConverter}
 
 
 object hdfsDAO {
 
-  private val gson : Gson = new Gson()
 
-  def writeQuery1Results(sparkSession : SparkSession, res : Array[Int], output: String) : Unit = {
+  def writeQuery1Results(sparkSession : SparkSession, res : Array[Int]) : Unit = {
 
-    val tmp = Array(System.currentTimeMillis(), res)
+    val results = JSONConverter.results1ToJSON(res)
 
-    val results = gson.toJson(tmp)
+    sparkSession.sparkContext.parallelize(res)
+      .saveAsTextFile(SmartPlugConfig.get(Properties.JSON_RESULTS_1_URL))
 
-    val df = sparkSession.read.textFile(results)
 
-    df.coalesce(1).write.json(SmartPlugConfig.get(output))
+    //    writeOnAlluxio(results, "alluxio://localhost:19998/results/results1.json")
   }
 
-  def writeQuery1SQLResults(sparkSession : SparkSession, res: Dataset[Row]) : Unit = {
+  def writeQuery2Results(sparkSession : SparkSession, res: Array[((Int,Int),Double,Double)]) : Unit = {
 
-    val tmp = Array(System.currentTimeMillis(), res)
+    val results = JSONConverter.results2ToJSON(res)
 
-    val results = gson.toJson(tmp)
-
-    val df = sparkSession.read.textFile(results)
-
-    df.coalesce(1).write.json(SmartPlugConfig.get(Properties.JSON_RESULTS_SQL_1_URL))
+    sparkSession.sparkContext.parallelize(res)
+      .saveAsTextFile(SmartPlugConfig.get(Properties.JSON_RESULTS_2_URL))
   }
 
-  def writeQuery2Results(sparkSession : SparkSession, res: Array[((Int,Int),Double,Double)], output : String) : Unit = {
+  def writeQuery3Results(sparkSession: SparkSession, res: Array[((Int,Int,Int,Int),Double)]) : Unit = {
 
-    val tmp = Array(System.currentTimeMillis(), res)
+    val results = JSONConverter.results3ToJSON(res)
 
-    val results = gson.toJson(tmp)
-
-    val df = sparkSession.read.textFile(results)
-
-    df.coalesce(1).write.json(output)
+    sparkSession.sparkContext.parallelize(res)
+      .saveAsTextFile(SmartPlugConfig.get(Properties.JSON_RESULTS_3_URL))
   }
 
-  def writeQuery2SQLResults(sparkSession : SparkSession, res: Dataset[Row]) : Unit = {
-    val tmp = Array(System.currentTimeMillis(), res)
 
-    val results = gson.toJson(tmp)
+  def writeOnAlluxio(r: String, dest: String): Unit = {
 
-    val df = sparkSession.read.textFile(results)
+    val fs : FileSystem = FileSystem.Factory.get
 
-    df.coalesce(1).write.json(SmartPlugConfig.get(Properties.JSON_RESULTS_SQL_2_URL))
+    val path : AlluxioURI = new AlluxioURI(dest)
+
+    val out : FileOutStream = fs.createFile(path)
+
+    out.write(r.toByte)
+
+    out.close()
   }
 
-  def writeQuery3Results(sparkSession: SparkSession, res: Array[((Int,Int,Int,Int),Double)], output : String) : Unit = {
-    val tmp = Array(System.currentTimeMillis(), res)
+  def main(args: Array[String]): Unit = {
 
-    val results = gson.toJson(tmp)
-
-    val df = sparkSession.read.textFile(results)
-
-    df.coalesce(1).write.json(output)
-  }
-
-  def writeQuery3SQLResults(sparkSession: SparkSession, res: Dataset[Row]) : Unit = {
-    val tmp = Array(System.currentTimeMillis(), res)
-
-    val results = gson.toJson(tmp)
-
-    val df = sparkSession.read.textFile(results)
-
-    df.coalesce(1).write.json(SmartPlugConfig.get(Properties.JSON_RESULTS_SQL_3_URL))
+    val res1 = Query1.executeCSV(SparkController.defaultSparkContext(),"dataset/filtered/d14_filtered.csv")
+    writeQuery1Results(SparkController.defaultSparkSession(),res1)
+    val res2 = Query2.executeCSV(SparkController.defaultSparkContext(),"dataset/filtered/d14_filtered.csv", new CalendarManager)
+    writeQuery2Results(SparkController.defaultSparkSession(),res2)
+    val res3 = Query3.executeCSV(SparkController.defaultSparkContext(),"dataset/filtered/d14_filtered.csv", new CalendarManager)
+    writeQuery3Results(SparkController.defaultSparkSession(),res3)
   }
 }
