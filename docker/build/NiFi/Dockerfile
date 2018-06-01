@@ -7,7 +7,6 @@ RUN apt-get update \
 
 ADD config/core-site.xml /core-site.xml
 ADD config/hdfs-site.xml /hdfs-site.xml
-ADD config/hbase-site.xml /hbase-site.xml
 ADD ./start.sh /opt/nifi/scripts/
 
 RUN mkdir /data
