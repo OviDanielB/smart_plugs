@@ -25,7 +25,7 @@ The AppMain executes the queries and store the results in a file. Use it as foll
                     <csv file> <parquet file> <avro file> <deploymode> <cacheOrNot>
 ```
 
-The argument <deploymode> can be "local" or "cluster". <cacheOrNot> can be "cache" or "no_cache"
+The argument 'deploymode' can be "local" or "cluster". 'cacheOrNot' can be "cache" or "no_cache"
 The BenchmarkMain runs the queries and compute the execution time saving it in a file.
 
 ```
@@ -34,8 +34,8 @@ The BenchmarkMain runs the queries and compute the execution time saving it in a
                     <output> <<csv file> <parquet file> <avro file> <deploymode> <cacheOrNot> <#run>
 ```
 
-The <output> parameter take the path to the file where write the execution times for the query performed with the different
-input file format. <#run> specify the number of runs for each query on which to compute the average of the execution time.
+The 'output' parameter take the path to the file where write the execution times for the query performed with the different
+input file format. '#run' specify the number of runs for each query on which to compute the average of the execution time.
 
 
 Local Deployment
