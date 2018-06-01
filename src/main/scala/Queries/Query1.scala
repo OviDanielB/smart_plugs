@@ -53,8 +53,6 @@ object Query1 extends Serializable {
       .distinct()
       .collect()
 
-    //    q.foreach(x => println(x))
-
     q
   }
 
