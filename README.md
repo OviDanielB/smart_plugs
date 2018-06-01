@@ -1,6 +1,7 @@
 Table of Contents
 =================
 
+* [Application usage](#application-usage)
 * [Local Deployment](#local-deployment)
    * [Data Ingestion: Apache NiFi](#data-ingestion-apache-nifi)
    * [Alluxio](#alluxio)
@@ -12,9 +13,33 @@ Table of Contents
    * [Alluxio Deployment](#alluxio-deployment)
    * [MongoDB Deployment](#mongodb-deployment)
 
+#### Application usage
+The jar has two main entrypoint the AppMain and the BenchmarkMain.
+You can run the application on a Spark cluster exploiting the spark-submit.sh script in the master node.
+For more info refer to <https://spark.apache.org/docs/latest/submitting-applications.html> .
+The AppMain executes the queries and store the results in a file. Use it as follows:
+
+```
+./bin/spark-submit --class AppMain --master <master-url> \
+                   --deploy-mode <deploy-mode> hdfs://master:54310/app.jar \
+                    <csv file> <parquet file> <avro file> <deploymode> <cacheOrNot>
+```
+
+The argument <deploymode> can be "local" or "cluster". <cacheOrNot> can be "cache" or "no_cache"
+The BenchmarkMain runs the queries and compute the execution time saving it in a file.
+
+```
+./bin/spark-submit --class BenchmarkMain --master <master-url> \
+                   --deploy-mode <deploy-mode> hdfs://master:54310/app.jar \
+                    <output> <<csv file> <parquet file> <avro file> <deploymode> <cacheOrNot> <#run>
+```
+
+The <output> parameter take the path to the file where write the execution times for the query performed with the different
+input file format. <#run> specify the number of runs for each query on which to compute the average of the execution time.
 
 
-#### Local Deployment
+Local Deployment
+=================
 
 To deploy locally the layers of the application you can exploit Docker.
 Several scripts are available in the directory `/docker/run`
@@ -30,12 +55,13 @@ The image already contains the template that is instantiated automatically on Ni
 To start it, you can access the NiFi UI at <http://localhost:9999/nifi/>. After the container startup
 the UI can take several minute to be available.
 To start the dataFlow you must first enable all the controller services as describet at <https://nifi.apache.org/docs/nifi-docs/html/user-guide.html#Enabling_Disabling_Controller_Services>
-For more info please refers to <https://nifi.apache.org/docs/nifi-docs/html/user-guide.html#starting-a-component>
+For more info please refer to <https://nifi.apache.org/docs/nifi-docs/html/user-guide.html#starting-a-component>
 
 ##### Alluxio
 To build and run Alluxio docker image please refer to: [Build and run alluxio docker image](https://github.com/trillaura/smart_plugs/blob/master/docker/build/alluxio/README.md)
 
-#### Google Cloud Deployment
+Google Cloud Deployment
+=================
 
 ##### Software Needed
 * *kubectl* - Kubernetes CLI
