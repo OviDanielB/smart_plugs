@@ -14,13 +14,20 @@ docker exec master /bin/bash -c \
     hdfs namenode -format;
     /usr/local/hadoop/sbin/start-dfs.sh"
 
-FILENAME=d14_filtered.csv
+FILENAME1=d14_filtered.csv
+FILENAME2=d14_filtered.parquet
+FILENAME3=d14_filtered.avro
 
-docker cp ../../dataset/$FILENAME $CONT:/
+docker cp ../../dataset/filtered/$FILENAME1 $CONT:/
+docker cp ../../dataset/filtered/$FILENAME2 $CONT:/
+docker cp ../../dataset/filtered/$FILENAME3 $CONT:/
 
 docker exec master /bin/bash -c \
 "hdfs dfs -mkdir /dataset;
-    hdfs dfs -put $FILENAME /dataset/"
+    hdfs dfs -mkdir /dataset/filtered;
+    hdfs dfs -put $FILENAME1 /dataset/filtered/;
+    hdfs dfs -put $FILENAME2 /dataset/filtered/;
+    hdfs dfs -put $FILENAME3 /dataset/filtered/"
 
 docker cp ../../target/scala-2.11/smart_plugs-assembly-0.1.jar ${CONT}:/app.jar
 

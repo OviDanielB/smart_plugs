@@ -175,7 +175,7 @@ object BenchmarkMain {
       t3SQLcsv, t3SQLparquet, t3SQLavro)
 
     // Write times as JSON file
-    sparkContext.parallelize(JSONConverter.timesToJson(res))
+    sparkContext.parallelize(Seq(JSONConverter.timesToJson(res)))
       .saveAsTextFile(outputPath)
   }
 }
