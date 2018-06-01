@@ -1,3 +1,4 @@
+import Queries.QueryOneSQL.spark
 import Queries._
 import com.google.gson.Gson
 import controller.SparkController
@@ -22,6 +23,7 @@ object BenchmarkMain {
 //    var sparkContext = SparkController.sparkContextNoMaster
 //    var sparkSession = SparkController.sparkSessionNoMaster
 
+    import spark.implicits._
 
     /*
        Default path to dataset and output file
@@ -152,7 +154,7 @@ object BenchmarkMain {
       t3SQLcsv, t3SQLparquet, t3SQLavro)
 
     // Write times as JSON file
-    sparkContext.parallelize(JSONConverter.timesToJson(res))
-      .saveAsTextFile(SmartPlugConfig.get(Properties.JSON_TIMES_URL))
+    val df = spark.read.json(Seq(JSONConverter.timesToJson(res)).toDS)
+    df.write.json(outputPath)
   }
 }

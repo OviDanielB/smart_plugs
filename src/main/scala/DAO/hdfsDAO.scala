@@ -1,5 +1,6 @@
 package DAO
 
+import Queries.QueryOneSQL.spark
 import Queries.{Query1, Query2, Query3}
 import alluxio.AlluxioURI
 import alluxio.client.file.{FileOutStream, FileSystem}
@@ -11,15 +12,16 @@ import utils.{CalendarManager, JSONConverter}
 
 object hdfsDAO {
 
+  import spark.implicits._
+
 
   def writeQuery1Results(sparkSession : SparkSession, res : Array[Int]) : Unit = {
 
     val results = JSONConverter.results1ToJSON(res)
 
-    sparkSession.sparkContext.parallelize(res)
-      .saveAsTextFile(SmartPlugConfig.get(Properties.JSON_RESULTS_1_URL))
+    val df = spark.read.json(Seq(results).toDS)
 
-
+    df.write.json(SmartPlugConfig.get(Properties.JSON_RESULTS_1_URL))
     //    writeOnAlluxio(results, "alluxio://localhost:19998/results/results1.json")
   }
 
@@ -27,16 +29,18 @@ object hdfsDAO {
 
     val results = JSONConverter.results2ToJSON(res)
 
-    sparkSession.sparkContext.parallelize(res)
-      .saveAsTextFile(SmartPlugConfig.get(Properties.JSON_RESULTS_2_URL))
+    val df = spark.read.json(Seq(results).toDS)
+
+    df.write.json(SmartPlugConfig.get(Properties.JSON_RESULTS_2_URL))
   }
 
   def writeQuery3Results(sparkSession: SparkSession, res: Array[((Int,Int,Int,Int),Double)]) : Unit = {
 
     val results = JSONConverter.results3ToJSON(res)
 
-    sparkSession.sparkContext.parallelize(res)
-      .saveAsTextFile(SmartPlugConfig.get(Properties.JSON_RESULTS_3_URL))
+    val df = spark.read.json(Seq(results).toDS)
+
+    df.write.json(SmartPlugConfig.get(Properties.JSON_RESULTS_3_URL))
   }
 
 
@@ -55,11 +59,12 @@ object hdfsDAO {
 
   def main(args: Array[String]): Unit = {
 
-    val res1 = Query1.executeCSV(SparkController.defaultSparkContext(),"dataset/filtered/d14_filtered.csv")
+    val sc = SparkController.defaultSparkContext()
+    val res1 = Query1.executeCSV(sc,"dataset/filtered/d14_filtered.csv")
     writeQuery1Results(SparkController.defaultSparkSession(),res1)
-    val res2 = Query2.executeCSV(SparkController.defaultSparkContext(),"dataset/filtered/d14_filtered.csv", new CalendarManager)
+    val res2 = Query2.executeCSV(sc,"dataset/filtered/d14_filtered.csv", new CalendarManager)
     writeQuery2Results(SparkController.defaultSparkSession(),res2)
-    val res3 = Query3.executeCSV(SparkController.defaultSparkContext(),"dataset/filtered/d14_filtered.csv", new CalendarManager)
+    val res3 = Query3.executeCSV(sc,"dataset/filtered/d14_filtered.csv", new CalendarManager)
     writeQuery3Results(SparkController.defaultSparkSession(),res3)
   }
 }
