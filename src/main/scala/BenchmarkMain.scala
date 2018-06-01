@@ -1,10 +1,11 @@
 import Queries._
 import com.google.gson.Gson
-
 import controller.SparkController
 import org.apache.spark.sql.types.StructType
-import utils.{CalendarManager, ProfilingTime}
+import utils.{CalendarManager, JSONConverter, ProfilingTime}
 import com.databricks.spark.avro._
+import config.{Properties, SmartPlugConfig}
+import utils.JSONConverter.Times
 
 
 object BenchmarkMain {
@@ -15,18 +16,21 @@ object BenchmarkMain {
     val schema: StructType = SparkController.defaultCustomSchema()
 
     //    val sparkContext = SparkController.sparkContextNoMaster
-    //var sparkContext = SparkController.defaultSparkContext()
-    //var sparkSession = SparkController.defaultSparkSession()
+    var sparkContext = SparkController.defaultSparkContext()
+    var sparkSession = SparkController.defaultSparkSession()
 
-    var sparkContext = SparkController.sparkContextNoMaster
-    var sparkSession = SparkController.sparkSessionNoMaster
+//    var sparkContext = SparkController.sparkContextNoMaster
+//    var sparkSession = SparkController.sparkSessionNoMaster
+
+    //import spark.implicits._
+
     /*
        Default path to dataset and output file
      */
-    var outputPath = ""//SmartPlugConfig.get(Properties.JSON_TIMES_URL)
-    var datasetPathCSV: String = ""//SmartPlugConfig.get(Properties.CSV_DATASET_URL)
-    var datasetPathParquet: String = ""//SmartPlugConfig.get(Properties.PARQUET_DATASET_URL)
-    var datasetPathAvro: String = ""//SmartPlugConfig.get(Properties.AVRO_DATASET_URL)
+    var outputPath = SmartPlugConfig.get(Properties.JSON_TIMES_URL)
+    var datasetPathCSV: String = SmartPlugConfig.get(Properties.CSV_DATASET_URL)
+    var datasetPathParquet: String = SmartPlugConfig.get(Properties.PARQUET_DATASET_URL)
+    var datasetPathAvro: String = SmartPlugConfig.get(Properties.AVRO_DATASET_URL)
     var deployMode = "local"
     var cacheOrNot = "no_cache"
     var runString = "1"
@@ -40,6 +44,10 @@ object BenchmarkMain {
       if (deployMode.equals("cluster")) {
         sparkContext = SparkController.sparkContextNoMaster
         sparkSession = SparkController.sparkSessionNoMaster
+
+        sparkContext.setLogLevel("INFO")
+        sparkSession.sparkContext.setLogLevel("INFO")
+
       }
       cacheOrNot = args(5)
       runString = args(6)
@@ -76,92 +84,98 @@ object BenchmarkMain {
       Spark core queries
       Note: For queries on Parquet and Avro, dataframes are converted to RDD[Row]
      */
-    var res: Map[String, Double] = Map() // keep results
     val RUN = runString.toInt
 
     /*
       Query 1
      */
 
-    var t = ProfilingTime.getMeanTime(RUN, Query1.executeCSV(sparkContext, rddCSV))
-    res += ("query1csv" -> t)
+    println("Running t1csv")
+    val t1csv = ProfilingTime.getMeanTime(RUN, Query1.executeCSV(sparkContext, rddCSV))
 
-    t = ProfilingTime.getMeanTime(RUN, Query1.executeOnRow(sparkContext, dataFrameParquet.rdd))
-    res += ("query1parquet" -> t)
+    println("Running t1parquet")
+    val t1parquet = ProfilingTime.getMeanTime(RUN, Query1.executeOnRow(sparkContext, dataFrameParquet.rdd))
 
-    t = ProfilingTime.getMeanTime(RUN, Query1.executeOnRow(sparkContext, dataFrameAvro.rdd))
-    res += ("query1avro" -> t)
+    println("Running t1avro")
+    val t1avro = ProfilingTime.getMeanTime(RUN, Query1.executeOnRow(sparkContext, dataFrameAvro.rdd))
 
     /*
       Query 1 with Spark SQL
      */
 
-    t = ProfilingTime.getMeanTime(RUN, QueryOneSQL.execute(dataFrameCSV))
-    res += ("query1SQLcsv" -> t)
+    println("Running t1SQLcsv")
+    val t1SQLcsv = ProfilingTime.getMeanTime(RUN, QueryOneSQL.execute(dataFrameCSV))
 
-    t = ProfilingTime.getMeanTime(RUN, QueryOneSQL.execute(dataFrameParquet))
-    res += ("query1SQLparquet" -> t)
+    println("Running t1SQLparquet")
+    val t1SQLparquet = ProfilingTime.getMeanTime(RUN, QueryOneSQL.execute(dataFrameParquet))
 
-    t = ProfilingTime.getMeanTime(RUN, QueryOneSQL.execute(dataFrameAvro))
-    res += ("query1SQLavro" -> t)
+    println("Running t1SQLavro")
+    val t1SQLavro = ProfilingTime.getMeanTime(RUN, QueryOneSQL.execute(dataFrameAvro))
 
     /*
       Query 2
      */
 
-    t = ProfilingTime.getMeanTime(RUN, Query2.executeCSV(sparkContext, rddCSV, calendarManager))
-    res += ("query2csv" -> t)
+    println("Running t2csv")
+    val t2csv = ProfilingTime.getMeanTime(RUN, Query2.executeCSV(sparkContext, rddCSV, calendarManager))
 
-    t = ProfilingTime.getMeanTime(RUN, Query2.executeOnRow(sparkContext, dataFrameParquet.rdd, calendarManager))
-    res += ("query2parquet" -> t)
+    println("Running t2parquet")
+    val t2parquet = ProfilingTime.getMeanTime(RUN, Query2.executeOnRow(sparkContext, dataFrameParquet.rdd, calendarManager))
 
-    t = ProfilingTime.getMeanTime(RUN, Query2.executeOnRow(sparkContext, dataFrameAvro.rdd, calendarManager))
-    res += ("query2avro" -> t)
+    println("Running t2avro")
+    val t2avro = ProfilingTime.getMeanTime(RUN, Query2.executeOnRow(sparkContext, dataFrameAvro.rdd, calendarManager))
 
     /*
       Query 2 with Spark SQL
      */
 
-    t = ProfilingTime.getMeanTime(RUN, QueryTwoSQL.execute(dataFrameCSV))
-    res += ("query2SQLcsv" -> t)
+    println("Running t2SQLcsv")
+    val t2SQLcsv = ProfilingTime.getMeanTime(RUN, QueryTwoSQL.execute(dataFrameCSV))
 
-    t = ProfilingTime.getMeanTime(RUN, QueryTwoSQL.execute(dataFrameParquet))
-    res += ("query2SQLparquet" -> t)
+    println("Running t2SQLparquet")
+    val t2SQLparquet = ProfilingTime.getMeanTime(RUN, QueryTwoSQL.execute(dataFrameParquet))
 
-    t = ProfilingTime.getMeanTime(RUN, QueryTwoSQL.execute(dataFrameAvro))
-    res += ("query2SQLavro" -> t)
+    println("Running t2SQLavro")
+    val t2SQLavro = ProfilingTime.getMeanTime(RUN, QueryTwoSQL.execute(dataFrameAvro))
 
     /*
       Query 3
      */
 
-    t = ProfilingTime.getMeanTime(RUN, Query3.executeCSV(sparkContext, rddCSV, calendarManager))
-    res += ("query3csv" -> t)
+    println("Running t3csv")
+    val t3csv = ProfilingTime.getMeanTime(RUN, Query3.executeCSV(sparkContext, rddCSV, calendarManager))
 
-    t = ProfilingTime.getMeanTime(RUN, Query3.executeOnRow(sparkContext, dataFrameParquet.rdd, calendarManager))
-    res += ("query3parquet" -> t)
+    println("Running t3parquet")
+    val t3parquet = ProfilingTime.getMeanTime(RUN, Query3.executeOnRow(sparkContext, dataFrameParquet.rdd, calendarManager))
 
-    t = ProfilingTime.getMeanTime(RUN, Query3.executeOnRow(sparkContext, dataFrameAvro.rdd, calendarManager))
-    res += ("query3avro" -> t)
+    println("Running t3avro")
+    val t3avro = ProfilingTime.getMeanTime(RUN, Query3.executeOnRow(sparkContext, dataFrameAvro.rdd, calendarManager))
 
     /*
       Query 3 with Spark SQL
      */
 
-    t = ProfilingTime.getMeanTime(RUN, QueryThreeSQL.execute(dataFrameCSV))
-    res += ("query3SQLcsv" -> t)
+    println("Running t3SQLcsv")
+    val t3SQLcsv = ProfilingTime.getMeanTime(RUN, QueryThreeSQL.execute(dataFrameCSV))
 
-    t = ProfilingTime.getMeanTime(RUN, QueryThreeSQL.execute(dataFrameParquet))
-    res += ("query3SQLparquet" -> t)
+    println("Running t3SQLparquet")
+    val t3SQLparquet = ProfilingTime.getMeanTime(RUN, QueryThreeSQL.execute(dataFrameParquet))
 
-    t = ProfilingTime.getMeanTime(RUN, QueryThreeSQL.execute(dataFrameAvro))
-    res += ("query3SQLavro" -> t)
+    println("Running t3SQLavro")
+    val t3SQLavro = ProfilingTime.getMeanTime(RUN, QueryThreeSQL.execute(dataFrameAvro))
 
-    sparkContext.parallelize(Seq(System.currentTimeMillis(), res))
-      .saveAsTextFile(outputPath)
+
+    val res = new Times(
+      System.currentTimeMillis(),
+      t1csv, t1parquet, t1avro,
+      t2csv, t2parquet, t2avro,
+      t3csv, t3parquet, t3avro,
+      t1SQLcsv, t1SQLparquet, t1SQLavro,
+      t2SQLcsv, t2SQLparquet, t2SQLavro,
+      t3SQLcsv, t3SQLparquet, t3SQLavro)
 
     // Write times as JSON file
-    /*val times = sparkSession.read.textFile(gson.toJson(Array(System.currentTimeMillis(), res)))
-    times.write.json(outputPath) */
+    sparkContext.parallelize(JSONConverter.timesToJson(res))
+      .saveAsTextFile(outputPath)
   }
 }
