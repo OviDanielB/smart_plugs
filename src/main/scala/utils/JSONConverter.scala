@@ -2,6 +2,14 @@ package utils
 
 import com.google.gson.Gson
 
+/**
+  * This object implements functions to manage query results
+  * and executions times measurement to convert them as JSON objects.
+  *
+  * @author Ovidiu Daniel Barba
+  * @author Laura Trivelloni
+  * @author Emanuele Vannacci
+  */
 object JSONConverter {
 
   private val gson : Gson = new Gson()
