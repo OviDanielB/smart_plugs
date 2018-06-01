@@ -40,6 +40,10 @@ object BenchmarkMain {
       if (deployMode.equals("cluster")) {
         sparkContext = SparkController.sparkContextNoMaster
         sparkSession = SparkController.sparkSessionNoMaster
+
+        sparkContext.setLogLevel("DEBUG")
+        sparkSession.sparkContext.setLogLevel("DEBUG")
+
       }
       cacheOrNot = args(5)
       runString = args(6)
