@@ -23,7 +23,7 @@ object AppMain {
 
   def main(args: Array[String]): Unit = {
 
-    val calendarManager: CalendarManager = new CalendarManager
+    val calendarManager = CalendarManager
     val schema: StructType = SparkController.defaultCustomSchema()
 
     //    val sparkContext = SparkController.sparkContextNoMaster
@@ -86,14 +86,14 @@ object AppMain {
     Query1.executeOnRow(sparkContext, dataFrameAvro.rdd)
     hdfsDAO.writeQuery1Results(sparkSession, results1)
 
-    val results2 = Query2.executeCSV(sparkContext, rddCSV, calendarManager)
-    Query2.executeOnRow(sparkContext, dataFrameParquet.rdd, calendarManager)
-    Query2.executeOnRow(sparkContext, dataFrameAvro.rdd, calendarManager)
+    val results2 = Query2.executeCSV(sparkContext, rddCSV)
+    Query2.executeOnRow(sparkContext, dataFrameParquet.rdd)
+    Query2.executeOnRow(sparkContext, dataFrameAvro.rdd)
     hdfsDAO.writeQuery2Results(sparkSession, results2)
 
-    val results3 = Query3.executeCSV(sparkContext, rddCSV, calendarManager)
-    Query3.executeOnRow(sparkContext, dataFrameParquet.rdd, calendarManager)
-    Query3.executeOnRow(sparkContext, dataFrameAvro.rdd, calendarManager)
+    val results3 = Query3.executeCSV(sparkContext, rddCSV)
+    Query3.executeOnRow(sparkContext, dataFrameParquet.rdd)
+    Query3.executeOnRow(sparkContext, dataFrameAvro.rdd)
     hdfsDAO.writeQuery3Results(sparkSession, results3)
 
     /*

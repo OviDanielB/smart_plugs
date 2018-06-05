@@ -25,15 +25,14 @@ object BenchmarkMain {
 
   def main(args: Array[String]): Unit = {
 
-    val calendarManager: CalendarManager = new CalendarManager
     val schema: StructType = SparkController.defaultCustomSchema()
 
     //    val sparkContext = SparkController.sparkContextNoMaster
-    var sparkContext = SparkController.defaultSparkContext()
-    var sparkSession = SparkController.defaultSparkSession()
+    //var sparkContext = SparkController.defaultSparkContext()
+    //var sparkSession = SparkController.defaultSparkSession()
 
-//    var sparkContext = SparkController.sparkContextNoMaster
-//    var sparkSession = SparkController.sparkSessionNoMaster
+    var sparkContext = SparkController.sparkContextNoMaster
+    var sparkSession = SparkController.sparkSessionNoMaster
 
     /*
        Default path to dataset and output file
@@ -128,13 +127,13 @@ object BenchmarkMain {
      */
 
     println("Running t2csv")
-    val t2csv = ProfilingTime.getMeanTime(RUN, Query2.executeCSV(sparkContext, rddCSV, calendarManager))
+    val t2csv = ProfilingTime.getMeanTime(RUN, Query2.executeCSV(sparkContext, rddCSV))
 
     println("Running t2parquet")
-    val t2parquet = ProfilingTime.getMeanTime(RUN, Query2.executeOnRow(sparkContext, dataFrameParquet.rdd, calendarManager))
+    val t2parquet = ProfilingTime.getMeanTime(RUN, Query2.executeOnRow(sparkContext, dataFrameParquet.rdd))
 
     println("Running t2avro")
-    val t2avro = ProfilingTime.getMeanTime(RUN, Query2.executeOnRow(sparkContext, dataFrameAvro.rdd, calendarManager))
+    val t2avro = ProfilingTime.getMeanTime(RUN, Query2.executeOnRow(sparkContext, dataFrameAvro.rdd))
 
     /*
       Query 2 with Spark SQL
@@ -154,13 +153,13 @@ object BenchmarkMain {
      */
 
     println("Running t3csv")
-    val t3csv = ProfilingTime.getMeanTime(RUN, Query3.executeCSV(sparkContext, rddCSV, calendarManager))
+    val t3csv = ProfilingTime.getMeanTime(RUN, Query3.executeCSV(sparkContext, rddCSV))
 
     println("Running t3parquet")
-    val t3parquet = ProfilingTime.getMeanTime(RUN, Query3.executeOnRow(sparkContext, dataFrameParquet.rdd, calendarManager))
+    val t3parquet = ProfilingTime.getMeanTime(RUN, Query3.executeOnRow(sparkContext, dataFrameParquet.rdd))
 
     println("Running t3avro")
-    val t3avro = ProfilingTime.getMeanTime(RUN, Query3.executeOnRow(sparkContext, dataFrameAvro.rdd, calendarManager))
+    val t3avro = ProfilingTime.getMeanTime(RUN, Query3.executeOnRow(sparkContext, dataFrameAvro.rdd))
 
     /*
       Query 3 with Spark SQL

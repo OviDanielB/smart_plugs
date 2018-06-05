@@ -56,9 +56,9 @@ object hdfsDAO {
     val sc = SparkController.defaultSparkContext()
     val res1 = Query1.executeCSV(sc,"dataset/filtered/d14_filtered.csv")
     writeQuery1Results(SparkController.defaultSparkSession(),res1)
-    val res2 = Query2.executeCSV(sc,"dataset/filtered/d14_filtered.csv", new CalendarManager)
+    val res2 = Query2.executeCSV(sc,"dataset/filtered/d14_filtered.csv")
     writeQuery2Results(SparkController.defaultSparkSession(),res2)
-    val res3 = Query3.executeCSV(sc,"dataset/filtered/d14_filtered.csv", new CalendarManager)
+    val res3 = Query3.executeCSV(sc,"dataset/filtered/d14_filtered.csv")
     writeQuery3Results(SparkController.defaultSparkSession(),res3)
   }
 }

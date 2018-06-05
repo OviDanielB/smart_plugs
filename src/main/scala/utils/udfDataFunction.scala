@@ -15,7 +15,7 @@ import org.apache.spark.sql.functions.udf
   */
 object udfDataFunction {
 
-  private val calendarManager = new CalendarManager
+  private val calendarManager = CalendarManager
 
   private val getTimeSlot: Long => Int = calendarManager.getTimeSlot
 

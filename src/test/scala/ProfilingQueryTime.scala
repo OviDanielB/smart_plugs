@@ -24,7 +24,7 @@ class ProfilingQueryTime extends FlatSpec {
 
   val sparkSession: SparkSession = SparkController.defaultSparkSession()
 
-  val calendarManager: CalendarManager = new CalendarManager
+  val calendarManager = CalendarManager
 
   val schema: StructType = SparkController.defaultCustomSchema()
 

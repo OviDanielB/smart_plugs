@@ -15,10 +15,11 @@ import org.joda.time.{DateTime, DateTimeZone}
   * @author Laura Trivelloni
   * @author Emanuele Vannacci
   */
-class CalendarManager extends Serializable {
+object CalendarManager extends Serializable {
 
   val TIMEZONE: DateTimeZone = DateTimeZone.forID("Europe/Berlin")
   val HOLIDAY_HIERARCHY: String = "de"
+  val hm: HolidayManager = HolidayManager.getInstance()
 
   def fullDateString(timestamp: Long) : String = {
     val date = getDateFromTimestamp(timestamp)
@@ -158,8 +159,8 @@ class CalendarManager extends Serializable {
     * @return if holiday
     */
   def isHoliday(dateTime: DateTime) : Boolean = {
-    val hm: HolidayManager = HolidayManager.getInstance()
-    hm.isHoliday(dateTime.toGregorianCalendar, HOLIDAY_HIERARCHY)
+
+     hm.isHoliday(dateTime.toGregorianCalendar, HOLIDAY_HIERARCHY)
   }
 
   /**

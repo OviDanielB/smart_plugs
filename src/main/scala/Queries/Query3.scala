@@ -19,6 +19,8 @@ import utils.{CalendarManager, ProfilingTime, Statistics}
   */
 object Query3 extends Serializable {
 
+  val cm = CalendarManager
+
   /**
     * Compute plugs ranking based on the difference between monthly average values
     * of energy consumption during the high rate periods and low rate periods.
@@ -29,11 +31,10 @@ object Query3 extends Serializable {
     * RDD is created by reading a CSV file.
     *
     * @param sc   Spark context
-    * @param data rdd
-    * @param cm   calendar manager
+    * @param data rd
     * @return ranking of plugs
     */
-  def executeCSV(sc: SparkContext, data: RDD[String], cm: CalendarManager)
+  def executeCSV(sc: SparkContext, data: RDD[String])
   : Array[((Int, Int, Int, Int), Double)] = {
 
     val q = data
@@ -117,9 +118,9 @@ object Query3 extends Serializable {
     q
   }
 
-  def executeCSV(sc: SparkContext, filename: String, cm: CalendarManager): Array[((Int, Int, Int, Int), Double)] = {
+  def executeCSV(sc: SparkContext, filename: String): Array[((Int, Int, Int, Int), Double)] = {
     val data = sc.textFile(filename)
-    executeCSV(sc, data, cm)
+    executeCSV(sc, data)
   }
 
   /**
@@ -133,10 +134,9 @@ object Query3 extends Serializable {
     *
     * @param sc   Spark context
     * @param data rdd
-    * @param cm   calendar manager
     * @return ranking of plugs
     */
-  def executeOnRow(sc: SparkContext, data: RDD[Row], cm: CalendarManager)
+  def executeOnRow(sc: SparkContext, data: RDD[Row])
   : Array[((Int, Int, Int, Int), Double)] = {
 
     val q = data
@@ -241,18 +241,17 @@ object Query3 extends Serializable {
     val data_p = spark.read.parquet(datasetParquet)
     val data_a = spark.read.avro(datasetAvro)
 
-    val cm = new CalendarManager
 
     ProfilingTime.time {
-      executeCSV(sc, data, cm)
+      executeCSV(sc, data)
     }
 
     ProfilingTime.time {
-      executeOnRow(sc, data_p.rdd, cm)
+      executeOnRow(sc, data_p.rdd)
     }
 
     ProfilingTime.time {
-      executeOnRow(sc, data_a.rdd, cm)
+      executeOnRow(sc, data_a.rdd)
     }
   }
 }

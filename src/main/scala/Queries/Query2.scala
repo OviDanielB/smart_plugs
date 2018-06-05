@@ -19,6 +19,8 @@ import utils.{CalendarManager, ProfilingTime, Statistics}
   */
 object Query2 extends Serializable {
 
+  val cm = CalendarManager
+
   /**
     * Compute mean and standard deviation statistics of every house energy consumption
     * during each time slot in [00:00,05:59], [06:00,11:59], [12:00, 17:59], [18:00, 23:59].
@@ -29,10 +31,10 @@ object Query2 extends Serializable {
     *
     * @param sc Spark context
     * @param data rdd
-    * @param cm calendar manager
+
     * @return array of statistics for each house
     */
-  def executeCSV(sc: SparkContext, data: RDD[String], cm: CalendarManager) : Array[((Int,Int),Double,Double)] = {
+  def executeCSV(sc: SparkContext, data: RDD[String]) : Array[((Int,Int),Double,Double)] = {
 
     val q = data
       .flatMap (
@@ -99,9 +101,9 @@ object Query2 extends Serializable {
     q
   }
 
-  def executeCSV(sc: SparkContext, filename: String, cm: CalendarManager) : Array[((Int,Int),Double,Double)] = {
+  def executeCSV(sc: SparkContext, filename: String) : Array[((Int,Int),Double,Double)] = {
     val data = sc.textFile(filename)
-    executeCSV(sc, data, cm)
+    executeCSV(sc, data)
   }
 
   /**
@@ -114,10 +116,10 @@ object Query2 extends Serializable {
     *
     * @param sc Spark context
     * @param data rdd
-    * @param cm calendar manager
+
     * @return array of statistics for each house
     */
-  def executeOnRow(sc: SparkContext, data: RDD[Row], cm: CalendarManager)
+  def executeOnRow(sc: SparkContext, data: RDD[Row])
   : Array[((Int,Int),Double,Double)] = {
 
     val q = data
@@ -205,17 +207,17 @@ object Query2 extends Serializable {
     val data_p = spark.read.parquet(datasetParquet)
     val data_a = spark.read.avro(datasetAvro)
 
-    val cm = new CalendarManager
+
 
     ProfilingTime.time {
-      executeCSV(sc, data, cm)
+      executeCSV(sc, data)
     }
     ProfilingTime.time {
-      executeOnRow(sc, data_p.rdd, cm)
+      executeOnRow(sc, data_p.rdd)
     }
 
     ProfilingTime.time {
-      executeOnRow(sc, data_a.rdd, cm)
+      executeOnRow(sc, data_a.rdd)
     }
 
   }
