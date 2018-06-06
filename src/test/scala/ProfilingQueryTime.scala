@@ -79,13 +79,13 @@ class ProfilingQueryTime extends FlatSpec {
       Query 2
      */
 
-    t = ProfilingTime.getMeanTime(RUN, Query2.executeCSV(sparkContext, dataCSV, calendarManager))
+    t = ProfilingTime.getMeanTime(RUN, Query2.executeCSV(sparkContext, dataCSV))
     res += ("query2csv" -> t)
 
-    t = ProfilingTime.getMeanTime(RUN, Query2.executeOnRow(sparkContext, dataParquet, calendarManager))
+    t = ProfilingTime.getMeanTime(RUN, Query2.executeOnRow(sparkContext, dataParquet))
     res += ("query2parquet" -> t)
 
-    t = ProfilingTime.getMeanTime(RUN, Query2.executeOnRow(sparkContext, dataAVro, calendarManager))
+    t = ProfilingTime.getMeanTime(RUN, Query2.executeOnRow(sparkContext, dataAVro))
     res += ("query2avro" -> t)
 
     /*
@@ -105,13 +105,13 @@ class ProfilingQueryTime extends FlatSpec {
       Query 3
      */
 
-    t = ProfilingTime.getMeanTime(RUN, Query3.executeCSV(sparkContext, dataCSV, calendarManager))
+    t = ProfilingTime.getMeanTime(RUN, Query3.executeCSV(sparkContext, dataCSV))
     res += ("query3csv_fast" -> t)
 
-    t = ProfilingTime.getMeanTime(RUN, Query3.executeOnRow(sparkContext, dataParquet, calendarManager))
+    t = ProfilingTime.getMeanTime(RUN, Query3.executeOnRow(sparkContext, dataParquet))
     res += ("query3parquet" -> t)
 
-    t = ProfilingTime.getMeanTime(RUN, Query3.executeOnRow(sparkContext, dataAVro, calendarManager))
+    t = ProfilingTime.getMeanTime(RUN, Query3.executeOnRow(sparkContext, dataAVro))
     res += ("query3avro" -> t)
 
     /*
