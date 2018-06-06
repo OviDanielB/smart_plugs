@@ -14,7 +14,7 @@ class QueryTwoTestSuite extends FlatSpec {
   val START_DAY_OF_MONTH = 1
   val END_DAY_OF_MONTH = 30
 
-  val calManager = new CalendarManager
+  val calManager = CalendarManager
   val dataList : ListBuffer[PlugData] = CSVParser.readDataFromLocalFile(SmartPlugConfig.get(Properties.Test.CSV_DATASET_URL))
 
   /*             (plugID, day, value)         */

@@ -17,14 +17,14 @@ val depManagement = "provided"
 libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "2.9.9",
   "org.joda" % "joda-convert" % "2.0.1",
-  "org.scalactic" %% "scalactic" % "3.0.1" % depManagement ,
+  "org.scalactic" %% "scalactic" % "3.0.1"  ,
   "org.scalatest" %% "scalatest" % "3.0.0" % "test",
-  "org.apache.spark" %% "spark-core" % sparkVersion % depManagement,
-  "org.apache.spark" %% "spark-sql" % sparkVersion % depManagement,
+  "org.apache.spark" %% "spark-core" % sparkVersion ,
+  "org.apache.spark" %% "spark-sql" % sparkVersion ,
   "de.jollyday" % "jollyday" % "0.5.5",
   "com.databricks" %% "spark-avro" % "4.0.0",
   "com.typesafe" % "config" % "1.3.2",
-  "org.apache.hadoop" % "hadoop-common" % "2.7.3" % depManagement,
+  "org.apache.hadoop" % "hadoop-common" % "2.7.3" ,
   "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.5",
   "org.alluxio" % "alluxio-core-client-hdfs" % "1.7.1"
 )

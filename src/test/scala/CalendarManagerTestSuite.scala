@@ -6,7 +6,7 @@ class CalendarManagerTestSuite extends FlatSpec {
 
   "Calendar manager" should "get the correct time interval" in {
 
-    val calendarManager  = new CalendarManager
+    val calendarManager  = CalendarManager
 
     var interval = calendarManager.getTimeSlot(getTimeStampForHourAndMinute(0,0))
     assert(interval == 0)
