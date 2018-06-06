@@ -17,7 +17,7 @@ until $(curl --output /dev/null --silent --head --fail http://$HOST:$PORT); do
     sleep 5
 done
 
-docker exec -it nifi java -jar /nifi-deploy-config-1.1.32.jar -nifi http://$HOSTNAME:$PORT/nifi-api -conf /template2.0.xml -m deployTemplate
+docker exec -it nifi java -jar /nifi-deploy-config-1.1.32.jar -nifi http://$HOSTNAME:$PORT/nifi-api -conf /template.xml -m deployTemplate
 
 
 
